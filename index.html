@@ -1,30 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Redirecting...</title>
+    <title>Dynamic Host Loader</title>
     <script>
-        // Extract the subdomain from the current URL
-        const hostname = window.location.hostname; // e.g., "host1.dtechhq.co.za"
-        const subdomain = hostname.split('.')[0]; // Extract "host1"
-
-        // Define the redirection rules
-        const redirections = {
+        // Mapping subdomains to external hosts
+        const subdomainHostMap = {
             "host1": "http://momapi.dev.digital.oldmutual.co.za",
             "host2": "http://mtn-play.site.byorbit.com",
-            // Add more subdomains as needed
         };
 
-        // Redirect based on the subdomain
-        if (redirections[subdomain]) {
-            window.location.replace(redirections[subdomain]);
+        // Get the current subdomain
+        const subdomain = window.location.hostname.split('.')[0];
+
+        // Load the appropriate host
+        if (subdomainHostMap[subdomain]) {
+            document.write(`<iframe src="${subdomainHostMap[subdomain]}" style="border: none; width: 100%; height: 100vh;"></iframe>`);
         } else {
-            document.write("<h1>Subdomain not configured</h1>");
+            document.write("<h1>Invalid subdomain</h1>");
         }
     </script>
 </head>
 <body>
     <noscript>
-        <p>This page requires JavaScript to function.</p>
+        <p>This page requires JavaScript to load correctly. Please enable JavaScript in your browser.</p>
     </noscript>
 </body>
 </html>
