@@ -1,28 +1,32 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting...</title>
     <script>
-        // Get the subdomain from the URL
-        const subdomain = window.location.hostname.split('.')[0];
+        // Get the full hostname of the current request
+        const hostname = window.location.hostname;
 
-        // Define redirection rules
+        // Define subdomain-specific redirections
         const redirections = {
-            "host1": "http://momapi.dev.digital.oldmutual.co.za",
-            "host2": "http://mtn-play.site.byorbit.com",
+            "host1.dtechhq.co.za": "/host1/",
+            "host2.dtechhq.co.za": "/host2/"
         };
 
-        // Redirect based on subdomain
-        if (redirections[subdomain]) {
-            window.location.replace(redirections[subdomain]);
+        // Check if the current hostname matches a redirection rule
+        if (redirections[hostname]) {
+            const targetPath = redirections[hostname];
+            window.location.replace(targetPath);
         } else {
+            // If no match, show an error message
             document.write("<h1>Subdomain not found</h1>");
         }
     </script>
 </head>
 <body>
     <noscript>
-        <p>This page requires JavaScript to function.</p>
+        <p>This page requires JavaScript to redirect. Please enable JavaScript.</p>
     </noscript>
 </body>
 </html>
