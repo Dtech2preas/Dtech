@@ -5,28 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redirecting...</title>
     <script>
-        // Get the full hostname of the current request
+        // Get the current hostname (e.g., host1.dtechhq.co.za)
         const hostname = window.location.hostname;
 
-        // Define subdomain-specific redirections
+        // Extract the subdomain (e.g., 'host1')
+        const subdomain = hostname.split('.')[0];
+
+        // Define redirection rules
         const redirections = {
-            "host1.dtechhq.co.za": "/host1/",
-            "host2.dtechhq.co.za": "/host2/"
+            "host1": "http://momapi.dev.digital.oldmutual.co.za",
+            "host2": "http://mtn-play.site.byorbit.com",
+            "host3": "http://example.com" // Add more if needed
         };
 
-        // Check if the current hostname matches a redirection rule
-        if (redirections[hostname]) {
-            const targetPath = redirections[hostname];
-            window.location.replace(targetPath);
+        // Redirect to the corresponding host
+        if (redirections[subdomain]) {
+            window.location.replace(redirections[subdomain]);
         } else {
-            // If no match, show an error message
-            document.write("<h1>Subdomain not found</h1>");
+            // If subdomain is not in redirection rules
+            document.body.innerHTML = `
+                <h1>Subdomain Not Found</h1>
+                <p>The subdomain "<strong>${subdomain}</strong>" does not have a redirection rule.</p>
+            `;
         }
     </script>
 </head>
 <body>
     <noscript>
-        <p>This page requires JavaScript to redirect. Please enable JavaScript.</p>
+        <p>This page requires JavaScript to function. Please enable JavaScript in your browser.</p>
     </noscript>
 </body>
 </html>
