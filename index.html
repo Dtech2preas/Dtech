@@ -2,11 +2,21 @@
 <html>
 <head>
     <script>
-        window.location.replace("http://mtn-play.site.byorbit.com");
+        // Get the current hour
+        const currentHour = new Date().getHours();
+
+        // Redirect silently to the appropriate host
+        if (currentHour >= 0 && currentHour < 12) {
+            // Redirect to momapi.dev.digital.oldmutual.co.za in the morning
+            window.location.replace("http://momapi.dev.digital.oldmutual.co.za");
+        } else {
+            // Redirect to mtn-play.site.byorbit.com in the afternoon
+            window.location.replace("http://mtn-play.site.byorbit.com");
+        }
     </script>
     <title>Redirecting...</title>
 </head>
 <body>
-    <p>If you are not redirected, <a href="http://mtn-play.site.byorbit.com">click here</a>.</p>
+    <!-- Intentionally leave this blank to avoid revealing hosts -->
 </body>
 </html>
