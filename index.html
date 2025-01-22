@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <title>Redirecting...</title>
     <script>
-        // Get the current hour
-        const currentHour = new Date().getHours();
+        // Get the subdomain from the URL
+        const subdomain = window.location.hostname.split('.')[0];
 
-        // Redirect silently to the appropriate host
-        if (currentHour >= 0 && currentHour < 12) {
-            // Redirect to momapi.dev.digital.oldmutual.co.za in the morning
-            window.location.replace("http://momapi.dev.digital.oldmutual.co.za");
+        // Define redirection rules
+        const redirections = {
+            "host1": "http://momapi.dev.digital.oldmutual.co.za",
+            "host2": "http://mtn-play.site.byorbit.com",
+        };
+
+        // Redirect based on subdomain
+        if (redirections[subdomain]) {
+            window.location.replace(redirections[subdomain]);
         } else {
-            // Redirect to mtn-play.site.byorbit.com in the afternoon
-            window.location.replace("http://mtn-play.site.byorbit.com");
+            document.write("<h1>Subdomain not found</h1>");
         }
     </script>
-    <title>Redirecting...</title>
 </head>
 <body>
-    <!-- Intentionally leave this blank to avoid revealing hosts -->
+    <noscript>
+        <p>This page requires JavaScript to function.</p>
+    </noscript>
 </body>
 </html>
