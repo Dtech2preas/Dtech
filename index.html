@@ -1,10 +1,36 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=http://momapi.dev.digital.oldmutual.co.za">
-    <title>Redirecting...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host Redirection</title>
+    <script>
+        async function checkHosts() {
+            const hosts = [
+                "http://onlinecms.mtn.co.za",
+                "http://mtn-play.site.byorbit.com",
+                "http://momapi.dev.digital.oldmutual.co.za"
+            ];
+
+            for (const host of hosts) {
+                try {
+                    const response = await fetch(host, { method: "HEAD", mode: "no-cors" });
+                    if (response) {
+                        window.location.href = host; // Redirect to the working host
+                        return;
+                    }
+                } catch (error) {
+                    console.log(`Failed to connect to ${host}`);
+                }
+            }
+
+            alert("No hosts are available at the moment.");
+        }
+
+        window.onload = checkHosts;
+    </script>
 </head>
 <body>
+    <p>Redirecting you to the best available host...</p>
 </body>
 </html>
