@@ -4,47 +4,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DTECH App Store</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #f0f4f8, #e2e8f0);
+    }
+  </style>
 </head>
-<body class="bg-gray-100 font-sans">
-  <header class="bg-blue-800 text-white p-4 shadow-md">
+<body class="font-sans">
+  <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-4 shadow-lg">
     <div class="container mx-auto flex justify-between items-center">
       <div class="flex items-center space-x-4">
-        <img src="logo.png" alt="DTECH Logo" class="h-10 w-10 rounded bg-white p-1">
+        <img src="icons/dtech-logo.png" alt="DTECH Logo" class="h-14 w-14 rounded-full bg-white p-1 border-2 border-blue-200 shadow-md">
         <div>
-          <h1 class="text-2xl font-bold">DTECH App Store</h1>
-          <p class="text-sm">Empowering the Youth Through Digital Innovation</p>
+          <h1 class="text-3xl font-extrabold tracking-wide">DTECH App Store</h1>
+          <p class="text-sm italic text-blue-100">Empowering the Youth Through Digital Innovation</p>
         </div>
       </div>
     </div>
   </header>  <main class="container mx-auto p-6">
     <!-- Categories -->
     <section class="mb-6">
-      <h2 class="text-xl font-semibold mb-2">Categories</h2>
+      <h2 class="text-2xl font-semibold mb-4 text-blue-800">Categories</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <button class="bg-white shadow rounded p-4 hover:bg-blue-100">D-TECH Apps</button>
-        <button class="bg-white shadow rounded p-4 hover:bg-blue-100">Games</button>
-        <button class="bg-white shadow rounded p-4 hover:bg-blue-100">General</button>
-        <button class="bg-white shadow rounded p-4 hover:bg-blue-100">Design</button>
-        <button class="bg-white shadow rounded p-4 hover:bg-blue-100">Others</button>
+        <button class="bg-white shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 transition">D-TECH Apps</button>
+        <button class="bg-white shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 transition">Games</button>
+        <button class="bg-white shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 transition">General</button>
+        <button class="bg-white shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 transition">Design</button>
+        <button class="bg-white shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 transition">Others</button>
       </div>
     </section><!-- App Listings -->
 <section>
-  <h2 class="text-xl font-semibold mb-4">Featured Apps</h2>
+  <h2 class="text-2xl font-semibold mb-6 text-blue-800">Featured Apps</h2>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <!-- Example App Card -->
-    <div class="bg-white shadow-md rounded-lg overflow-hidden">
-      <img src="icons/dtech-icon.png" alt="App Icon" class="w-full h-32 object-contain p-4">
+    <div class="bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition">
+      <img src="icons/dtech-icon.png" alt="App Icon" class="w-full h-32 object-contain p-4 bg-blue-50 border-b border-blue-100">
       <div class="p-4">
-        <h3 class="text-lg font-bold">DTECH Calculator</h3>
-        <p class="text-sm text-gray-600 mb-2">Helps students calculate APS scores and find qualifying courses.</p>
-        <a href="apps/dtech-calculator.apk" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Download APK</a>
+        <h3 class="text-lg font-bold text-blue-800">DTECH Calculator</h3>
+        <p class="text-sm text-gray-600 mb-3">Helps students calculate APS scores and find qualifying courses.</p>
+        <a href="apps/dtech-calculator.apk" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Download APK</a>
       </div>
     </div>
     <!-- More app cards will go here -->
   </div>
 </section>
 
-  </main>  <footer class="bg-blue-800 text-white p-4 text-center mt-10">
+  </main>  <footer class="bg-blue-900 text-white p-4 text-center mt-10 shadow-inner">
     <p class="text-sm">Powered by Preasx24 | DTECH 2025</p>
   </footer>
 </body>
