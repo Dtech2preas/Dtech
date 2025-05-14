@@ -6,66 +6,84 @@
   <title>DTECH Services</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
   <style>
     body {
-      background: linear-gradient(to bottom right, #0f172a, #1e293b);
+      background: radial-gradient(ellipse at top, #0f172a, #000);
+      font-family: 'Segoe UI', sans-serif;
     }
     .glow {
       box-shadow: 0 0 20px #3b82f6, 0 0 30px #60a5fa;
     }
+    .service-card {
+      background: linear-gradient(to bottom right, #0f172a, #1e293b);
+      border: 1px solid #3b82f6;
+    }
     .service-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 20px #3b82f6, 0 0 30px #60a5fa;
+      transform: scale(1.05);
+      box-shadow: 0 0 30px #3b82f6, 0 0 60px #60a5fa;
+    }
+    .neon-text {
+      text-shadow: 0 0 5px #3b82f6, 0 0 10px #60a5fa, 0 0 20px #3b82f6;
+    }
+    header::after {
+      content: '';
+      display: block;
+      height: 3px;
+      background: linear-gradient(to right, #3b82f6, #60a5fa);
+      margin-top: 10px;
     }
   </style>
 </head>
-<body class="font-sans text-white">
+<body class="text-white">
 
-  <header class="bg-gradient-to-r from-black via-blue-900 to-black text-white p-6 shadow-lg">
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-black via-blue-900 to-black p-6 shadow-lg">
     <div class="container mx-auto flex justify-between items-center">
       <div class="flex items-center space-x-4">
-        <img src="icons/dtech-logo.png" alt="DTECH Logo" class="h-16 w-16 rounded-full bg-white p-1 border-4 border-blue-400 shadow-lg">
+        <img src="icons/dtech-logo.png" alt="DTECH Logo" class="h-16 w-16 rounded-full bg-white p-1 border-4 border-blue-400 shadow-lg animate-pulse">
         <div>
-          <h1 class="text-4xl font-extrabold tracking-wide text-blue-400">DTECH Services</h1>
+          <h1 class="text-4xl font-extrabold tracking-wide text-blue-400 neon-text">DTECH Services</h1>
           <p class="text-sm italic text-blue-200">Empowering the Youth Through Digital Innovation</p>
         </div>
       </div>
     </div>
   </header>
 
-  <main class="container mx-auto px-6 py-10">
-    <h2 class="text-3xl font-bold mb-10 text-blue-300 text-center">Explore Our Services</h2>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+  <!-- Services -->
+  <main class="container mx-auto px-6 py-14">
+    <h2 class="text-3xl font-bold mb-12 text-center text-blue-300 neon-text" data-aos="zoom-in">Explore Our Services</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
 
       <!-- Service 1 -->
-      <div class="service-card bg-gray-900 rounded-xl p-6 transition duration-300 hover:scale-105">
-        <div class="text-blue-400 text-4xl mb-4"><i class="fas fa-laptop-code"></i></div>
-        <h3 class="text-2xl font-bold mb-2 text-white">Free Website Creation</h3>
-        <p class="text-gray-300 mb-4">We offer students & startups beautiful, fast websites at no cost, hosted under dtech24.co.za.</p>
+      <div class="service-card rounded-2xl p-6 transition-transform duration-500" data-aos="fade-up" data-aos-delay="100">
+        <div class="text-blue-400 text-5xl mb-4"><i class="fas fa-laptop-code animate-pulse"></i></div>
+        <h3 class="text-2xl font-bold mb-3 text-white">Free Website Creation</h3>
+        <p class="text-gray-300 mb-6">Students & startups get fast, mobile-optimized websites hosted under <strong>dtech24.co.za</strong>.</p>
         <a href="https://dtech24.co.za" target="_blank"
-           class="inline-block px-4 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded glow transition">
+           class="inline-block px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full glow transition">
            Learn More
         </a>
       </div>
 
       <!-- Service 2 -->
-      <div class="service-card bg-gray-900 rounded-xl p-6 transition duration-300 hover:scale-105">
-        <div class="text-blue-400 text-4xl mb-4"><i class="fas fa-store"></i></div>
-        <h3 class="text-2xl font-bold mb-2 text-white">Student Marketplace</h3>
-        <p class="text-gray-300 mb-4">Buy, sell, or rent second-hand books, gadgets, student furniture, and more.</p>
+      <div class="service-card rounded-2xl p-6 transition-transform duration-500" data-aos="fade-up" data-aos-delay="200">
+        <div class="text-blue-400 text-5xl mb-4"><i class="fas fa-store animate-pulse"></i></div>
+        <h3 class="text-2xl font-bold mb-3 text-white">Student Marketplace</h3>
+        <p class="text-gray-300 mb-6">Buy, sell, or rent textbooks, gadgets, furniture and more — created by students, for students.</p>
         <a href="https://www.dtech-services.co.za" target="_blank"
-           class="inline-block px-4 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded glow transition">
+           class="inline-block px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full glow transition">
            Visit Now
         </a>
       </div>
 
       <!-- Service 3 -->
-      <div class="service-card bg-gray-900 rounded-xl p-6 transition duration-300 hover:scale-105">
-        <div class="text-blue-400 text-4xl mb-4"><i class="fas fa-paint-brush"></i></div>
-        <h3 class="text-2xl font-bold mb-2 text-white">Digital Branding</h3>
-        <p class="text-gray-300 mb-4">We help you with poster design, logo creation, email setup, and social profiles — all free for students.</p>
+      <div class="service-card rounded-2xl p-6 transition-transform duration-500" data-aos="fade-up" data-aos-delay="300">
+        <div class="text-blue-400 text-5xl mb-4"><i class="fas fa-paint-brush animate-pulse"></i></div>
+        <h3 class="text-2xl font-bold mb-3 text-white">Digital Branding</h3>
+        <p class="text-gray-300 mb-6">Posters, logos, email setup, social design — free for students launching new ideas.</p>
         <a href="#contact"
-           class="inline-block px-4 py-2 text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white rounded glow transition">
+           class="inline-block px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full glow transition">
            Contact Us
         </a>
       </div>
@@ -73,9 +91,20 @@
     </div>
   </main>
 
-  <footer class="bg-black text-white p-4 text-center mt-10 shadow-inner">
+  <!-- Footer -->
+  <footer class="bg-black text-white p-6 text-center mt-20 shadow-inner">
     <p class="text-sm text-blue-300">Powered by <strong>Preasx24</strong> | DTECH 2025</p>
   </footer>
+
+  <!-- AOS Script -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    AOS.init({
+      once: true,
+      duration: 1000,
+      offset: 100
+    });
+  </script>
 
 </body>
 </html>
