@@ -1,71 +1,93 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DTECH App Store</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
   <style>
     body {
-      background: linear-gradient(to bottom right, #f0f4f8, #e2e8f0);
+      background: linear-gradient(to bottom right, #0f172a, #1e293b);
+    }
+    .glow {
+      box-shadow: 0 0 20px #3b82f6, 0 0 30px #60a5fa;
+    }
+    .app-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px #3b82f6, 0 0 30px #60a5fa;
+    }
+    .category-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 12px #3b82f6, 0 0 20px #60a5fa;
+    }
+    .fade-in {
+      animation: fadeIn 2s ease-in-out;
+    }
+    .slide-in {
+      animation: slideIn 1s ease-out forwards;
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    @keyframes slideIn {
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .neon-border {
+      border: 2px solid #3b82f6;
+      box-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6;
+    }
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
   </style>
 </head>
-<body class="font-sans">
+<body class="font-sans text-white fade-in"><a href="https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365" target="_blank"
+class="fixed top-0 right-0 m-2 text-sm bg-white text-blue-900 px-3 py-1 rounded-full shadow hover:bg-blue-100 transition z-50"> Support </a>
 
-  <!-- Support Button -->
-  <a href="https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365" target="_blank"
-     class="fixed top-0 right-0 m-2 text-sm bg-white text-blue-900 px-3 py-1 rounded-full shadow hover:bg-blue-100 transition z-50">
-    Support
-  </a>
-
-  <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-4 shadow-lg">
+  <header class="bg-gradient-to-r from-black via-blue-900 to-black text-white p-6 shadow-lg slide-in">
     <div class="container mx-auto flex items-center space-x-4">
-      <img src="logo.png" alt="DTECH Logo" class="h-14 w-14 rounded-full bg-white p-1 border-2 border-blue-200 shadow-md">
+      <img src="logo.png" alt="DTECH Logo" class="h-14 w-14 rounded-full bg-white p-1 border-4 border-blue-400 shadow-lg pulse">
       <div>
-        <h1 class="text-3xl font-extrabold tracking-wide">DTECH App Store</h1>
-        <p class="text-sm italic text-blue-100">Empowering the Youth Through Digital Innovation</p>
+        <h1 class="text-3xl font-extrabold tracking-wide text-blue-400">DTECH App Store</h1>
+        <p class="text-sm italic text-blue-200">Empowering the Youth Through Digital Innovation</p>
       </div>
     </div>
-  </header>
-
-  <main class="container mx-auto p-6">
-    <!-- Categories -->
-    <section class="mb-6">
-      <h2 class="text-2xl font-semibold mb-4 text-blue-800">Categories</h2>
+  </header>  <main class="container mx-auto p-6">
+    <section class="mb-6 slide-in">
+      <h2 class="text-2xl font-bold mb-4 text-blue-300">Categories</h2>
       <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
-        <!-- Cool gradient buttons for all except Service -->
-        <a href="dtech-apps.html" class="bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg rounded-lg p-4 hover:from-pink-600 hover:to-purple-600 font-semibold text-center transition block border-2 border-white">D-TECH Apps</a>
-        <a href="GAMES.html" class="bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg rounded-lg p-4 hover:from-pink-600 hover:to-purple-600 font-semibold text-center transition block border-2 border-white">GAMES</a>
-        <a href="GENERAL.html" class="bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg rounded-lg p-4 hover:from-pink-600 hover:to-purple-600 font-semibold text-center transition block border-2 border-white">GENERAL</a>
-        <a href="DESIGN.html" class="bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg rounded-lg p-4 hover:from-pink-600 hover:to-purple-600 font-semibold text-center transition block border-2 border-white">DESIGN</a>
-        <a href="tech.html" class="bg-gradient-to-r from-blue-600 to-red-500 text-white shadow-lg rounded-lg p-4 hover:from-pink-600 hover:to-purple-600 font-semibold text-center transition block border-2 border-white">TECH</a>
-
-        <!-- SERVICE button with the simple clean style -->
-        <a href="services.html" class="bg-white shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 text-center transition block">SERVICE</a>
+        <a href="dtech-apps.html" class="category-button bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg rounded-lg p-4 hover:from-pink-600 hover:to-purple-600 font-semibold text-center transition block border-2 border-white neon-border">D-TECH Apps</a>
+        <a href="GAMES.html" class="category-button bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg rounded-lg p-4 hover:from-pink-600 hover:to-purple-600 font-semibold text-center transition block border-2 border-white neon-border">GAMES</a>
+        <a href="GENERAL.html" class="category-button bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg rounded-lg p-4 hover:from-pink-600 hover:to-purple-600 font-semibold text-center transition block border-2 border-white neon-border">GENERAL</a>
+        <a href="DESIGN.html" class="category-button bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg rounded-lg p-4 hover:from-pink-600 hover:to-purple-600 font-semibold text-center transition block border-2 border-white neon-border">DESIGN</a>
+        <a href="tech.html" class="category-button bg-gradient-to-r from-blue-600 to-red-500 text-white shadow-lg rounded-lg p-4 hover:from-pink-600 hover:to-purple-600 font-semibold text-center transition block border-2 border-white neon-border">TECH</a>
+        <a href="services.html" class="category-button bg-white text-blue-800 shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-center transition block pulse">SERVICE</a>
       </div>
-    </section>
-
-    <!-- App Listings -->
-    <section>
-      <h2 class="text-2xl font-semibold mb-6 text-blue-800">Featured Apps</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <!-- Example App Card -->
-        <div class="bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition">
-          <img src="icon.png" alt="App Icon" class="w-full h-32 object-contain p-4 bg-blue-50 border-b border-blue-100">
-          <div class="p-4">
-            <h3 class="text-lg font-bold text-blue-800">DTECH Calculator</h3>
-            <p class="text-sm text-gray-600 mb-3">Helps students calculate APS scores and find qualifying courses.</p>
-            <a href="apps/dtech-calculator.apk" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Download APK</a>
-          </div>
-        </div>
+    </section><section class="slide-in">
+  <h2 class="text-2xl font-bold mb-6 text-blue-300">Featured Apps</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="app-card bg-gray-900 border border-blue-700 shadow-lg rounded-xl overflow-hidden transition duration-300 hover:scale-105 slide-in">
+      <img src="icon.png" alt="App Icon" class="w-full h-32 object-contain p-4 bg-blue-950 border-b border-blue-700">
+      <div class="p-4">
+        <h3 class="text-lg font-bold text-white">DTECH Calculator</h3>
+        <p class="text-sm text-gray-300 mb-3">Helps students calculate APS scores and find qualifying courses.</p>
+        <a href="apps/dtech-calculator.apk" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow transition">Download APK</a>
       </div>
-    </section>
-  </main>
+    </div>
+  </div>
+</section>
 
-  <footer class="bg-blue-900 text-white p-4 text-center mt-10 shadow-inner">
-    <p class="text-sm">Powered by Preasx24 | DTECH 2025</p>
-  </footer>
-
-</body>
+  </main>  <footer class="bg-black text-white p-4 text-center mt-10 shadow-inner slide-in">
+    <p class="text-sm text-blue-300">Powered by <strong>Preasx24</strong> | DTECH 2025</p>
+  </footer></body>
 </html>
