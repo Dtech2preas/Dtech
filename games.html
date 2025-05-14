@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DTECH Games</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #f0f4f8, #e2e8f0);
+    }
+  </style>
+</head>
+<body class="font-sans">
+
+  <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-4 shadow-lg">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center space-x-4">
+        <img src="icons/dtech-logo.png" alt="DTECH Logo" class="h-14 w-14 rounded-full bg-white p-1 border-2 border-blue-200 shadow-md">
+        <div>
+          <h1 class="text-3xl font-extrabold tracking-wide">DTECH App Store</h1>
+          <p class="text-sm italic text-blue-100">Empowering the Youth Through Digital Innovation</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-6">
+    <h2 class="text-2xl font-semibold mb-6 text-blue-800">Games</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Game 1 -->
+      <div class="bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition">
+        <img src="icons/game1.png" alt="Game Icon" class="w-full h-32 object-contain p-4 bg-blue-50 border-b border-blue-100">
+        <div class="p-4">
+          <h3 class="text-lg font-bold text-blue-800">Math Runner</h3>
+          <p class="text-sm text-gray-600 mb-3">An endless runner game where solving equations powers your jumps.</p>
+          <a href="games/math-runner.apk"
+             onclick="window.open('https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365', '_blank')"
+             class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+             Download APK
+          </a>
+        </div>
+      </div>
+
+      <!-- Game 2 -->
+      <div class="bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition">
+        <img src="icons/game2.png" alt="Game Icon" class="w-full h-32 object-contain p-4 bg-blue-50 border-b border-blue-100">
+        <div class="p-4">
+          <h3 class="text-lg font-bold text-blue-800">Campus Clash</h3>
+          <p class="text-sm text-gray-600 mb-3">Multiplayer battle game set in a virtual campus environment.</p>
+          <a href="games/campus-clash.apk"
+             onclick="window.open('https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365', '_blank')"
+             class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+             Download APK
+          </a>
+        </div>
+      </div>
+
+      <!-- Game 3 -->
+      <div class="bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition">
+        <img src="icons/game3.png" alt="Game Icon" class="w-full h-32 object-contain p-4 bg-blue-50 border-b border-blue-100">
+        <div class="p-4">
+          <h3 class="text-lg font-bold text-blue-800">DTECH Puzzle Quest</h3>
+          <p class="text-sm text-gray-600 mb-3">Sharpen your mind with logic puzzles and unlock achievements.</p>
+          <a href="games/puzzle-quest.apk"
+             onclick="window.open('https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365', '_blank')"
+             class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+             Download APK
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="bg-blue-900 text-white p-4 text-center mt-10 shadow-inner">
+    <p class="text-sm">Powered by Preasx24 | DTECH 2025</p>
+  </footer>
+
+</body>
+</html>
