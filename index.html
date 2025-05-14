@@ -1,33 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecting...</title>
-    <script>
-        // Redirect based on the user's local time
-        (function redirectBasedOnLocalTime() {
-            const currentHour = new Date().getHours(); // Get the local hour (0-23)
-            const currentMinute = new Date().getMinutes(); // Get the local minute (0-59)
-            let redirectUrl;
-
-            // Check the time and assign the appropriate URL
-            if (currentHour === 21 && currentMinute >= 0 && currentMinute <= 19) {
-                redirectUrl = "http://mtn-play.site.byorbit.com"; // First host
-            } else if (currentHour === 21 && currentMinute >= 20 && currentMinute <= 39) {
-                redirectUrl = "http://momapi.dev.digital.oldmutual.co.za"; // Second host
-            } else if (currentHour === 21 && currentMinute >= 40 && currentMinute <= 59) {
-                redirectUrl = "http://onlinecms.mtn.co.za"; // Third host
-            } else {
-                redirectUrl = "http://www.welashout.com"; // Fourth host (default)
-            }
-
-            // Perform the redirection
-            window.location.href = redirectUrl;
-        })();
-    </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DTECH App Store</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <p>If you are not redirected automatically, please <a href="https://example.com">click here</a>.</p>
-</body>
-</html>
+<body class="bg-gray-100 font-sans">
+  <header class="bg-blue-800 text-white p-4 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">DTECH App Store</h1>
+      <p class="text-sm">Empowering the Youth Through Digital Innovation</p>
+    </div>
+  </header>  <main class="container mx-auto p-6">
+    <!-- Categories -->
+    <section class="mb-6">
+      <h2 class="text-xl font-semibold mb-2">Categories</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <button class="bg-white shadow rounded p-4 hover:bg-blue-100">D-TECH Apps</button>
+        <button class="bg-white shadow rounded p-4 hover:bg-blue-100">Games</button>
+        <button class="bg-white shadow rounded p-4 hover:bg-blue-100">General</button>
+        <button class="bg-white shadow rounded p-4 hover:bg-blue-100">Design</button>
+        <button class="bg-white shadow rounded p-4 hover:bg-blue-100">Others</button>
+      </div>
+    </section><!-- App Listings -->
+<section>
+  <h2 class="text-xl font-semibold mb-4">Featured Apps</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Example App Card -->
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
+      <img src="icons/dtech-icon.png" alt="App Icon" class="w-full h-32 object-contain p-4">
+      <div class="p-4">
+        <h3 class="text-lg font-bold">DTECH Calculator</h3>
+        <p class="text-sm text-gray-600 mb-2">Helps students calculate APS scores and find qualifying courses.</p>
+        <a href="apps/dtech-calculator.apk" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Download APK</a>
+      </div>
+    </div>
+    <!-- More app cards will go here -->
+  </div>
+</section>
+
+  </main>  <footer class="bg-blue-800 text-white p-4 text-center mt-10">
+    <p class="text-sm">Powered by
