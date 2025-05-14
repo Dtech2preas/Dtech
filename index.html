@@ -4,30 +4,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>DTECH App Store</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     body {
       background: linear-gradient(to bottom right, #f0f4f8, #e2e8f0);
-      font-family: 'Poppins', sans-serif;
-    }.glass {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.glow-text {
-  text-shadow: 0 0 8px rgba(59,130,246,0.6);
-}
-
-.card-hover {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card-hover:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-}
-
+    }
   </style>
 </head>
 <body class="font-sans">
@@ -37,7 +17,7 @@
         <img src="icons/dtech-logo.png" alt="DTECH Logo" class="h-14 w-14 rounded-full bg-white p-1 border-2 border-blue-200 shadow-md">
         <div>
           <h1 class="text-3xl font-extrabold tracking-wide">DTECH App Store</h1>
-          <p class="text-sm italic text-blue-100 glow-text">Empowering the Youth Through Digital Innovation</p>
+          <p class="text-sm italic text-blue-100">Empowering the Youth Through Digital Innovation</p>
         </div>
       </div>
     </div>
@@ -46,18 +26,18 @@
     <section class="mb-6">
       <h2 class="text-2xl font-semibold mb-4 text-blue-800">Categories</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <a href="dtech-apps.html" class="glass shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 text-center transition block">D-TECH Apps</a>
-        <a href="games.html" class="glass shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 text-center transition block">Games</a>
-        <a href="general.html" class="glass shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 text-center transition block">General</a>
-        <a href="design.html" class="glass shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 text-center transition block">Design</a>
-        <a href="others.html" class="glass shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 text-center transition block">Others</a>
+        <button class="bg-white shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 transition">D-TECH Apps</button>
+        <button class="bg-white shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 transition">Games</button>
+        <button class="bg-white shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 transition">General</button>
+        <button class="bg-white shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 transition">Design</button>
+        <button class="bg-white shadow-lg rounded-lg p-4 hover:bg-blue-100 border border-blue-200 font-medium text-blue-800 transition">Others</button>
       </div>
     </section><!-- App Listings -->
 <section>
   <h2 class="text-2xl font-semibold mb-6 text-blue-800">Featured Apps</h2>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     <!-- Example App Card -->
-    <div class="bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition card-hover">
+    <div class="bg-white border border-gray-200 shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition">
       <img src="icons/dtech-icon.png" alt="App Icon" class="w-full h-32 object-contain p-4 bg-blue-50 border-b border-blue-100">
       <div class="p-4">
         <h3 class="text-lg font-bold text-blue-800">DTECH Calculator</h3>
