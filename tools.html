@@ -44,11 +44,15 @@
   </button>
 </div>
 
-<!-- Modal for full-screen video -->
-<div id="video-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-50">
-  <div class="relative w-full max-w-3xl mx-4">
-    <button id="close-modal-btn" class="absolute top-2 right-2 text-white text-2xl">&times;</button>
-    <video id="tut-video" controls class="w-full rounded-lg shadow-lg">
+<!-- Full-screen Video Modal -->
+<div id="video-modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden z-50 p-4">
+  <div class="relative w-full h-full">
+    <!-- Close Button -->
+    <button id="close-modal-btn" class="absolute top-4 right-4 text-white text-3xl focus:outline-none">
+      &times;
+    </button>
+    <!-- Video Element -->
+    <video id="tut-video" controls class="absolute inset-0 w-full h-full object-contain">
       <source src="https://github.com/preasx24x/BUILD-APK/raw/main/InShot_20250612_065002364.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
@@ -64,20 +68,17 @@
   playBtn.addEventListener('click', () => {
     modal.classList.remove('hidden');
     video.currentTime = 0;
-    video.play().catch(()=>{});
+    video.play().catch(() => {});
   });
 
-  closeBtn.addEventListener('click', () => {
+  function closeModal() {
     video.pause();
     modal.classList.add('hidden');
-  });
+  }
 
-  // Also close modal if backdrop clicked
+  closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', e => {
-    if (e.target === modal) {
-      video.pause();
-      modal.classList.add('hidden');
-    }
+    if (e.target === modal) closeModal();
   });
 </script>
       <!-- Metasploit -->
