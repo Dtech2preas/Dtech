@@ -21,7 +21,7 @@
     </div>
   </header>  <main class="container mx-auto p-6">
     <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- DTech URL Video Downloader with Pre-Video Ad -->
+      <!-- DTech URL Video Downloader with Sandboxed Inline Ad -->
 <div class="tool-card bg-gray-900 border border-purple-700 rounded-xl p-6 neon-border">
   <h2 class="text-xl font-bold mb-2 text-white">DTech URL Video Downloader</h2>
   <p class="text-sm text-gray-300 mb-4">
@@ -38,28 +38,29 @@
   </code>
   <button onclick="copy('python load.py')" class="bg-purple-600 px-4 py-2 rounded glow mb-4">Copy</button>
 
-  <!-- Play Tutorial Button -->
   <button id="play-tut-btn" class="bg-purple-500 px-4 py-2 rounded">
     ▶️ Play Tutorial
   </button>
 </div>
 
-<!-- Full-screen Video Modal -->
+<!-- Full-screen Modal -->
 <div id="video-modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden z-50 p-4">
   <div class="relative w-full h-full max-w-3xl max-h-full">
-    <!-- Close Button -->
-    <button id="close-modal-btn" class="absolute top-4 right-4 text-white text-3xl focus:outline-none">
-      &times;
-    </button>
+    <!-- Close -->
+    <button id="close-modal-btn" class="absolute top-4 right-4 text-white text-3xl focus:outline-none">&times;</button>
 
-    <!-- Ad Overlay (shows first) -->
-    <div id="ad-overlay" class="absolute inset-0 bg-white flex flex-col items-center justify-center text-center p-6">
-      <!-- External ad script -->
-      <script type="text/javascript" src="//cafewarriors.com/06/70/0a/06700ae74ed6d9035f7f071031360cf5.js"></script>
-      <p class="text-gray-800 mb-4">Your video will play in <span id="ad-timer" class="font-bold">5</span> seconds...</p>
+    <!-- Sandboxed Ad Iframe -->
+    <div id="ad-container" class="absolute inset-0 bg-white flex flex-col items-center justify-center p-4">
+      <iframe 
+        id="ad-iframe"
+        src="//cafewarriors.com/06/70/0a/06700ae74ed6d9035f7f071031360cf5.js" 
+        sandbox="allow-scripts" 
+        class="w-full h-3/4 border-none mb-4"
+      ></iframe>
+      <p class="text-gray-800">Continuing in <span id="ad-timer" class="font-bold">5</span>…</p>
     </div>
 
-    <!-- Video Element (hidden until ad finishes) -->
+    <!-- Video (hidden until after ad) -->
     <video id="tut-video" controls class="absolute inset-0 w-full h-full object-contain hidden rounded-lg shadow-lg bg-black">
       <source src="https://github.com/preasx24x/BUILD-APK/raw/main/InShot_20250612_065002364.mp4" type="video/mp4">
       Your browser does not support the video tag.
@@ -68,44 +69,41 @@
 </div>
 
 <script>
-  const playBtn = document.getElementById('play-tut-btn');
-  const modal = document.getElementById('video-modal');
-  const closeBtn = document.getElementById('close-modal-btn');
-  const adOverlay = document.getElementById('ad-overlay');
+  const playBtn   = document.getElementById('play-tut-btn');
+  const modal     = document.getElementById('video-modal');
+  const closeBtn  = document.getElementById('close-modal-btn');
+  const adCont    = document.getElementById('ad-container');
   const adTimerEl = document.getElementById('ad-timer');
-  const videoEl = document.getElementById('tut-video');
-  let countdownInterval;
+  const videoEl   = document.getElementById('tut-video');
+  let countdown;
 
   playBtn.addEventListener('click', () => {
     modal.classList.remove('hidden');
-    adOverlay.classList.remove('hidden');
+    adCont.classList.remove('hidden');
     videoEl.classList.add('hidden');
 
-    // initialize timer
-    let timeLeft = 5;
-    adTimerEl.innerText = timeLeft;
-
-    countdownInterval = setInterval(() => {
-      timeLeft -= 1;
-      if (timeLeft > 0) {
-        adTimerEl.innerText = timeLeft;
+    let t = 5;
+    adTimerEl.textContent = t;
+    countdown = setInterval(() => {
+      t -= 1;
+      if (t > 0) {
+        adTimerEl.textContent = t;
       } else {
-        clearInterval(countdownInterval);
-        // hide ad and show video
-        adOverlay.classList.add('hidden');
+        clearInterval(countdown);
+        // swap to video
+        adCont.classList.add('hidden');
         videoEl.classList.remove('hidden');
         videoEl.currentTime = 0;
-        videoEl.play().catch(() => {});
+        videoEl.play().catch(()=>{});
       }
     }, 1000);
   });
 
   function closeModal() {
-    clearInterval(countdownInterval);
+    clearInterval(countdown);
     videoEl.pause();
     modal.classList.add('hidden');
   }
-
   closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', e => {
     if (e.target === modal) closeModal();
