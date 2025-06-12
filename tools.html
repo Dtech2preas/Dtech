@@ -39,13 +39,16 @@
   <button onclick="copy('python load.py')" class="bg-purple-600 px-4 py-2 rounded glow mb-4">Copy</button>
 
   <!-- Play Tutorial Button -->
-  <button id="play-tut-btn" class="bg-purple-500 px-4 py-2 rounded mb-4">
+  <button id="play-tut-btn" class="bg-purple-500 px-4 py-2 rounded">
     ▶️ Play Tutorial
   </button>
+</div>
 
-  <!-- Hidden video container -->
-  <div id="video-container" class="hidden mt-4">
-    <video controls class="w-full rounded-lg shadow-lg">
+<!-- Modal for full-screen video -->
+<div id="video-modal" class="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center hidden z-50">
+  <div class="relative w-full max-w-3xl mx-4">
+    <button id="close-modal-btn" class="absolute top-2 right-2 text-white text-2xl">&times;</button>
+    <video id="tut-video" controls class="w-full rounded-lg shadow-lg">
       <source src="https://github.com/preasx24x/BUILD-APK/raw/main/InShot_20250612_065002364.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
@@ -53,13 +56,27 @@
 </div>
 
 <script>
-  document.getElementById('play-tut-btn').addEventListener('click', function() {
-    const vc = document.getElementById('video-container');
-    vc.classList.toggle('hidden');
-    if (!vc.classList.contains('hidden')) {
-      // Autoplay once shown (some browsers allow autoplay muted)
-      const video = vc.querySelector('video');
-      video.play().catch(()=>{/* autoplay may be blocked */});
+  const playBtn = document.getElementById('play-tut-btn');
+  const modal = document.getElementById('video-modal');
+  const closeBtn = document.getElementById('close-modal-btn');
+  const video = document.getElementById('tut-video');
+
+  playBtn.addEventListener('click', () => {
+    modal.classList.remove('hidden');
+    video.currentTime = 0;
+    video.play().catch(()=>{});
+  });
+
+  closeBtn.addEventListener('click', () => {
+    video.pause();
+    modal.classList.add('hidden');
+  });
+
+  // Also close modal if backdrop clicked
+  modal.addEventListener('click', e => {
+    if (e.target === modal) {
+      video.pause();
+      modal.classList.add('hidden');
     }
   });
 </script>
