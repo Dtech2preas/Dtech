@@ -21,14 +21,32 @@
     </div>
   </header>  <main class="container mx-auto p-6">
     <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Nmap -->
-      <div class="tool-card bg-gray-900 border border-blue-700 rounded-xl p-6 neon-border">
-        <h2 class="text-xl font-bold mb-2 text-white">Nmap</h2>
-        <p class="text-sm text-gray-300 mb-4">Network mapper for port scanning, host discovery, and security auditing.</p>
-        <code class="block bg-gray-800 p-3 rounded mb-2">pkg install nmap</code>
-        <button onclick="copy('pkg install nmap')" class="bg-blue-600 px-4 py-2 rounded glow">Copy</button>
-        <button onclick="window.open('https://youtu.be/example-nmap','_blank')" class="ml-2 bg-blue-500 px-4 py-2 rounded">Tutorial</button>
-      </div>
+      <!-- DTech URL Video Downloader Tool Card -->
+<div class="tool-card bg-gray-900 border border-purple-700 shadow-lg rounded-xl overflow-hidden transition duration-300 p-6 neon-border">
+  <div class="mb-4">
+    <h3 class="text-lg font-bold text-white">DTech URL Video Downloader</h3>
+    <p class="text-sm text-gray-300 mb-3">
+      Download videos from any website—TikTok, YouTube, Facebook, Instagram, and more—using just the video URL.
+    </p>
+  </div>
+  <!-- Fetch the downloader script -->
+  <div class="mb-3">
+    <code class="block bg-gray-800 p-3 rounded">
+curl -o load.py https://raw.githubusercontent.com/x24em/Dtech/e9105ff06335482fa1f52711128d685b40c22b0d/load.py
+    </code>
+    <button onclick="copyText('curl -o load.py https://raw.githubusercontent.com/x24em/Dtech/e9105ff06335482fa1f52711128d685b40c22b0d/load.py')" class="mt-2 bg-purple-600 px-4 py-2 rounded glow">Copy</button>
+  </div>
+  <!-- Run the downloader -->
+  <div class="mb-3">
+    <code class="block bg-gray-800 p-3 rounded">
+python load.py
+    </code>
+    <button onclick="copyText('python load.py')" class="mt-2 bg-purple-600 px-4 py-2 rounded glow">Copy</button>
+  </div>
+  <button onclick="window.open('https://youtu.be/XXXXXXXXXXX','_blank')" class="mt-4 bg-purple-500 px-4 py-2 rounded-md transition">
+    📺 Watch Tutorial
+  </button>
+</div>
       <!-- Metasploit -->
       <div class="tool-card bg-gray-900 border border-blue-700 rounded-xl p-6 neon-border">
         <h2 class="text-xl font-bold mb-2 text-white">Metasploit Framework</h2>
