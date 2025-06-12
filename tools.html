@@ -31,17 +31,38 @@
   <code class="block bg-gray-800 p-3 rounded mb-2">
     curl -o load.py https://raw.githubusercontent.com/x24em/Dtech/e9105ff06335482fa1f52711128d685b40c22b0d/load.py
   </code>
-  <button onclick="copy('curl -o load.py https://raw.githubusercontent.com/x24em/Dtech/e9105ff06335482fa1f52711128d685b40c22b0d/load.py')" class="bg-purple-600 px-4 py-2 rounded glow">Copy</button>
+  <button onclick="copy('curl -o load.py https://raw.githubusercontent.com/x24em/Dtech/e9105ff06335482fa1f52711128d685b40c22b0d/load.py')" class="bg-purple-600 px-4 py-2 rounded glow mb-4">Copy</button>
 
-  <code class="block bg-gray-800 p-3 rounded my-2">
+  <code class="block bg-gray-800 p-3 rounded mb-2">
     python load.py
   </code>
-  <button onclick="copy('python load.py')" class="bg-purple-600 px-4 py-2 rounded glow">Copy</button>
+  <button onclick="copy('python load.py')" class="bg-purple-600 px-4 py-2 rounded glow mb-4">Copy</button>
 
-  <button onclick="window.open('https://github.com/preasx24x/BUILD-APK/blob/main/InShot_20250612_065002364.mp4?raw=true','_blank')" class="ml-2 bg-purple-500 px-4 py-2 rounded">
+  <!-- Play Tutorial Button -->
+  <button id="play-tut-btn" class="bg-purple-500 px-4 py-2 rounded mb-4">
     ▶️ Play Tutorial
   </button>
+
+  <!-- Hidden video container -->
+  <div id="video-container" class="hidden mt-4">
+    <video controls class="w-full rounded-lg shadow-lg">
+      <source src="https://github.com/preasx24x/BUILD-APK/raw/main/InShot_20250612_065002364.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 </div>
+
+<script>
+  document.getElementById('play-tut-btn').addEventListener('click', function() {
+    const vc = document.getElementById('video-container');
+    vc.classList.toggle('hidden');
+    if (!vc.classList.contains('hidden')) {
+      // Autoplay once shown (some browsers allow autoplay muted)
+      const video = vc.querySelector('video');
+      video.play().catch(()=>{/* autoplay may be blocked */});
+    }
+  });
+</script>
       <!-- Metasploit -->
       <div class="tool-card bg-gray-900 border border-blue-700 rounded-xl p-6 neon-border">
         <h2 class="text-xl font-bold mb-2 text-white">Metasploit Framework</h2>
