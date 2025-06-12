@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Full-Screen Pre-roll Video with Direct Ad</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+    }
+    #view-button {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 1rem 2rem;
+      font-size: 1.5rem;
+      z-index: 10000;
+      cursor: pointer;
+      background: #fff;
+      border: none;
+      border-radius: 5px;
+    }
+    #preroll-wrapper {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      z-index: 9999;
+    }
+    #ad-iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    #ad-overlay {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      color: #fff;
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      z-index: 10000;
+    }
+    #main-video {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>  <!-- Button to start --><button id="view-button">Watch Video</button>
+
+  <!-- Full-screen pre-roll ad -->  <div id="preroll-wrapper">
+    <iframe id="ad-iframe" src="https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365" allow="autoplay; fullscreen"></iframe>
+    <div id="ad-overlay">
+      Ad ends in <span id="counter">10</span>s
+    </div>
+  </div>  <!-- Full-screen HTML5 video -->  <video id="main-video" controls autoplay muted playsinline>
+    <source src="https://docs.google.com/uc?export=download&id=1FgTHyLHl0kT5LAOGpxJ48QEj_-l7qEhq" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>  <script>
+    const viewBtn = document.getElementById('view-button');
+    const preroll = document.getElementById('preroll-wrapper');
+    const overlay = document.getElementById('ad-overlay');
+    const counterEl = document.getElementById('counter');
+    const videoEl = document.getElementById('main-video');
+
+    viewBtn.addEventListener('click', () => {
+      viewBtn.style.display = 'none';
+      preroll.style.display = 'block';
+
+      let remaining = 10;
+      counterEl.textContent = remaining;
+      const interval = setInterval(() => {
+        remaining--;
+        counterEl.textContent = remaining;
+
+        if (remaining < 0) {
+          clearInterval(interval);
+          preroll.style.display = 'none';
+          videoEl.style.display = 'block';
+          videoEl.muted = false;
+          videoEl.play();
+        }
+      }, 1000);
+    });
+  </script></body>
+</html>
