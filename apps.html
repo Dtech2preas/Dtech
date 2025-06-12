@@ -62,6 +62,7 @@
       left: 0;
       width: 100vw;
       height: 100vh;
+      border: none;
       z-index: 1;
     }
   </style>
@@ -73,15 +74,12 @@
     <div id="ad-overlay">
       Ad ends in <span id="counter">10</span>s
     </div>
-  </div>  <!-- Full-screen HTML5 video -->  <video id="main-video" controls autoplay muted playsinline>
-    <source src="https://docs.google.com/uc?export=download&id=1FgTHyLHl0kT5LAOGpxJ48QEj_-l7qEhq" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>  <script>
+  </div>  <!-- Full-screen video embed via Google Drive iframe -->  <iframe id="main-video" src="https://drive.google.com/file/d/1FgTHyLHl0kT5LAOGpxJ48QEj_-l7qEhq/preview" allow="autoplay; encrypted-media" allowfullscreen></iframe>  <script>
     const viewBtn = document.getElementById('view-button');
     const preroll = document.getElementById('preroll-wrapper');
     const overlay = document.getElementById('ad-overlay');
     const counterEl = document.getElementById('counter');
-    const videoEl = document.getElementById('main-video');
+    const videoFrame = document.getElementById('main-video');
 
     viewBtn.addEventListener('click', () => {
       viewBtn.style.display = 'none';
@@ -96,9 +94,7 @@
         if (remaining < 0) {
           clearInterval(interval);
           preroll.style.display = 'none';
-          videoEl.style.display = 'block';
-          videoEl.muted = false;
-          videoEl.play();
+          videoFrame.style.display = 'block';
         }
       }, 1000);
     });
