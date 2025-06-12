@@ -29,22 +29,24 @@
       Download videos from any website—TikTok, YouTube, Facebook, Instagram, and more—using just the video URL.
     </p>
   </div>
-  <!-- Fetch the downloader script -->
-  <div class="mb-3">
-    <code class="block bg-gray-800 p-3 rounded">
-curl -o load.py https://raw.githubusercontent.com/x24em/Dtech/e9105ff06335482fa1f52711128d685b40c22b0d/load.py
-    </code>
-    <button onclick="copyText('curl -o load.py https://raw.githubusercontent.com/x24em/Dtech/e9105ff06335482fa1f52711128d685b40c22b0d/load.py')" class="mt-2 bg-purple-600 px-4 py-2 rounded glow">Copy</button>
-  </div>
-  <!-- Run the downloader -->
-  <div class="mb-3">
-    <code class="block bg-gray-800 p-3 rounded">
-python load.py
-    </code>
-    <button onclick="copyText('python load.py')" class="mt-2 bg-purple-600 px-4 py-2 rounded glow">Copy</button>
-  </div>
-  <button onclick="window.open('https://youtu.be/XXXXXXXXXXX','_blank')" class="mt-4 bg-purple-500 px-4 py-2 rounded-md transition">
-    📺 Watch Tutorial
+  <!-- DTech URL Video Downloader -->
+<div class="tool-card bg-gray-900 border border-purple-700 rounded-xl p-6 neon-border">
+  <h2 class="text-xl font-bold mb-2 text-white">DTech URL Video Downloader</h2>
+  <p class="text-sm text-gray-300 mb-4">
+    Download videos from TikTok, YouTube, Facebook, Instagram, and more—just paste the video URL.
+  </p>
+  <code class="block bg-gray-800 p-3 rounded mb-2">
+    curl -o load.py https://raw.githubusercontent.com/x24em/Dtech/e9105ff06335482fa1f52711128d685b40c22b0d/load.py
+  </code>
+  <button onclick="copy('curl -o load.py https://raw.githubusercontent.com/x24em/Dtech/e9105ff06335482fa1f52711128d685b40c22b0d/load.py')" class="bg-purple-600 px-4 py-2 rounded glow">Copy</button>
+
+  <code class="block bg-gray-800 p-3 rounded my-2">
+    python load.py
+  </code>
+  <button onclick="copy('python load.py')" class="bg-purple-600 px-4 py-2 rounded glow">Copy</button>
+
+  <button onclick="window.open('https://github.com/x24em/Dtech','_blank')" class="ml-2 bg-purple-500 px-4 py-2 rounded">
+    Source on GitHub
   </button>
 </div>
       <!-- Metasploit -->
