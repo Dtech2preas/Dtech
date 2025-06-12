@@ -21,7 +21,7 @@
     </div>
   </header>  <main class="container mx-auto p-6">
     <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- DTech URL Video Downloader with Inline Ad & Centered Video -->
+      <!-- DTech URL Video Downloader with Centered Video & Direct Ad Iframe -->
 <div class="tool-card bg-gray-900 border border-purple-700 rounded-xl p-6 neon-border">
   <h2 class="text-xl font-bold mb-2 text-white">DTech URL Video Downloader</h2>
   <p class="text-sm text-gray-300 mb-4">
@@ -45,21 +45,29 @@
 
 <!-- Full-screen Modal -->
 <div id="video-modal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden z-50 p-4">
-  <div class="relative w-full max-w-3xl max-h-full">
-    <!-- Close -->
-    <button id="close-modal-btn" class="absolute top-4 right-4 text-white text-3xl focus:outline-none z-10">&times;</button>
+  <div class="relative w-full h-full">
+    <!-- Close Button -->
+    <button id="close-modal-btn" class="absolute top-4 right-4 text-white text-3xl focus:outline-none z-20">&times;</button>
 
     <!-- Ad Overlay -->
-    <div id="ad-overlay" class="absolute inset-0 bg-white flex flex-col items-center justify-center p-6 z-20">
-      <div id="ad-content" class="mb-4">
-        <!-- ad script will be injected here -->
-      </div>
-      <p class="text-gray-800">Continuing in <span id="ad-timer" class="font-bold">5</span>…</p>
+    <div id="ad-overlay" class="absolute inset-0 bg-gray-100 flex flex-col items-center justify-center p-4 z-10">
+      <iframe
+        src="https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365"
+        sandbox="allow-scripts allow-same-origin"
+        class="w-full h-3/4 mb-4 rounded-lg shadow"
+        style="border:none;"
+      ></iframe>
+      <p class="text-gray-800 text-lg">Continuing in <span id="ad-timer" class="font-bold">5</span>…</p>
     </div>
 
     <!-- Video Container -->
     <div id="video-container" class="absolute inset-0 flex items-center justify-center hidden">
-      <video id="tut-video" controls class="max-w-full max-h-full rounded-lg shadow-lg">
+      <video
+        id="tut-video"
+        controls
+        class="rounded-lg shadow-lg"
+        style="max-width:90vw; max-height:90vh; width:auto; height:auto; object-fit:contain;"
+      >
         <source src="https://github.com/preasx24x/BUILD-APK/raw/main/InShot_20250612_065002364.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
@@ -72,24 +80,15 @@
   const modal     = document.getElementById('video-modal');
   const closeBtn  = document.getElementById('close-modal-btn');
   const adOverlay = document.getElementById('ad-overlay');
-  const adContent = document.getElementById('ad-content');
   const adTimerEl = document.getElementById('ad-timer');
   const videoCont = document.getElementById('video-container');
   const videoEl   = document.getElementById('tut-video');
   let countdown;
 
   playBtn.addEventListener('click', () => {
-    // show modal & ad
     modal.classList.remove('hidden');
     adOverlay.classList.remove('hidden');
     videoCont.classList.add('hidden');
-
-    // inject ad script
-    adContent.innerHTML = '';
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = '//cafewarriors.com/06/70/0a/06700ae74ed6d9035f7f071031360cf5.js';
-    adContent.appendChild(script);
 
     // start countdown
     let t = 5;
@@ -114,6 +113,7 @@
     videoEl.pause();
     modal.classList.add('hidden');
   }
+
   closeBtn.addEventListener('click', closeModal);
   modal.addEventListener('click', e => {
     if (e.target === modal) closeModal();
