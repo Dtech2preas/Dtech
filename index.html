@@ -436,4 +436,83 @@
             </div>
             <div>
               <label class="text-sm text-blue-300 mb-1 block">Command 2:</label>
-              <div class="command-box p-3 rou
+              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+                <code class="text-green-400">tool-name --another-option</code>
+                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                        data-cmd="tool-name --another-option">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-xl font-semibold mb-2 text-blue-300">Video Tutorial</h3>
+          <div class="aspect-w-16 aspect-h-9 bg-gray-800 rounded-lg overflow-hidden">
+            <iframe id="modalVideo" class="w-full h-64" src="https://www.youtube.com/embed/" frameborder="0" allowfullscreen></iframe>
+          </div>
+        </div>
+        
+        <div class="flex justify-center">
+          <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded glow flex items-center"
+                  id="modalTutorialBtn">
+            <i class="fab fa-youtube mr-2"></i> Watch Full Tutorial
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Copy command functionality
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const cmd = this.getAttribute('data-cmd');
+        navigator.clipboard.writeText(cmd).then(() => {
+          // Visual feedback
+          this.innerHTML = '<i class="fas fa-check"></i>';
+          this.classList.add('copied');
+          setTimeout(() => {
+            this.innerHTML = '<i class="far fa-copy"></i>';
+            this.classList.remove('copied');
+          }, 2000);
+        });
+      });
+    });
+    
+    // Modal functionality
+    const modal = document.getElementById('toolModal');
+    const closeModal = document.getElementById('closeModal');
+    
+    // Close modal
+    closeModal.addEventListener('click', () => {
+      modal.classList.add('hidden');
+    });
+    
+    // Close when clicking outside
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+      }
+    });
+    
+    // Example of opening modal (would be connected to your "More Info" buttons)
+    function openToolModal(toolData) {
+      // This would be populated with actual tool data
+      document.getElementById('modalTitle').textContent = toolData.name;
+      document.getElementById('modalDescription').textContent = toolData.description;
+      document.getElementById('modalInstallCmd').textContent = toolData.installCmd;
+      document.getElementById('modalVideo').src = `https://www.youtube.com/embed/${toolData.videoId}`;
+      document.getElementById('modalTutorialBtn').onclick = () => window.open(toolData.videoUrl, '_blank');
+      
+      // Set icon based on category
+      const icon = document.getElementById('modalIcon');
+      icon.className = `p-4 rounded-lg mr-4 ${toolData.iconColor}`;
+      icon.innerHTML = `<i class="${toolData.iconClass} text-3xl"></i>`;
+      
+      modal.classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
