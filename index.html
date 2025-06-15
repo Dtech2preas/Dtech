@@ -126,51 +126,44 @@
       </h2>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Nmap Tool Card -->
-        <div class="tool-card group relative overflow-hidden shadow-xl">
-          <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 opacity-20 group-hover:opacity-30 transition"></div>
-          <div class="relative p-6">
-            <div class="flex items-center mb-4">
-              <div class="bg-blue-600 p-3 rounded-lg mr-4">
-                <i class="fas fa-network-wired text-2xl"></i>
-              </div>
-              <h3 class="text-xl font-bold">Nmap</h3>
-            </div>
-            <p class="text-gray-300 mb-4">Network discovery and security auditing tool. Scan networks, discover hosts, services, and vulnerabilities.</p>
-            
-            <div class="mb-4">
-              <label class="text-sm text-blue-300 mb-1 block">Installation:</label>
-              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
-                <code class="text-green-400">pkg install nmap -y</code>
-                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
-                        data-cmd="pkg install nmap -y">
-                  <i class="far fa-copy"></i>
-                </button>
-              </div>
-            </div>
-            
-            <div class="mb-4">
-              <label class="text-sm text-blue-300 mb-1 block">Basic Scan:</label>
-              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
-                <code class="text-green-400">nmap -sV target.com</code>
-                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
-                        data-cmd="nmap -sV target.com">
-                  <i class="far fa-copy"></i>
-                </button>
-              </div>
-            </div>
-            
-            <div class="flex justify-between mt-6">
-              <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center">
-                <i class="fas fa-info-circle mr-2"></i> More Info
-              </button>
-              <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center"
-                      onclick="window.open('https://youtu.be/nmap-tutorial','_blank')">
-                <i class="fab fa-youtube mr-2"></i> Tutorial
-              </button>
-            </div>
-          </div>
-        </div>
+        <!-- Termux initial requirements Tool Card -->
+<div class="tool-card group relative overflow-hidden shadow-xl">
+  <div class="absolute inset-0 bg-gradient-to-br from-amber-600 to-red-800 opacity-20 group-hover:opacity-30 transition"></div>
+  <div class="relative p-6">
+    <div class="flex items-center mb-4">
+      <div class="bg-amber-600 p-3 rounded-lg mr-4">
+        <i class="fas fa-database text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold">Termux initial requirements</h3>
+    </div>
+    <p class="text-gray-300 mb-4">commands you should excute right after downloading termux (very important)</p>
+
+    <div class="mb-4">
+      <label class="text-sm text-blue-300 mb-1 block">Installation:</label>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">pkg update && pkg upgrade -y</code>
+        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="pkg update && pkg upgrade -y">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">pkg install python git curl wget -y</code>
+        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="pkg install python git curl wget -y">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365','_blank')">
+        <i class="fas fa-info-circle mr-2"></i> More Info
+      </button>
+      <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('sj','_blank')">
+        <i class="fab fa-youtube mr-2"></i> Tutorial
+      </button>
+    </div>
+  </div>
+</div>
         
         <!-- DTECH URL VIDEO DOWNLOADER Tool Card -->
 <div class="tool-card group relative overflow-hidden shadow-xl">
@@ -185,7 +178,7 @@
     <p class="text-gray-300 mb-4">this tools lets you download any kind of video from any type of url (tik tok ,facebook,youtube,instagram and any other site)</p>
 
     <div class="mb-4">
-      <label class="text-sm text-blue-300 mb-1 block">Installation:</label>
+      <label class="text-sm text-green-300 mb-1 block">Installation:</label>
       <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
         <code class="text-green-400">curl -o load.py https://raw.githubusercontent.com/x24em/Dtech/e9105ff06335482fa1f52711128d685b40c22b0d/load.py</code>
         <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="curl -o load.py https://raw.githubusercontent.com/x24em/Dtech/e9105ff06335482fa1f52711128d685b40c22b0d/load.py">
@@ -194,7 +187,7 @@
       </div>
       <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
         <code class="text-green-400">python load.py</code>
-        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="python load.py">
+        <button class="copy-btn bg-green-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="python load.py">
           <i class="far fa-copy"></i>
         </button>
       </div>
