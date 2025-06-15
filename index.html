@@ -1,282 +1,439 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<!-- SEO & Metadata for Google (Preasx24) -->
-<title>Preasx24 | Founder of DTECH | South African Student Tech Innovator</title>
-<meta name="description" content="Preasx24 is a Diploma in Management student at Nelson Mandela University and a self-taught full-stack web developer, UX/UI designer, and tech innovator. As founder of DTECH, he builds marketplaces, ed-tech hubs, CI/CD pipelines, animated brand experiences, and free web sponsorship programs to empower youth." />
-<meta name="keywords" content="Preasx24, DTECH, student entrepreneur, web developer, UX/UI designer, Nelson Mandela University, Web Workers, LocalForage, GitHub Actions, HTML/CSS/JS, digital innovation, free website sponsorship, second-hand marketplace, past-paper platform, APS calculator" />
-<meta name="author" content="Preasx24" />
-<meta name="robots" content="index, follow" />
-<link rel="canonical" href="https://preasx24.co.za/" />
-
-<!-- Open Graph (Facebook, LinkedIn, etc.) -->
-<meta property="og:title" content="Preasx24 | Student Tech Founder & Innovator" />
-<meta property="og:description" content="Meet Preasx24—a Management Diploma student and self-taught developer behind DTECH’s Services, Info, HQ, General & Uni platforms—empowering South African youth through technology." />
-<meta property="og:image" content="https://preasx24.co.za/images/preasx24.jpg" />
-<meta property="og:url" content="https://preasx24.co.za" />
-<meta property="og:type" content="profile" />
-<meta property="og:site_name" content="DTECH Hub" />
-
-<!-- Twitter Cards -->
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Who is Preasx24?" />
-<meta name="twitter:description" content="Discover Preasx24—NMU Management student, full-stack web dev, UX/UI designer, and founder of DTECH’s multi-branch digital ecosystem for student empowerment." />
-<meta name="twitter:image" content="https://preasx24.co.za/images/preasx24.jpg" />
-<meta name="twitter:site" content="@preasx24" />
-
-<!-- Structured Data (JSON-LD) -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Person",
-      "@id": "https://preasx24.co.za/#person",
-      "name": "Preasx24",
-      "url": "https://preasx24.co.za",
-      "jobTitle": "Founder & CEO",
-      "worksFor": { "@type": "Organization", "@id": "https://www.dtech-services.co.za/#org" },
-      "alumniOf": {
-        "@type": "CollegeOrUniversity",
-        "name": "Nelson Mandela University",
-        "description": "Diploma in Management"
-      },
-      "knowsAbout": [
-        "Full-stack Web Development (HTML, CSS, JavaScript)",
-        "Client-side Performance Optimization (Web Workers, LocalForage)",
-        "Static Site Architectures & JSON Search",
-        "Android CI/CD Pipelines with GitHub Actions",
-        "UX/UI Design & CSS/SVG Animations",
-        "SEO & Metadata Strategy",
-        "EdTech Platform Design",
-        "E-commerce & Marketplace Business Models",
-        "Data Structures in JavaScript",
-        "Static Hosting on GitHub Pages"
-      ],
-      "description": "A self-taught coder and Diploma in Management student who built DTECH: five interconnected platforms delivering rentals & resale, student Q&A, innovation tools, study resources, and university eligibility estimators—all aimed at youth empowerment.",
-      "address": {
-        "@type": "PostalAddress",
-        "addressLocality": "Port Elizabeth",
-        "addressRegion": "Eastern Cape",
-        "addressCountry": "South Africa"
-      },
-      "contactPoint": [
-        {
-          "@type": "ContactPoint",
-          "contactType": "customer support",
-          "email": "mailto: dtech2services@gmail.com"
-        },
-        {
-          "@type": "ContactPoint",
-          "contactType": "whatsapp",
-          "telephone": "+27-67-001-5423"
-        }
-      ],
-      "sameAs": [
-        "https://about.me/preasx24",
-        "https://www.instagram.com/preasx24",
-        "https://www.linkedin.com/in/d-tech-services-722b19363",
-        "https://facebook.com/D-techDestroyers-legion--100054886954297"
-      ]
-    },
-    {
-      "@type": "Organization",
-      "@id": "https://www.dtech-services.co.za/#org",
-      "name": "DTECH Services",
-      "url": "https://www.dtech-services.co.za",
-      "logo": "https://preasx24.co.za/images/dtech-logo.png",
-      "description": "Student-focused second-hand marketplace and rental platform with full KYC for new users and streamlined login for returning customers."
-    },
-    {
-      "@type": "Organization",
-      "@id": "https://info.dtech24.co.za/#org",
-      "name": "DTECH Info",
-      "url": "https://info.dtech24.co.za",
-      "description": "NMU student guides and Q&A hub covering orientation, NSFAS, accommodation, course changes, application outcomes, and textbook purchases."
-    },
-    {
-      "@type": "Organization",
-      "@id": "https://www.dtech24.co.za/#org",
-      "name": "DTECH HQ",
-      "url": "https://www.dtech24.co.za",
-      "description": "Innovation hub offering bots, file sharing, tutorials, FAQs, giveaways, and host-finder utilities."
-    },
-    {
-      "@type": "Organization",
-      "@id": "https://preasx24.co.za/#org",
-      "name": "DTECH General",
-      "url": "https://preasx24.co.za",
-      "description": "Comprehensive study resource portal with past papers, videos, audio guides, quizzes, SBA/PAT tutorials, NSFAS info, and live visitor metrics."
-    },
-    {
-      "@type": "Organization",
-      "@id": "https://uni.dtech24.co.za/#org",
-      "name": "DTECH Uni Eligibility",
-      "url": "https://uni.dtech24.co.za",
-      "description": "South African university APS calculator and acceptance-chance estimator for UL, UJ, UP, WITS, UCT, and more."
-    }
-  ]
-}
-</script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DTECH App Store</title>
+  <title>DTECH Termux Tools</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
   <style>
+    :root {
+      --primary: #3b82f6;
+      --secondary: #10b981;
+      --accent: #f59e0b;
+      --dark: #0f172a;
+      --darker: #020617;
+    }
+    
     body {
-      background: linear-gradient(to bottom right, #0f172a, #1e293b);
+      background: linear-gradient(to bottom right, var(--darker), var(--dark));
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+    
     .glow {
-      box-shadow: 0 0 20px #3b82f6, 0 0 30px #60a5fa;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.7);
+      transition: all 0.3s ease;
     }
-    .app-card:hover, .tool-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 0 20px #3b82f6, 0 0 30px #60a5fa;
+    
+    .glow:hover {
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.9);
     }
-    .category-button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 0 12px #3b82f6, 0 0 20px #60a5fa;
+    
+    .tool-card {
+      transition: all 0.3s ease;
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border-radius: 12px;
+      overflow: hidden;
+      border-left: 4px solid var(--primary);
     }
-    .fade-in {
-      animation: fadeIn 2s ease-in-out;
+    
+    .tool-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
     }
-    .slide-in {
-      animation: slideIn 1s ease-out forwards;
-      transform: translateX(-100%);
-      opacity: 0;
+    
+    .neon-text {
+      text-shadow: 0 0 8px rgba(59, 130, 246, 0.7);
     }
-    @keyframes slideIn {
-      to { transform: translateX(0); opacity: 1; }
+    
+    .command-box {
+      background: rgba(15, 23, 42, 0.7);
+      border-left: 3px solid var(--accent);
     }
-    @keyframes fadeIn {
-      from { opacity: 0; } to { opacity: 1; }
+    
+    .copy-btn {
+      transition: all 0.2s ease;
     }
-    .neon-border {
-      border: 2px solid #3b82f6;
-      box-shadow: 0 0 5px #3b82f6, 0 0 10px #3b82f6;
+    
+    .copy-btn:hover {
+      transform: scale(1.05);
     }
-    .pulse {
-      animation: pulse 2s infinite;
+    
+    .copy-btn.copied {
+      background-color: var(--secondary) !important;
     }
-    @keyframes pulse {
-      0%,100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+    
+    .gradient-text {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .floating {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #60a5fa;
     }
   </style>
 </head>
-<body class="font-sans text-white fade-in">
-  <a href="https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365" class="fixed top-0 right-0 m-2 text-sm bg-white text-blue-900 px-3 py-1 rounded-full shadow hover:bg-blue-100 transition z-50">Support</a>  <header class="bg-gradient-to-r from-black via-blue-900 to-black text-white p-6 shadow-lg slide-in">
-    <div class="container mx-auto flex items-center space-x-4">
-      <img src="logo.png" alt="DTECH Logo" class="h-14 w-14 rounded-full bg-white p-1 border-4 border-blue-400 shadow-lg pulse">
+<body class="text-gray-200">
+  <!-- Floating Support Button -->
+  <a href="https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365" 
+     class="fixed top-4 right-4 z-50 bg-gradient-to-r from-blue-600 to-blue-400 text-white px-4 py-2 rounded-full shadow-lg glow flex items-center hover:scale-105 transition-transform">
+    <i class="fas fa-heart mr-2"></i> Support Us
+  </a>
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 shadow-xl">
+    <div class="container mx-auto flex items-center">
+      <img src="logo.png" alt="DTECH Logo" class="h-16 w-16 rounded-full bg-white p-1 border-4 border-blue-400 shadow-lg floating mr-4">
       <div>
-        <h1 class="text-3xl font-extrabold tracking-wide text-blue-400">DTECH App Store</h1>
-        <p class="text-sm italic text-blue-200">Empowering the Youth Through Digital Innovation</p>
+        <h1 class="text-4xl font-extrabold tracking-tight neon-text">DTECH Termux Tools</h1>
+        <p class="text-blue-200 italic">Ultimate collection of hacking & security tools</p>
       </div>
     </div>
-  </header>  <main class="container mx-auto p-6">
-    <!-- Categories -->
-    <section class="mb-6 slide-in">
-      <h2 class="text-2xl font-bold mb-4 text-blue-300">Categories</h2>
-      <div class="grid grid-cols-2 md:grid-cols-6 gap-4">
-        <a href="tools.html" class="category-button bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg rounded-lg p-4 font-semibold text-center transition block border-2 border-white neon-border">Termux Tools</a>
-        <a href="apps.html" class="category-button bg-gradient-to-r from-purple-600 to-pink-500 text-white shadow-lg rounded-lg p-4 font-semibold text-center transition block border-2 border-white neon-border">Apps</a>
-      </div>
-    </section><!-- Termux Tools -->
-<section id="tools" class="mb-12 slide-in">
-  <h2 class="text-2xl font-bold mb-6 text-blue-300">Featured Termux Tools</h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-  <!-- Termux Initial Setup Card -->
-<div class="tool-card bg-gray-900 border border-green-700 shadow-lg rounded-xl overflow-hidden transition duration-300 p-6 neon-border">
-  <div class="mb-4">
-    <h3 class="text-lg font-bold text-white">Termux Initial Setup</h3>
-    <p class="text-sm text-gray-300 mb-3">
-      Run these commands in Termux to update your package lists, upgrade installed packages, and install common tools like Python, curl, git, and pip.
-    </p>
-  </div>
-  <!-- Update & Upgrade -->
-  <div class="mb-3">
-    <code class="block bg-gray-800 p-3 rounded">pkg update && pkg upgrade -y</code>
-    <button onclick="copyText('pkg update && pkg upgrade -y')" class="mt-2 bg-green-600 px-4 py-2 rounded glow">Copy</button>
-  </div>
-  <!-- Install Core Packages -->
-  <div class="mb-3">
-    <code class="block bg-gray-800 p-3 rounded">
-pkg install python git curl wget -y
-    </code>
-    <button onclick="copyText('pkg install python git curl wget -y')" class="mt-2 bg-green-600 px-4 py-2 rounded glow">Copy</button>
-  </div>
-  <!-- Upgrade pip -->
-  <div class="mb-3">
-    <code class="block bg-gray-800 p-3 rounded">pip install --upgrade pip</code>
-    <button onclick="copyText('pip install --upgrade pip')" class="mt-2 bg-green-600 px-4 py-2 rounded glow">Copy</button>
-  </div>
-  <!-- (Optional) Install Additional Utilities -->
-  <div class="mb-3">
-    <code class="block bg-gray-800 p-3 rounded">pkg install nano vim openssh -y</code>
-    <button onclick="copyText('pkg install nano vim openssh -y')" class="mt-2 bg-green-600 px-4 py-2 rounded glow">Copy</button>
-  </div>
-  <button onclick="window.open('https://youtu.be/XXXXXXXXXXX','_blank')" class="mt-4 bg-green-500 px-4 py-2 rounded-md transition">
-    📺 Watch Termux Setup Tutorial
-  </button>
-</div>
+  </header>
 
-    <!-- Nmap Tool Card -->
-    <div class="tool-card bg-gray-900 border border-blue-700 shadow-lg rounded-xl overflow-hidden transition duration-300 p-6 neon-border">
-      <div class="mb-4">
-        <h3 class="text-lg font-bold text-white">Nmap</h3>
-        <p class="text-sm text-gray-300 mb-3">Nmap is a powerful network scanner that discovers hosts, services, and vulnerabilities on your network.</p>
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- Featured Tools Section -->
+    <section class="mb-12">
+      <h2 class="text-3xl font-bold mb-6 gradient-text flex items-center">
+        <i class="fas fa-fire mr-3"></i> Termux Tools Collection
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Nmap Tool Card -->
+        <div class="tool-card group relative overflow-hidden shadow-xl">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 opacity-20 group-hover:opacity-30 transition"></div>
+          <div class="relative p-6">
+            <div class="flex items-center mb-4">
+              <div class="bg-blue-600 p-3 rounded-lg mr-4">
+                <i class="fas fa-network-wired text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold">Nmap</h3>
+            </div>
+            <p class="text-gray-300 mb-4">Network discovery and security auditing tool. Scan networks, discover hosts, services, and vulnerabilities.</p>
+            
+            <div class="mb-4">
+              <label class="text-sm text-blue-300 mb-1 block">Installation:</label>
+              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+                <code class="text-green-400">pkg install nmap -y</code>
+                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                        data-cmd="pkg install nmap -y">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="text-sm text-blue-300 mb-1 block">Basic Scan:</label>
+              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+                <code class="text-green-400">nmap -sV target.com</code>
+                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                        data-cmd="nmap -sV target.com">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="flex justify-between mt-6">
+              <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center">
+                <i class="fas fa-info-circle mr-2"></i> More Info
+              </button>
+              <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center"
+                      onclick="window.open('https://youtu.be/nmap-tutorial','_blank')">
+                <i class="fab fa-youtube mr-2"></i> Tutorial
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Metasploit Tool Card -->
+        <div class="tool-card group relative overflow-hidden shadow-xl">
+          <div class="absolute inset-0 bg-gradient-to-br from-red-600 to-purple-800 opacity-20 group-hover:opacity-30 transition"></div>
+          <div class="relative p-6">
+            <div class="flex items-center mb-4">
+              <div class="bg-red-600 p-3 rounded-lg mr-4">
+                <i class="fas fa-shield-alt text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold">Metasploit Framework</h3>
+            </div>
+            <p class="text-gray-300 mb-4">Penetration testing platform that enables you to find, exploit, and validate vulnerabilities.</p>
+            
+            <div class="mb-4">
+              <label class="text-sm text-blue-300 mb-1 block">Installation:</label>
+              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+                <code class="text-green-400">pkg install unstable-repo && pkg install metasploit</code>
+                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                        data-cmd="pkg install unstable-repo && pkg install metasploit">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="text-sm text-blue-300 mb-1 block">Start Framework:</label>
+              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+                <code class="text-green-400">msfconsole</code>
+                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                        data-cmd="msfconsole">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="flex justify-between mt-6">
+              <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center">
+                <i class="fas fa-info-circle mr-2"></i> More Info
+              </button>
+              <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center"
+                      onclick="window.open('https://youtu.be/metasploit-tutorial','_blank')">
+                <i class="fab fa-youtube mr-2"></i> Tutorial
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Termux Setup Card -->
+        <div class="tool-card group relative overflow-hidden shadow-xl">
+          <div class="absolute inset-0 bg-gradient-to-br from-green-600 to-blue-800 opacity-20 group-hover:opacity-30 transition"></div>
+          <div class="relative p-6">
+            <div class="flex items-center mb-4">
+              <div class="bg-green-600 p-3 rounded-lg mr-4">
+                <i class="fas fa-terminal text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold">Termux Setup</h3>
+            </div>
+            <p class="text-gray-300 mb-4">Essential commands to set up your Termux environment with all necessary packages.</p>
+            
+            <div class="mb-4">
+              <label class="text-sm text-blue-300 mb-1 block">Update & Upgrade:</label>
+              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+                <code class="text-green-400">pkg update && pkg upgrade -y</code>
+                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                        data-cmd="pkg update && pkg upgrade -y">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="mb-4">
+              <label class="text-sm text-blue-300 mb-1 block">Install Essentials:</label>
+              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+                <code class="text-green-400">pkg install python git curl wget -y</code>
+                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                        data-cmd="pkg install python git curl wget -y">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="flex justify-between mt-6">
+              <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center">
+                <i class="fas fa-info-circle mr-2"></i> More Info
+              </button>
+              <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center"
+                      onclick="window.open('https://youtu.be/termux-setup-tutorial','_blank')">
+                <i class="fab fa-youtube mr-2"></i> Tutorial
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hydra Tool Card -->
+        <div class="tool-card group relative overflow-hidden shadow-xl">
+          <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-pink-800 opacity-20 group-hover:opacity-30 transition"></div>
+          <div class="relative p-6">
+            <div class="flex items-center mb-4">
+              <div class="bg-purple-600 p-3 rounded-lg mr-4">
+                <i class="fas fa-key text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold">Hydra</h3>
+            </div>
+            <p class="text-gray-300 mb-4">Powerful brute-force attack tool that supports numerous protocols to attack.</p>
+            
+            <div class="mb-4">
+              <label class="text-sm text-blue-300 mb-1 block">Installation:</label>
+              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+                <code class="text-green-400">pkg install hydra -y</code>
+                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                        data-cmd="pkg install hydra -y">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="flex justify-between mt-6">
+              <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center">
+                <i class="fas fa-info-circle mr-2"></i> More Info
+              </button>
+              <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center"
+                      onclick="window.open('https://youtu.be/hydra-tutorial','_blank')">
+                <i class="fab fa-youtube mr-2"></i> Tutorial
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- SQLmap Tool Card -->
+        <div class="tool-card group relative overflow-hidden shadow-xl">
+          <div class="absolute inset-0 bg-gradient-to-br from-amber-600 to-red-800 opacity-20 group-hover:opacity-30 transition"></div>
+          <div class="relative p-6">
+            <div class="flex items-center mb-4">
+              <div class="bg-amber-600 p-3 rounded-lg mr-4">
+                <i class="fas fa-database text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold">SQLmap</h3>
+            </div>
+            <p class="text-gray-300 mb-4">Automatic SQL injection and database takeover tool for detecting and exploiting SQL flaws.</p>
+            
+            <div class="mb-4">
+              <label class="text-sm text-blue-300 mb-1 block">Installation:</label>
+              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+                <code class="text-green-400">pkg install sqlmap -y</code>
+                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                        data-cmd="pkg install sqlmap -y">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="flex justify-between mt-6">
+              <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center">
+                <i class="fas fa-info-circle mr-2"></i> More Info
+              </button>
+              <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center"
+                      onclick="window.open('https://youtu.be/sqlmap-tutorial','_blank')">
+                <i class="fab fa-youtube mr-2"></i> Tutorial
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Wireshark Tool Card -->
+        <div class="tool-card group relative overflow-hidden shadow-xl">
+          <div class="absolute inset-0 bg-gradient-to-br from-indigo-600 to-blue-800 opacity-20 group-hover:opacity-30 transition"></div>
+          <div class="relative p-6">
+            <div class="flex items-center mb-4">
+              <div class="bg-indigo-600 p-3 rounded-lg mr-4">
+                <i class="fas fa-project-diagram text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold">Tshark (Wireshark CLI)</h3>
+            </div>
+            <p class="text-gray-300 mb-4">Network protocol analyzer that lets you capture and interactively browse network traffic.</p>
+            
+            <div class="mb-4">
+              <label class="text-sm text-blue-300 mb-1 block">Installation:</label>
+              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+                <code class="text-green-400">pkg install tshark -y</code>
+                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                        data-cmd="pkg install tshark -y">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            
+            <div class="flex justify-between mt-6">
+              <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center">
+                <i class="fas fa-info-circle mr-2"></i> More Info
+              </button>
+              <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center"
+                      onclick="window.open('https://youtu.be/wireshark-tutorial','_blank')">
+                <i class="fab fa-youtube mr-2"></i> Tutorial
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="mb-3">
-        <code class="block bg-gray-800 p-3 rounded">pkg install nmap</code>
-        <button onclick="copyText('pkg install nmap')" class="mt-2 bg-blue-600 px-4 py-2 rounded glow">Copy</button>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-8 mt-12">
+    <div class="container mx-auto px-4 text-center">
+      <div class="mb-6">
+        <div class="flex items-center justify-center">
+          <img src="logo.png" alt="DTECH Logo" class="h-12 w-12 rounded-full bg-white p-1 border-2 border-blue-400 mr-3">
+          <h2 class="text-2xl font-bold">DTECH Termux Tools</h2>
+        </div>
+        <p class="text-blue-200 mt-2">Empowering ethical hackers and security researchers</p>
       </div>
-      <button onclick="window.open('https://youtu.be/example2','_blank')" class="mt-4 bg-blue-500 px-4 py-2 rounded-md transition">📺 Watch Tutorial</button>
+      
+      <div class="border-t border-blue-700 pt-6 text-blue-300">
+        <p>© 2025 DTECH Termux Tools. All rights reserved. | Powered by Preasx24</p>
+        <p class="text-sm mt-2">For educational purposes only. Use responsibly.</p>
+      </div>
     </div>
-  </div>
-</section>
+  </footer>
 
-<!-- Apps Section -->
-<section id="apps" class="slide-in">
-  <h2 class="text-2xl font-bold mb-6 text-blue-300">Featured Apps</h2>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-    <!-- DTECH Calculator App Card -->
-    <div class="app-card bg-gray-900 border border-blue-700 shadow-lg rounded-xl overflow-hidden transition duration-300 p-6 neon-border">
-      <div class="mb-4">
-        <img src="icon.png" alt="App Icon" class="w-16 h-16 object-contain mb-2">
-        <h3 class="text-lg font-bold text-white">DTECH Calculator</h3>
-      </div>
-      <p class="text-sm text-gray-300 mb-4">Helps students calculate APS scores and find qualifying courses.</p>
-      <a href="apps/dtech-calculator.apk" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow transition">Download APK</a>
-    </div>
-
-    <!-- Info App Card -->
-    <div class="app-card bg-gray-900 border border-blue-700 shadow-lg rounded-xl overflow-hidden transition duration-300 p-6 neon-border">
-      <div class="mb-4">
-        <i class="fas fa-info-circle fa-3x text-blue-400 mb-2"></i>
-        <h3 class="text-lg font-bold text-white">DTECH Info App</h3>
-      </div>
-      <p class="text-sm text-gray-300 mb-4">Access tutorials, commands, and resources all in one place.</p>
-      <a href="https://example.com/dtech-info.apk" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow transition" download>Download APK</a>
-    </div>
-
-    <!-- Tools Hub App Card -->
-    <div class="app-card bg-gray-900 border border-blue-700 shadow-lg rounded-xl overflow-hidden transition duration-300 p-6 neon-border">
-      <div class="mb-4">
-        <i class="fas fa-tools fa-3x text-blue-400 mb-2"></i>
-        <h3 class="text-lg font-bold text-white">DTECH Tools Hub</h3>
-      </div>
-      <p class="text-sm text-gray-300 mb-4">Manage and run multiple Termux tools from a simple interface.</p>
-      <a href="https://example.com/dtech-tools.apk" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow transition" download>Download APK</a>
-    </div>
-  </div>
-</section>
-
-  </main>  <footer class="bg-black text-white p-4 text-center mt-10 shadow-inner slide-in">
-    <p class="text-sm text-blue-300">Powered by <strong>Preasx24</strong> | DTECH 2025</p>
-  </footer>  <script>
-    function copyText(text) {
-      navigator.clipboard.writeText(text);
-      alert('Copied to clipboard!');
-    }
-  </script></body>
-</html>
+  <!-- Tool Details Modal -->
+  <div id="toolModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center hidden">
+    <div class="bg-gray-900 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative" style="border: 2px solid #3b82f6;">
+      <button id="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">
+        <i class="fas fa-times"></i>
+      </button>
+      
+      <div class="p-6">
+        <div class="flex items-center mb-6">
+          <div id="modalIcon" class="bg-blue-600 p-4 rounded-lg mr-4">
+            <i class="fas fa-toolbox text-3xl"></i>
+          </div>
+          <h2 id="modalTitle" class="text-2xl font-bold gradient-text">Tool Name</h2>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-xl font-semibold mb-2 text-blue-300">Description</h3>
+          <p id="modalDescription" class="text-gray-300">Tool description goes here with detailed information about its functionality and use cases.</p>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-xl font-semibold mb-2 text-blue-300">Installation</h3>
+          <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+            <code id="modalInstallCmd" class="text-green-400">pkg install tool-name</code>
+            <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                    data-cmd="pkg install tool-name">
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-xl font-semibold mb-2 text-blue-300">Basic Usage</h3>
+          <div class="space-y-3">
+            <div>
+              <label class="text-sm text-blue-300 mb-1 block">Command 1:</label>
+              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+                <code class="text-green-400">tool-name --option</code>
+                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                        data-cmd="tool-name --option">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            <div>
+              <label class="text-sm text-blue-300 mb-1 block">Command 2:</label>
+              <div class="command-box p-3 rou
