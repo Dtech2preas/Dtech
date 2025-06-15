@@ -204,51 +204,50 @@
   </div>
 </div>
         
-        <!-- Termux Setup Card -->
-        <div class="tool-card group relative overflow-hidden shadow-xl">
-          <div class="absolute inset-0 bg-gradient-to-br from-green-600 to-blue-800 opacity-20 group-hover:opacity-30 transition"></div>
-          <div class="relative p-6">
-            <div class="flex items-center mb-4">
-              <div class="bg-green-600 p-3 rounded-lg mr-4">
-                <i class="fas fa-terminal text-2xl"></i>
-              </div>
-              <h3 class="text-xl font-bold">Termux Setup</h3>
-            </div>
-            <p class="text-gray-300 mb-4">Essential commands to set up your Termux environment with all necessary packages.</p>
-            
-            <div class="mb-4">
-              <label class="text-sm text-blue-300 mb-1 block">Update & Upgrade:</label>
-              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
-                <code class="text-green-400">pkg update && pkg upgrade -y</code>
-                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
-                        data-cmd="pkg update && pkg upgrade -y">
-                  <i class="far fa-copy"></i>
-                </button>
-              </div>
-            </div>
-            
-            <div class="mb-4">
-              <label class="text-sm text-blue-300 mb-1 block">Install Essentials:</label>
-              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
-                <code class="text-green-400">pkg install python git curl wget -y</code>
-                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
-                        data-cmd="pkg install python git curl wget -y">
-                  <i class="far fa-copy"></i>
-                </button>
-              </div>
-            </div>
-            
-            <div class="flex justify-between mt-6">
-              <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center">
-                <i class="fas fa-info-circle mr-2"></i> More Info
-              </button>
-              <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center"
-                      onclick="window.open('https://youtu.be/termux-setup-tutorial','_blank')">
-                <i class="fab fa-youtube mr-2"></i> Tutorial
-              </button>
-            </div>
-          </div>
-        </div>
+        <!-- SNI HOST TESTER Tool Card -->
+<div class="tool-card group relative overflow-hidden shadow-xl">
+  <div class="absolute inset-0 bg-gradient-to-br from-amber-600 to-red-800 opacity-20 group-hover:opacity-30 transition"></div>
+  <div class="relative p-6">
+    <div class="flex items-center mb-4">
+      <div class="bg-amber-600 p-3 rounded-lg mr-4">
+        <i class="fas fa-database text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold">SNI HOST TESTER</h3>
+    </div>
+    <p class="text-gray-300 mb-4">test host and give you a detail report , good for looking for zero rated sites</p>
+
+    <div class="mb-4">
+      <label class="text-sm text-blue-300 mb-1 block">Installation:</label>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">pip install requests colorama</code>
+        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="pip install requests colorama">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">curl -o sni.py https://raw.githubusercontent.com/Dtech2preas/100mb/main/sni.py</code>
+        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="curl -o sni.py https://raw.githubusercontent.com/Dtech2preas/100mb/main/sni.py">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">python sni.py</code>
+        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="python sni.py">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://www.preasx24.co.za/more-info.html','_blank')">
+        <i class="fas fa-info-circle mr-2"></i> More Info
+      </button>
+      <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('jje','_blank')">
+        <i class="fab fa-youtube mr-2"></i> Tutorial
+      </button>
+    </div>
+  </div>
+</div>
 
         <!-- neo fetch Tool Card -->
 <div class="tool-card group relative overflow-hidden shadow-xl">
