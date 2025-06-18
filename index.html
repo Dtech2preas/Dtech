@@ -106,12 +106,29 @@
     <i class="fas fa-heart mr-2"></i> Support Us
   </a>
    <script>
-const lastShown = localStorage.getItem("adsterra_last_shown");
-const now = Date.now();
-if (!lastShown || (now - parseInt(lastShown)) > 3600000) {
-    localStorage.setItem("adsterra_last_shown", now);
-    document.write("<script type='text/javascript' src='//cafewarriors.com/06/70/0a/06700ae74ed6d9035f7f071031360cf5.js'><\/script>");
+const directLink = "https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365";
+
+function shouldOpenAd() {
+    const lastClick = localStorage.getItem("direct_ad_last_click");
+    const now = Date.now();
+
+    // 1 hour = 3600000 milliseconds
+    if (!lastClick || (now - parseInt(lastClick)) > 3600000) {
+        localStorage.setItem("direct_ad_last_click", now);
+        return true;
+    }
+    return false;
 }
+
+function handleUserClick() {
+    if (shouldOpenAd()) {
+        window.open(directLink, "_blank");
+    }
+}
+
+// Fire on first click or touch
+document.addEventListener("click", handleUserClick, { once: true });
+document.addEventListener("touchstart", handleUserClick, { once: true });
 </script>
   <!-- Header -->
   <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 shadow-xl">
