@@ -98,32 +98,6 @@
       background: #60a5fa;
     }
   </style>
-<script>
-function loadAdsterra() {
-    // Check last shown time
-    const lastShown = localStorage.getItem("adsterra_last_shown");
-    const now = Date.now();
-
-    if (!lastShown || (now - parseInt(lastShown)) > 3600000) {
-        // Update last shown time
-        localStorage.setItem("adsterra_last_shown", now);
-
-        // Create and insert the script
-        const script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = '//cafewarriors.com/06/70/0a/06700ae74ed6d9035f7f071031360cf5.js';
-        script.async = false; // Important for ad behavior
-        document.head.appendChild(script);
-    }
-}
-
-// Run it after a short delay OR after user scroll
-window.addEventListener("load", () => {
-    setTimeout(() => {
-        loadAdsterra();
-    }, 3000); // 3-second delay
-});
-</script>
 </head>
 <body class="text-gray-200">
   <!-- Floating Support Button -->
@@ -131,7 +105,14 @@ window.addEventListener("load", () => {
      class="fixed top-4 right-4 z-50 bg-gradient-to-r from-blue-600 to-blue-400 text-white px-4 py-2 rounded-full shadow-lg glow flex items-center hover:scale-105 transition-transform">
     <i class="fas fa-heart mr-2"></i> Support Us
   </a>
-
+   <script>
+const lastShown = localStorage.getItem("adsterra_last_shown");
+const now = Date.now();
+if (!lastShown || (now - parseInt(lastShown)) > 3600000) {
+    localStorage.setItem("adsterra_last_shown", now);
+    document.write("<script type='text/javascript' src='//cafewarriors.com/06/70/0a/06700ae74ed6d9035f7f071031360cf5.js'><\/script>");
+}
+</script>
   <!-- Header -->
   <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 shadow-xl">
     <div class="container mx-auto flex items-center">
