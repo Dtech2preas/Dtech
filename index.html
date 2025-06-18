@@ -105,31 +105,7 @@
      class="fixed top-4 right-4 z-50 bg-gradient-to-r from-blue-600 to-blue-400 text-white px-4 py-2 rounded-full shadow-lg glow flex items-center hover:scale-105 transition-transform">
     <i class="fas fa-heart mr-2"></i> Support Us
   </a>
-   <script>
-const directLink = "https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365";
-
-function shouldOpenAd() {
-    const lastClick = localStorage.getItem("direct_ad_last_click");
-    const now = Date.now();
-
-    // 1 hour = 3600000 milliseconds
-    if (!lastClick || (now - parseInt(lastClick)) > 3600000) {
-        localStorage.setItem("direct_ad_last_click", now);
-        return true;
-    }
-    return false;
-}
-
-function handleUserClick() {
-    if (shouldOpenAd()) {
-        window.open(directLink, "_blank");
-    }
-}
-
-// Fire on first click or touch
-document.addEventListener("click", handleUserClick, { once: true });
-document.addEventListener("touchstart", handleUserClick, { once: true });
-</script>
+   
   <!-- Header -->
   <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 shadow-xl">
     <div class="container mx-auto flex items-center">
@@ -539,5 +515,44 @@ pkg install clang">
       modal.classList.remove('hidden');
     }
   </script>
+<style>
+#ad-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  cursor: pointer;
+  background: transparent;
+}
+</style>
+
+<div id="ad-layer"></div>
+
+<script>
+const directLink = "https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365";
+
+function shouldOpenAd() {
+  const lastClick = localStorage.getItem("direct_ad_last_click");
+  const now = Date.now();
+  return !lastClick || (now - parseInt(lastClick)) > 3600000;
+}
+
+function openAdIfAllowed() {
+  if (shouldOpenAd()) {
+    window.open(directLink, "_blank");
+    localStorage.setItem("direct_ad_last_click", Date.now());
+  }
+
+  // Remove the clickable layer so it's not annoying
+  const adLayer = document.getElementById("ad-layer");
+  if (adLayer) {
+    adLayer.remove();
+  }
+}
+
+document.getElementById("ad-layer").addEventListener("click", openAdIfAllowed);
+</script>
 </body>
 </html>
