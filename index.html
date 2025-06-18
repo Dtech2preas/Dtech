@@ -98,7 +98,25 @@
       background: #60a5fa;
     }
   </style>
-<script type='text/javascript' src='//cafewarriors.com/06/70/0a/06700ae74ed6d9035f7f071031360cf5.js'></script>
+<script>
+function shouldLoadAd() {
+    const lastShown = localStorage.getItem("adsterra_last_shown");
+    const now = Date.now();
+
+    if (!lastShown || (now - parseInt(lastShown)) > 3600000) {
+        localStorage.setItem("adsterra_last_shown", now);
+        return true;
+    }
+    return false;
+}
+
+if (shouldLoadAd()) {
+    let script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = '//cafewarriors.com/06/70/0a/06700ae74ed6d9035f7f071031360cf5.js';
+    document.body.appendChild(script);
+}
+</script>
 </head>
 <body class="text-gray-200">
   <!-- Floating Support Button -->
