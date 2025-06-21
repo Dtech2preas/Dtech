@@ -52,6 +52,7 @@
       width: 100vw;
       height: 100vh;
       position: relative;
+      overflow: hidden; /* Added to hide cropped parts */
     }
 
     iframe {
@@ -88,6 +89,16 @@
 
     footer {
       display: none;
+    }
+
+    /* SOLUTION: Landscape cropping styles */
+    @media (orientation: landscape) {
+      #animePlayer {
+        width: 177.77vh;  /* 16:9 aspect ratio (100vh * 16/9) */
+        height: 100vh;
+        left: 50%;
+        transform: translateX(-50%);
+      }
     }
   </style>
 </head>
