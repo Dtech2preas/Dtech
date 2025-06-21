@@ -2,57 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Anime Player</title>
+  <title>Anime Player Search</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background: #111;
       color: #fff;
-      padding: 20px;
       margin: 0;
+      padding: 20px;
     }
+
     input {
       width: 100%;
       padding: 10px;
       font-size: 16px;
       margin-bottom: 20px;
-    }
-    .result {
-      margin-bottom: 10px;
-      background: #222;
-      padding: 10px;
       border-radius: 6px;
-    }
-    .result button {
-      margin-top: 5px;
-      padding: 6px 12px;
-      background: #0af;
       border: none;
-      color: white;
-      cursor: pointer;
-      border-radius: 4px;
     }
 
-    /* Fullscreen Player */
+    .result {
+      background: #222;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+    }
+
+    .result button {
+      background: #0af;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 4px;
+      margin-top: 8px;
+    }
+
+    /* Fullscreen Video Modal */
     #playerModal {
       display: none;
       background: #000;
     }
+
     #fullscreenContainer {
       width: 100%;
       height: 100%;
     }
+
     #fullscreenContainer iframe {
       width: 100vw;
       height: 100vh;
       border: none;
+      margin: 0;
+      padding: 0;
+      display: block;
     }
   </style>
 </head>
 <body>
 
-  <h2>Search Anime</h2>
-  <input type="text" id="searchInput" placeholder="Search by title or episode...">
+  <h2>🎬 Anime Search</h2>
+  <input type="text" id="searchInput" placeholder="Search title or episode (e.g. A3, Episode 5)...">
 
   <div id="results"></div>
 
@@ -62,26 +73,37 @@
   </div>
 
   <script>
-    const jsonFiles = ['part1.json', 'part2.json']; // Add more if needed
+    const jsonFiles = ['part1.json', 'part2.json']; // Add more JSON parts here
     let allVideos = [];
 
-    // Load all JSON parts
+    // Load JSON files and merge
     async function loadJSONFiles() {
-      const fetches = jsonFiles.map(file => fetch(file).then(res => res.json()));
+      const fetches = jsonFiles.map(file =>
+        fetch(file)
+          .then(res => {
+            if (!res.ok) throw new Error(`Failed to load ${file}`);
+            return res.json();
+          })
+          .catch(err => {
+            console.error(`Error loading ${file}:`, err);
+            return [];
+          })
+      );
       const allData = await Promise.all(fetches);
       allVideos = allData.flat();
+      console.log("Loaded videos:", allVideos);
     }
 
-    // Search videos
+    // Search by title or episode
     function searchVideos(query) {
-      const lower = query.toLowerCase();
+      const lower = query.trim().toLowerCase();
       return allVideos.filter(item =>
         item.title.toLowerCase().includes(lower) ||
         item.episode.toLowerCase().includes(lower)
       );
     }
 
-    // Render search results
+    // Show results
     function showResults(results) {
       const container = document.getElementById('results');
       container.innerHTML = '';
@@ -102,25 +124,18 @@
       });
     }
 
-    // Enter fullscreen and play iframe
+    // Play video in full screen
     async function playVideo(iframeHtml) {
       const container = document.getElementById('fullscreenContainer');
       container.innerHTML = iframeHtml;
-
       const modal = document.getElementById('playerModal');
       modal.style.display = 'block';
 
       try {
-        // Request full screen
-        if (modal.requestFullscreen) {
-          await modal.requestFullscreen();
-        } else if (modal.webkitRequestFullscreen) {
-          await modal.webkitRequestFullscreen();
-        } else if (modal.msRequestFullscreen) {
-          await modal.msRequestFullscreen();
-        }
+        if (modal.requestFullscreen) await modal.requestFullscreen();
+        else if (modal.webkitRequestFullscreen) await modal.webkitRequestFullscreen();
+        else if (modal.msRequestFullscreen) await modal.msRequestFullscreen();
 
-        // Lock to landscape if supported
         if (screen.orientation && screen.orientation.lock) {
           await screen.orientation.lock('landscape');
         }
@@ -129,7 +144,7 @@
       }
     }
 
-    // Exit fullscreen when user exits
+    // Exit fullscreen resets player
     document.addEventListener('fullscreenchange', () => {
       if (!document.fullscreenElement) {
         document.getElementById('playerModal').style.display = 'none';
@@ -137,14 +152,14 @@
       }
     });
 
-    // On input
+    // Search input listener
     document.getElementById('searchInput').addEventListener('input', e => {
       const results = searchVideos(e.target.value);
       showResults(results);
     });
 
+    // Load JSON when page starts
     loadJSONFiles();
   </script>
-
 </body>
 </html>
