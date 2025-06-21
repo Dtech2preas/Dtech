@@ -1,183 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DTECH Splash & Apps</title>
+  <meta charset="UTF-8">
+  <title>Anime Player</title>
   <style>
-    /* Reset & base */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { width:100%; height:100%; overflow:hidden; font-family: sans-serif; }
-
-    /* Full-screen splash */
-    #splash {
-      position: fixed; top:0; left:0; width:100%; height:100%;
-      display: flex; align-items: center; justify-content: center;
-      background: black; z-index: 1000;
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 20px;
+      margin: 0;
     }
-    /* Color cycle to blue then black */
-    @keyframes colorCycle {
-      0%   { background: #ff0044; }
-      25%  { background: #44ff00; }
-      50%  { background: #00ffff; }
-      75%  { background: #0000ff; }
-      100% { background: #000; }
+    input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 20px;
     }
-    #splash-bg {
-      position:absolute; top:0; left:0; width:100%; height:100%;
-      animation: colorCycle 3s forwards ease-in-out;
+    .result {
+      margin-bottom: 10px;
+      background: #222;
+      padding: 10px;
+      border-radius: 6px;
     }
-    /* Swirl effect */
-    #splash-swirl {
-      position:absolute; top:0; left:0; width:100%; height:100%;
-      background: conic-gradient(from 0deg at 50% 50%, #0000ff, #000);
-      opacity: 0;
-      animation: swirlIn 2s 3s forwards ease-in-out;
-    }
-    @keyframes swirlIn {
-      0%   { opacity: 0; transform: rotate(0deg) scale(1); }
-      50%  { opacity: 0.8; transform: rotate(180deg) scale(1.2); }
-      100% { opacity: 1; transform: rotate(360deg) scale(1); }
+    .result button {
+      margin-top: 5px;
+      padding: 6px 12px;
+      background: #0af;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 4px;
     }
 
-    /* Logo text reveal */
-    #splash-text {
-      position: relative; z-index:2; text-align:center; color: #60a5fa;
-      opacity: 0; transform: translateY(20px);
-      animation: textIn 1s 5s forwards ease-out;
+    /* Fullscreen Player */
+    #playerModal {
+      display: none;
+      background: #000;
     }
-    #splash-text h1 {
-      font-size: 4rem; letter-spacing: 0.2em; text-shadow: 0 0 10px #3b82f6;
+    #fullscreenContainer {
+      width: 100%;
+      height: 100%;
     }
-    #splash-text p {
-      margin-top:0.5rem; font-size:1.2rem; color:#a5b4fc; text-shadow:0 0 6px #60a5fa;
+    #fullscreenContainer iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
     }
-    @keyframes textIn {
-      to { opacity: 1; transform: translateY(0); }
-    }
-    /* Fade out splash */
-    #splash.fade-out {
-      animation: fadeSplash 1s 6s forwards ease;
-    }
-    @keyframes fadeSplash {
-      to { opacity: 0; visibility: hidden; }
-    }
-
-    /* Main content hidden initially */
-    #main-content {
-      opacity: 0; transition: opacity 1s ease 7s;
-      padding: 2rem; max-width: 1000px; margin: 0 auto; visibility: hidden;
-    }
-    #main-content.visible {
-      opacity: 1; visibility: visible;
-    }
-
-    /* Simple grid layout for apps */
-    .apps-grid {
-      display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
-      gap: 1.5rem;
-    }
-    .app-card {
-      background: #111827; border-radius: 0.75rem; overflow: hidden;
-      box-shadow: 0 0 8px #2563eb, 0 0 15px #3b82f6; transition: transform .3s;
-    }
-    .app-card:hover { transform: scale(1.02); }
-    .app-icon {
-      width:64px; height:64px; margin:1rem auto; border-radius:50%;
-      background:#2563eb; display:flex; align-items:center; justify-content:center;
-      filter: drop-shadow(0 0 8px #60a5fa);
-    }
-    .app-icon img { width:40px; height:40px; }
-    .screenshots {
-      display:flex; gap:0.5rem; padding:0 1rem; margin-bottom:1rem;
-    }
-    .screenshots img {
-      flex:1; height:100px; object-fit:cover; border-radius:0.5rem;
-      box-shadow:0 0 6px #3b82f6;
-    }
-    .app-content {
-      padding:1rem; color:#cbd5e1; display:flex; flex-direction:column;
-    }
-    .app-title {
-      color:#60a5fa; font-size:1.3rem; font-weight:600; text-align:center;
-      margin-bottom:0.5rem;
-    }
-    .app-desc { flex:1; text-align:center; margin-bottom:1rem; }
-    .btn-download {
-      background:#2563eb; color:white; padding:.5rem 1.2rem;
-      border-radius:9999px; text-align:center; display:block; width:max-content;
-      margin:0 auto; box-shadow:0 0 6px #3b82f6; text-decoration:none;
-      transition: box-shadow .3s;
-    }
-    .btn-download:hover { box-shadow:0 0 12px #60a5fa; }
-
-    footer { text-align:center; margin-top:2rem; color:#60a5fa; }
   </style>
 </head>
 <body>
 
-  <!-- SPLASH -->
-  <div id="splash">
-    <div id="splash-bg"></div>
-    <div id="splash-swirl"></div>
-    <div id="splash-text">
-      <h1>D-TECH</h1>
-      <p>Powered by PREASX24</p>
-    </div>
-  </div>
+  <h2>Search Anime</h2>
+  <input type="text" id="searchInput" placeholder="Search by title or episode...">
 
-  <!-- MAIN CONTENT -->
-  <div id="main-content">
-    <header class="main">
-      <h1>DTECH Tech Apps</h1>
-      <p>Innovative apps designed to empower your digital experience</p>
-    </header>
-    <section class="apps-grid">
-      <div class="app-card">
-        <div class="app-icon"><img src="icon-filemanager.png" alt="File Manager Pro"></div>
-        <div class="screenshots">
-          <img src="screens/filemgr1.png"><img src="screens/filemgr2.png"><img src="screens/filemgr3.png">
-        </div>
-        <div class="app-content">
-          <div class="app-title">File Manager Pro</div>
-          <div class="app-desc">Manage your files effortlessly with a secure explorer.</div>
-          <a href="apps/file-manager-pro.apk" class="btn-download">Download APK</a>
-        </div>
-      </div>
-      <div class="app-card">
-        <div class="app-icon"><img src="icon-vpn.png" alt="Secure VPN"></div>
-        <div class="screenshots">
-          <img src="screens/vpn1.png"><img src="screens/vpn2.png"><img src="screens/vpn3.png">
-        </div>
-        <div class="app-content">
-          <div class="app-title">Secure VPN</div>
-          <div class="app-desc">Browse privately and securely with reliable VPN.</div>
-          <a href="apps/secure-vpn.apk" class="btn-download">Download APK</a>
-        </div>
-      </div>
-      <div class="app-card">
-        <div class="app-icon"><img src="icon-battery.png" alt="Battery Saver"></div>
-        <div class="screenshots">
-          <img src="screens/battery1.png"><img src="screens/battery2.png"><img src="screens/battery3.png">
-        </div>
-        <div class="app-content">
-          <div class="app-title">Battery Saver</div>
-          <div class="app-desc">Optimize battery life with smart power-saving modes.</div>
-          <a href="apps/battery-saver.apk" class="btn-download">Download APK</a>
-        </div>
-      </div>
-    </section>
-    <footer>Powered by <strong>Preasx24</strong> | DTECH 2025</footer>
+  <div id="results"></div>
+
+  <!-- Fullscreen Container -->
+  <div id="playerModal">
+    <div id="fullscreenContainer"></div>
   </div>
 
   <script>
-    // Trigger splash fade-out and show main
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        document.getElementById('splash').classList.add('fade-out');
-        document.getElementById('main-content').classList.add('visible');
-      }, 4500);
+    const jsonFiles = ['part1.json', 'part2.json']; // Add more if needed
+    let allVideos = [];
+
+    // Load all JSON parts
+    async function loadJSONFiles() {
+      const fetches = jsonFiles.map(file => fetch(file).then(res => res.json()));
+      const allData = await Promise.all(fetches);
+      allVideos = allData.flat();
+    }
+
+    // Search videos
+    function searchVideos(query) {
+      const lower = query.toLowerCase();
+      return allVideos.filter(item =>
+        item.title.toLowerCase().includes(lower) ||
+        item.episode.toLowerCase().includes(lower)
+      );
+    }
+
+    // Render search results
+    function showResults(results) {
+      const container = document.getElementById('results');
+      container.innerHTML = '';
+
+      if (results.length === 0) {
+        container.innerHTML = '<p>No results found.</p>';
+        return;
+      }
+
+      results.forEach(video => {
+        const div = document.createElement('div');
+        div.className = 'result';
+        div.innerHTML = `
+          <strong>${video.title}</strong> - ${video.episode}<br>
+          <button onclick='playVideo(\`${video.iframe.replace(/`/g, "\\`")}\`)'>Play</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    // Enter fullscreen and play iframe
+    async function playVideo(iframeHtml) {
+      const container = document.getElementById('fullscreenContainer');
+      container.innerHTML = iframeHtml;
+
+      const modal = document.getElementById('playerModal');
+      modal.style.display = 'block';
+
+      try {
+        // Request full screen
+        if (modal.requestFullscreen) {
+          await modal.requestFullscreen();
+        } else if (modal.webkitRequestFullscreen) {
+          await modal.webkitRequestFullscreen();
+        } else if (modal.msRequestFullscreen) {
+          await modal.msRequestFullscreen();
+        }
+
+        // Lock to landscape if supported
+        if (screen.orientation && screen.orientation.lock) {
+          await screen.orientation.lock('landscape');
+        }
+      } catch (e) {
+        console.warn('Fullscreen or orientation lock failed:', e);
+      }
+    }
+
+    // Exit fullscreen when user exits
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        document.getElementById('playerModal').style.display = 'none';
+        document.getElementById('fullscreenContainer').innerHTML = '';
+      }
     });
+
+    // On input
+    document.getElementById('searchInput').addEventListener('input', e => {
+      const results = searchVideos(e.target.value);
+      showResults(results);
+    });
+
+    loadJSONFiles();
   </script>
 </body>
 </html>
