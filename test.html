@@ -731,3 +731,81 @@
         console.warn('Fullscreen or orientation lock failed:', e);
       }
     }
+    
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    // Handle exit (back button or user exit)
+    function exitPlayer() {
+      document.getElementById('playerModal').style.display = 'none';
+      document.getElementById('searchSection').style.display = 'block';
+      document.getElementById('fullscreenContainer').innerHTML = '';
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      }
+    }
+
+    // Exit when fullscreen changes
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        // Don't exit player completely, just exit fullscreen
+        document.getElementById('playerModal').style.display = 'block';
+      }
+    });
+
+    // Debounced search handler with 500ms delay
+    function handleSearch() {
+      const query = document.getElementById('searchInput').value.trim();
+      
+      // Clear any existing timeout
+      clearTimeout(debounceTimer);
+      
+      if (query.length === 0) {
+        document.getElementById('results').innerHTML = `
+          <div class="no-results" style="grid-column: 1 / -1;">
+            <i class="fas fa-keyboard" style="font-size: 3rem; margin-bottom: 20px;"></i>
+            <p>Search for anime titles</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">Start typing to find your favorite shows</p>
+          </div>
+        `;
+        document.getElementById('searchStatus').textContent = `Type to search...`;
+        return;
+      }
+      
+      // Show searching status
+      document.getElementById('searchStatus').textContent = `Searching...`;
+      
+      // Set a new timeout with 500ms delay
+      debounceTimer = setTimeout(() => {
+        const results = searchAnimeTitles(query);
+        showAnimeTitles(results);
+      }, 500);
+    }
+
+    // Search listener with debounce
+    document.getElementById('searchInput').addEventListener('input', handleSearch);
+
+    // Handle browser back button
+    window.onpopstate = function (event) {
+      if (event.state && event.state.playing) {
+        exitPlayer();
+      }
+    };
+
+    // Initial load
+    loadJSONFiles();
+    
+    // Add floating animation to logo
+    setTimeout(() => {
+      document.querySelector('.logo-icon').classList.add('floating');
+    }, 500);
+  </script>
+</body>
+</html>
