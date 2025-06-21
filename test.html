@@ -268,6 +268,13 @@
       padding: 0 5px;
     }
 
+    .performance-info {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+
     /* Fullscreen Player Mode */
     #playerModal {
       display: none;
@@ -396,7 +403,7 @@
         <i class="fas fa-play-circle logo-icon floating"></i>
         <h1>NEXUS ANIME</h1>
       </div>
-      <div class="subtitle">PREMIUM STREAMING EXPERIENCE</div>
+      <div class="subtitle">OPTIMIZED STREAMING EXPERIENCE</div>
     </div>
     
     <div class="search-container">
@@ -407,6 +414,7 @@
     <div class="stats-bar">
       <span id="totalEpisodes">Total episodes: 0</span>
       <span id="searchStatus">Ready</span>
+      <span class="performance-info" id="performanceInfo">0ms search</span>
     </div>
     
     <div class="loading-indicator" id="loadingIndicator">
@@ -431,13 +439,18 @@
   </div>
 
   <div class="footer">
-    <p>© 2023 NEXUS ANIME | ULTRA HD STREAMING</p>
+    <p>© 2023 NEXUS ANIME | OPTIMIZED PERFORMANCE</p>
   </div>
 
   <script>
     const jsonFiles = ['part1.json', 'finish.json', 'part2.json']; // Replace with your actual JSON files
     let allVideos = [];
-    let currentSearchResults = [];
+    let searchIndex = {};
+    let debounceTimer;
+    
+    // Performance tracking
+    let searchCount = 0;
+    let totalSearchTime = 0;
 
     async function loadJSONFiles() {
       showLoading(true);
@@ -458,6 +471,9 @@
         const allData = await Promise.all(fetches);
         allVideos = allData.flat();
         console.log("Loaded videos:", allVideos.length);
+        
+        // Create a search index for faster searching
+        createSearchIndex();
         
         document.getElementById('totalEpisodes').textContent = `Total episodes: ${allVideos.length}`;
         document.getElementById('searchStatus').textContent = `Type to search...`;
@@ -484,24 +500,92 @@
       }
     }
 
+    function createSearchIndex() {
+      // Create an index for faster searching
+      searchIndex = {};
+      
+      allVideos.forEach(video => {
+        // Index by title
+        const titleWords = video.title.toLowerCase().split(/\s+/);
+        titleWords.forEach(word => {
+          if (!searchIndex[word]) searchIndex[word] = new Set();
+          searchIndex[word].add(video);
+        });
+        
+        // Index by episode
+        const episodeWords = video.episode.toLowerCase().split(/\s+/);
+        episodeWords.forEach(word => {
+          if (!searchIndex[word]) searchIndex[word] = new Set();
+          searchIndex[word].add(video);
+        });
+      });
+      
+      console.log("Search index created with", Object.keys(searchIndex).length, "terms");
+    }
+
     function showLoading(isLoading) {
       const indicator = document.getElementById('loadingIndicator');
       indicator.style.display = isLoading ? 'block' : 'none';
     }
 
     function searchVideos(query) {
+      const startTime = performance.now();
       const lower = query.trim().toLowerCase();
-      if (!lower) return [];
       
-      return allVideos.filter(item => {
-        const titleMatch = item.title.toLowerCase().includes(lower);
-        const episodeMatch = item.episode.toLowerCase().includes(lower);
-        return titleMatch || episodeMatch;
+      if (!lower) {
+        return [];
+      }
+      
+      // Split the query into words
+      const queryWords = lower.split(/\s+/);
+      
+      // Find videos that match any of the query words
+      const resultsSet = new Set();
+      
+      queryWords.forEach(word => {
+        if (searchIndex[word]) {
+          searchIndex[word].forEach(video => resultsSet.add(video));
+        }
       });
+      
+      // Convert set to array
+      let results = Array.from(resultsSet);
+      
+      // If no results from index, fall back to linear search
+      if (results.length === 0) {
+        results = allVideos.filter(item => {
+          return item.title.toLowerCase().includes(lower) || 
+                 item.episode.toLowerCase().includes(lower);
+        });
+      }
+      
+      // Sort by title then by episode
+      results.sort((a, b) => {
+        if (a.title !== b.title) {
+          return a.title.localeCompare(b.title);
+        }
+        
+        // Extract episode numbers for better sorting
+        const numA = parseInt(a.episode.replace(/\D/g, ''));
+        const numB = parseInt(b.episode.replace(/\D/g, ''));
+        return numB - numA; // Descending order
+      });
+      
+      const endTime = performance.now();
+      const searchTime = endTime - startTime;
+      
+      // Update performance stats
+      searchCount++;
+      totalSearchTime += searchTime;
+      const avgTime = totalSearchTime / searchCount;
+      
+      document.getElementById('performanceInfo').textContent = 
+        `${Math.round(searchTime)}ms search (avg: ${Math.round(avgTime)}ms)`;
+      
+      return results;
     }
 
     function showResults(results) {
-      currentSearchResults = results;
       const container = document.getElementById('results');
       container.innerHTML = '';
       
@@ -526,14 +610,9 @@
         grouped[video.title].push(video);
       });
 
-      // Sort by title and then by episode number
+      // Render each group
       Object.keys(grouped).sort().forEach(title => {
-        const videos = grouped[title].sort((a, b) => {
-          // Extract episode numbers
-          const numA = parseInt(a.episode.replace(/\D/g, ''));
-          const numB = parseInt(b.episode.replace(/\D/g, ''));
-          return numB - numB ? numA - numB : a.episode.localeCompare(b.episode);
-        });
+        const videos = grouped[title];
         
         // Create a container for each title
         const titleDiv = document.createElement('div');
@@ -623,9 +702,13 @@
       }
     });
 
-    // Search listener
-    document.getElementById('searchInput').addEventListener('input', e => {
-      const query = e.target.value.trim();
+    // Debounced search handler
+    function handleSearch() {
+      const query = document.getElementById('searchInput').value.trim();
+      
+      // Clear any existing timeout
+      clearTimeout(debounceTimer);
+      
       if (query.length < 2) {
         if (query.length === 0) {
           document.getElementById('results').innerHTML = `
@@ -640,9 +723,20 @@
         return;
       }
       
-      const results = searchVideos(query);
-      showResults(results);
-    });
+      // Show loading indicator for complex searches
+      if (query.length > 4) {
+        document.getElementById('searchStatus').textContent = `Searching...`;
+      }
+      
+      // Set a new timeout
+      debounceTimer = setTimeout(() => {
+        const results = searchVideos(query);
+        showResults(results);
+      }, query.length > 4 ? 100 : 300); // Faster response for longer queries
+    }
+
+    // Search listener with debounce
+    document.getElementById('searchInput').addEventListener('input', handleSearch);
 
     // Handle browser back button
     window.onpopstate = function (event) {
