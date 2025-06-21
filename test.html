@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>NEXUS ANIME</title>
+  <title>ANIME</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -205,12 +205,11 @@
       font-size: 1.3rem;
       color: var(--primary);
       letter-spacing: 0.5px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
+      overflow: visible;
+      white-space: normal;
+      word-break: break-word;
       max-width: 85%;
+      line-height: 1.4;
     }
 
     .episode-count {
@@ -220,6 +219,8 @@
       padding: 5px 12px;
       font-size: 0.9rem;
       font-weight: 600;
+      flex-shrink: 0;
+      margin-left: 10px;
     }
 
     .episodes-container {
@@ -419,70 +420,150 @@
       border-radius: 4px;
     }
 
+    /* Video Loading Indicator */
+    #videoLoading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10001;
+      color: var(--primary);
+      font-size: 1.5rem;
+    }
+
+    #videoLoading p {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .nav-btn {
+      background: rgba(0, 243, 255, 0.1);
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      padding: 12px 25px;
+      border-radius: 30px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+    }
+
+    .nav-btn:hover {
+      background: rgba(0, 243, 255, 0.2);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 243, 255, 0.4);
+    }
+
+    .nav-btn i {
+      font-size: 1.2rem;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .results-container {
         grid-template-columns: 1fr;
       }
-      
+
       h1 {
         font-size: 2.2rem;
       }
-      
+
       .subtitle {
         font-size: 0.95rem;
       }
-      
+
       .player-controls {
         top: 10px;
         right: 10px;
       }
-      
+
       .player-btn {
         width: 40px;
         height: 40px;
         font-size: 16px;
       }
-      
+
       .episode-grid {
         grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+        gap: 15px;
       }
     }
   </style>
 </head>
 <body>
   <div class="grid-pattern"></div>
-  
+
   <div id="searchSection">
     <div class="header">
       <div class="logo">
         <i class="fas fa-play-circle logo-icon floating"></i>
-        <h1>🧑‍🦯🧑‍🦯 ANIME</h1>
+        <h1>DTECH ANIME</h1>
       </div>
-      <div class="subtitle">ULTRA-FAST SUPER DUPER ANIME STEAMER</div>
+      <div class="subtitle">PREMIUM VERSION</div>
     </div>
-    
+
+    <div class="nav-buttons">
+      <a href="server.html" class="nav-btn">
+        <i class="fas fa-server"></i>
+        <span>Another Server</span>
+      </a>
+      <a href="anime.html" class="nav-btn">
+        <i class="fas fa-info-circle"></i>
+        <span>Know Your Anime</span>
+      </a>
+    </div>
+
     <div class="search-container">
       <i class="fas fa-search search-icon"></i>
       <input type="text" id="searchInput" placeholder="Search anime titles...">
     </div>
-    
+
     <div class="stats-bar">
       <span id="totalEpisodes">Total episodes: 0</span>
       <span id="searchStatus">Ready</span>
       <span class="performance-info" id="performanceInfo">0ms search</span>
     </div>
-    
+
     <div class="loading-indicator" id="loadingIndicator">
       <i class="fas fa-spinner"></i>
       <p>Loading anime database...</p>
     </div>
-    
+
     <div class="results-container" id="results"></div>
   </div>
 
   <!-- Fullscreen Container -->
   <div id="playerModal">
+    <div id="videoLoading">
+      <i class="fas fa-spinner fa-spin" style="font-size: 3rem;"></i>
+      <p>Loading episode...</p>
+      <p style="font-size: 1rem; margin-top: 10px; opacity: 0.7;">This may take a few seconds</p>
+    </div>
+    
     <div class="player-controls">
       <button class="player-btn" onclick="toggleFullscreen()">
         <i class="fas fa-expand"></i>
@@ -495,23 +576,23 @@
   </div>
 
   <div class="footer">
-    <p>© 2025 D-TECH ANIME | W</p>
+    <p>© 2025 D-TECH ANIME | Premium Streaming Experience</p>
   </div>
 
   <script>
-    const jsonFiles = ['part1.json', 'finish.json',    'finis.json', 'part2.json']; // Replace with your actual JSON files
+    const jsonFiles = ['part1.json', 'part3.json', 'part4.json', 'part5.json', 'part6.json',  'finish.json',  'finis.json', 'part2.json']; // Replace with your actual JSON files
     let allVideos = [];
     let animeMap = new Map(); // Maps anime title to its episodes
     let debounceTimer;
     let activeAnimeGroup = null;
-    
+
     // Performance tracking
     let searchCount = 0;
     let totalSearchTime = 0;
 
     async function loadJSONFiles() {
       showLoading(true);
-      
+
       try {
         const fetches = jsonFiles.map(file =>
           fetch(file)
@@ -524,17 +605,17 @@
               return [];
             })
         );
-        
+
         const allData = await Promise.all(fetches);
         allVideos = allData.flat();
         console.log("Loaded videos:", allVideos.length);
-        
+
         // Create anime map
         createAnimeMap();
-        
+
         document.getElementById('totalEpisodes').textContent = `Total episodes: ${allVideos.length}`;
         document.getElementById('searchStatus').textContent = `Type to search...`;
-        
+
         // Show placeholder message
         document.getElementById('results').innerHTML = `
           <div class="no-results" style="grid-column: 1 / -1;">
@@ -560,7 +641,7 @@
     function createAnimeMap() {
       // Reset the map
       animeMap = new Map();
-      
+
       // Group videos by anime title
       allVideos.forEach(video => {
         if (!animeMap.has(video.title)) {
@@ -568,7 +649,7 @@
         }
         animeMap.get(video.title).push(video);
       });
-      
+
       // Sort episodes in ascending order for each anime
       animeMap.forEach(episodes => {
         episodes.sort((a, b) => {
@@ -578,7 +659,7 @@
           return numA - numB;
         });
       });
-      
+
       console.log("Created anime map with", animeMap.size, "titles");
     }
 
@@ -590,40 +671,40 @@
     function searchAnimeTitles(query) {
       const startTime = performance.now();
       const lower = query.trim().toLowerCase();
-      
+
       if (!lower) {
         return [];
       }
-      
+
       // Get all anime titles
       const titles = Array.from(animeMap.keys());
-      
+
       // Filter titles that match the query
       const results = titles.filter(title => 
         title.toLowerCase().includes(lower)
       );
-      
+
       // Sort by title
       results.sort((a, b) => a.localeCompare(b));
-      
+
       const endTime = performance.now();
       const searchTime = endTime - startTime;
-      
+
       // Update performance stats
       searchCount++;
       totalSearchTime += searchTime;
       const avgTime = totalSearchTime / searchCount;
-      
+
       document.getElementById('performanceInfo').textContent = 
         `${Math.round(searchTime)}ms search (avg: ${Math.round(avgTime)}ms)`;
-      
+
       return results;
     }
 
     function showAnimeTitles(titles) {
       const container = document.getElementById('results');
       container.innerHTML = '';
-      
+
       if (titles.length === 0) {
         container.innerHTML = `
           <div class="no-results">
@@ -648,27 +729,27 @@
           </div>
           <div class="episodes-container"></div>
         `;
-        
+
         // Add click handler to show episodes
         groupDiv.querySelector('.anime-header').addEventListener('click', () => {
           toggleEpisodes(groupDiv, title);
         });
-        
+
         container.appendChild(groupDiv);
       });
 
       document.getElementById('searchStatus').textContent = `Found ${titles.length} anime for "${document.getElementById('searchInput').value}"`;
     }
-    
+
     function toggleEpisodes(groupElement, title) {
       const episodesContainer = groupElement.querySelector('.episodes-container');
-      
+
       // Close currently open group if different
       if (activeAnimeGroup && activeAnimeGroup !== groupElement) {
         activeAnimeGroup.querySelector('.episodes-container').style.display = 'none';
         activeAnimeGroup.classList.remove('active');
       }
-      
+
       // Toggle the clicked group
       if (episodesContainer.style.display === 'block') {
         episodesContainer.style.display = 'none';
@@ -684,12 +765,12 @@
         activeAnimeGroup = groupElement;
       }
     }
-    
+
     function populateEpisodes(container, title) {
       const episodes = animeMap.get(title);
       const episodeGrid = document.createElement('div');
       episodeGrid.className = 'episode-grid';
-      
+
       episodes.forEach(episode => {
         const episodeCard = document.createElement('div');
         episodeCard.className = 'episode-card';
@@ -697,14 +778,14 @@
           <div class="episode-number">${episode.episode}</div>
           <div class="episode-title">${episode.episode}</div>
         `;
-        
+
         episodeCard.addEventListener('click', () => {
           playVideo(episode.iframe);
         });
-        
+
         episodeGrid.appendChild(episodeCard);
       });
-      
+
       container.appendChild(episodeGrid);
     }
 
@@ -713,10 +794,21 @@
       const modal = document.getElementById('playerModal');
       const container = document.getElementById('fullscreenContainer');
       const search = document.getElementById('searchSection');
+      const loadingIndicator = document.getElementById('videoLoading');
 
-      container.innerHTML = iframeHtml;
+      // Show loading indicator
+      loadingIndicator.style.display = 'flex';
       modal.style.display = 'block';
       search.style.display = 'none';
+
+      // Add the iframe to the container
+      container.innerHTML = iframeHtml;
+      
+      // Simulate video loading (in a real app, you'd wait for the video to start)
+      setTimeout(() => {
+        // Hide loading indicator after 3 seconds
+        loadingIndicator.style.display = 'none';
+      }, 3000);
 
       try {
         // Fullscreen
@@ -731,7 +823,7 @@
         console.warn('Fullscreen or orientation lock failed:', e);
       }
     }
-    
+
     function toggleFullscreen() {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
@@ -763,10 +855,10 @@
     // Debounced search handler with 500ms delay
     function handleSearch() {
       const query = document.getElementById('searchInput').value.trim();
-      
+
       // Clear any existing timeout
       clearTimeout(debounceTimer);
-      
+
       if (query.length === 0) {
         document.getElementById('results').innerHTML = `
           <div class="no-results" style="grid-column: 1 / -1;">
@@ -778,10 +870,10 @@
         document.getElementById('searchStatus').textContent = `Type to search...`;
         return;
       }
-      
+
       // Show searching status
       document.getElementById('searchStatus').textContent = `Searching...`;
-      
+
       // Set a new timeout with 500ms delay
       debounceTimer = setTimeout(() => {
         const results = searchAnimeTitles(query);
@@ -801,7 +893,7 @@
 
     // Initial load
     loadJSONFiles();
-    
+
     // Add floating animation to logo
     setTimeout(() => {
       document.querySelector('.logo-icon').classList.add('floating');
