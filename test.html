@@ -843,40 +843,32 @@
 <script>
 const layer = document.getElementById("ad-layer");
 const AD_DURATION = 10000; // 10 seconds
-const COOLDOWN = 3600000;  // 1 hour in ms
+const COOLDOWN = 3600000;  // 1 hour
 
 function showLayer(bold = false) {
-  if (bold) {
-    layer.classList.add("bold");
-    layer.innerHTML = "⏳ You must wait at least 10 seconds<br><small>Try again, but stay longer.</small>";
-  } else {
-    layer.classList.remove("bold");
-    layer.innerHTML = "👆 Tap to Continue<br><small>(Ad will open once per hour)</small>";
-  }
-
+  layer.classList.toggle("bold", bold);
+  layer.innerHTML = bold
+    ? "⏳ Please wait at least 10 seconds<br><small>Try again and stay longer.</small>"
+    : "👆 Tap to Continue<br><small>(Ad will open once per hour)</small>";
   layer.style.display = "flex";
 }
 
 function checkAndShowLayer() {
-  const lastClick = localStorage.getItem("direct_ad_last_click");
+  const lastClick = parseInt(localStorage.getItem("direct_ad_last_click") || "0");
   const now = Date.now();
-
-  if (!lastClick || (now - parseInt(lastClick)) > COOLDOWN) {
+  if (!lastClick || (now - lastClick) > COOLDOWN) {
     showLayer(false);
   }
 }
 
 layer.addEventListener("click", () => {
   const now = Date.now();
-  const lastClick = localStorage.getItem("direct_ad_last_click");
-  const lastWatch = localStorage.getItem("direct_ad_watch_start");
+  const lastClick = parseInt(localStorage.getItem("direct_ad_last_click") || "0");
 
-  // if allowed
-  if (!lastClick || (now - parseInt(lastClick)) > COOLDOWN) {
-    // store when ad opened
+  if (!lastClick || (now - lastClick) > COOLDOWN) {
+    // Save the time the ad was opened
     localStorage.setItem("direct_ad_watch_start", now);
 
-    // call native ad popup
     if (typeof Android !== "undefined" && Android.openAdWindow) {
       Android.openAdWindow();
     }
@@ -885,23 +877,25 @@ layer.addEventListener("click", () => {
   layer.style.display = "none";
 });
 
-// When page regains focus (user returns from ad)
-window.addEventListener("focus", () => {
-  const watchStart = parseInt(localStorage.getItem("direct_ad_watch_start") || "0");
-  const now = Date.now();
+// ✅ When user comes back from ad screen
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    const start = parseInt(localStorage.getItem("direct_ad_watch_start") || "0");
+    const now = Date.now();
 
-  if (watchStart > 0 && (now - watchStart) < AD_DURATION) {
-    // User returned too soon — retry ad popup
-    localStorage.removeItem("direct_ad_last_click"); // force retry
-    setTimeout(() => showLayer(true), 500); // bold version
-  } else if (watchStart > 0 && (now - watchStart) >= AD_DURATION) {
-    // Success — store the full success time
-    localStorage.setItem("direct_ad_last_click", now);
-    localStorage.removeItem("direct_ad_watch_start");
+    if (start > 0 && (now - start) < AD_DURATION) {
+      // Too fast — force retry
+      localStorage.removeItem("direct_ad_last_click");
+      setTimeout(() => showLayer(true), 500);
+    } else if (start > 0 && (now - start) >= AD_DURATION) {
+      // Passed — success
+      localStorage.setItem("direct_ad_last_click", now);
+      localStorage.removeItem("direct_ad_watch_start");
+    }
   }
 });
 
-// Start
+// Initial check
 checkAndShowLayer();
 setInterval(checkAndShowLayer, 600000);
 </script>
