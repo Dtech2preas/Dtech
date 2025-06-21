@@ -3,150 +3,214 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>07-Ghost - Full Screen Player</title>
+  <title>A3 Season Autumn Winter - Episode Selector</title>
   <style>
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     body {
-      background: #000;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
-      height: 100vh;
-      overflow: hidden;
-      position: fixed;
-      width: 100%;
-      touch-action: manipulation;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+      min-height: 100vh;
+      padding: 20px;
     }
     
-    #playerContainer {
-      position: fixed;
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+    }
+    
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+      color: #4ef0f0;
+      text-shadow: 0 0 10px rgba(78, 240, 240, 0.7);
+      letter-spacing: 1px;
+    }
+    
+    .subtitle {
+      font-size: 1.2rem;
+      color: #a6f0f0;
+      max-width: 700px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    .episode-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+    
+    .episode-card {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      border: 1px solid rgba(78, 240, 240, 0.3);
+    }
+    
+    .episode-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+      border-color: rgba(78, 240, 240, 0.7);
+    }
+    
+    .episode-thumb {
+      height: 180px;
+      background: linear-gradient(45deg, #1a2a6c, #b21f1f, #1a2a6c);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .episode-thumb::before {
+      content: '';
+      position: absolute;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(transparent 70%, rgba(0, 0, 0, 0.8));
+    }
+    
+    .episode-number {
+      font-size: 4.5rem;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 0.2);
+      position: absolute;
+      top: 10px;
+      right: 15px;
       z-index: 1;
+    }
+    
+    .episode-title {
+      font-size: 1.4rem;
+      font-weight: bold;
+      padding: 20px 20px 15px;
+      position: relative;
+      z-index: 2;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    .episode-info {
+      padding: 0 20px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .play-btn {
+      background: linear-gradient(to right, #4ef0f0, #2b9cff);
+      color: #0a0a1a;
+      font-weight: bold;
+      padding: 8px 20px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      box-shadow: 0 4px 15px rgba(78, 240, 240, 0.4);
+    }
+    
+    .play-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(78, 240, 240, 0.6);
+    }
+    
+    .player-section {
+      margin-top: 40px;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      display: none;
+    }
+    
+    .player-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(78, 240, 240, 0.3);
+    }
+    
+    .now-playing {
+      font-size: 1.6rem;
+      color: #4ef0f0;
+    }
+    
+    .close-player {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .close-player:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(90deg);
     }
     
     #playerWrapper {
       position: relative;
       width: 100%;
-      height: 100%;
-      overflow: hidden;
+      height: 0;
+      padding-bottom: 56.25%; /* 16:9 aspect ratio */
       background: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      border-radius: 10px;
+      overflow: hidden;
     }
     
     #animePlayer {
-      width: 100%;
-      height: 100%;
-      border: none;
-      z-index: 1;
-      display: block;
-    }
-    
-    .overlay {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #0a0a1a 0%, #1a1a3a 100%);
-      z-index: 10;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 20px;
-      transition: opacity 0.5s ease;
-    }
-    
-    .overlay.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-    
-    .title {
-      font-size: 2.8rem;
-      margin-bottom: 15px;
-      color: #4ef0f0;
-      font-weight: 800;
-      letter-spacing: 2px;
-      text-shadow: 0 0 15px rgba(78, 240, 240, 0.6);
-    }
-    
-    .subtitle {
-      font-size: 1.2rem;
-      color: #c6f6f6;
-      margin-bottom: 40px;
-      max-width: 500px;
-      line-height: 1.6;
-      opacity: 0.9;
-    }
-    
-    .play-btn {
-      background: #4ef0f0;
-      color: #0a0a1a;
-      font-weight: bold;
-      padding: 16px 45px;
-      font-size: 1.2rem;
       border: none;
-      border-radius: 35px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 6px 20px rgba(78, 240, 240, 0.5);
-    }
-    
-    .play-btn:hover {
-      background: #7af5f5;
-      transform: scale(1.05);
-      box-shadow: 0 8px 25px rgba(78, 240, 240, 0.7);
     }
     
     .rotate-warning {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: #000;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      display: none;
       text-align: center;
       padding: 20px;
-      display: none;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 10px;
+      margin-top: 20px;
     }
     
     .rotate-icon {
-      font-size: 3.5rem;
-      margin-bottom: 25px;
+      font-size: 2.5rem;
+      margin-bottom: 15px;
       color: #4ef0f0;
-      animation: rotateAnimation 2s infinite ease;
-    }
-    
-    .rotate-warning h3 {
-      font-size: 1.8rem;
-      margin-bottom: 20px;
-      color: #4ef0f0;
-    }
-    
-    .rotate-warning p {
-      font-size: 1.1rem;
-      max-width: 350px;
-      line-height: 1.6;
-      color: #a6f0f0;
+      animation: rotateAnimation 2s infinite ease-in-out;
     }
     
     @keyframes rotateAnimation {
@@ -154,121 +218,245 @@
       100% { transform: rotate(90deg); }
     }
     
-    /* Aspect ratio solution without cropping */
-    @media (orientation: landscape) {
-      #playerWrapper {
-        /* Preserve entire video frame */
-        max-width: 100vw;
-        max-height: 100vh;
+    .mobile-info {
+      display: none;
+      text-align: center;
+      padding: 15px;
+      background: rgba(78, 240, 240, 0.1);
+      border-radius: 10px;
+      margin-top: 20px;
+      font-size: 0.9rem;
+    }
+    
+    @media (max-width: 768px) {
+      .episode-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
       }
       
-      #animePlayer {
-        /* Maintain original aspect ratio without cropping */
-        width: auto;
-        height: auto;
-        max-width: 100vw;
-        max-height: 100vh;
+      h1 {
+        font-size: 2.2rem;
+      }
+      
+      .player-section {
+        padding: 20px;
+      }
+      
+      .mobile-info {
+        display: block;
       }
     }
     
-    @media screen and (orientation: portrait) {
+    @media (max-width: 480px) {
+      .episode-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+      
+      .episode-title {
+        font-size: 1.2rem;
+      }
+      
+      .now-playing {
+        font-size: 1.3rem;
+      }
+    }
+    
+    @media (orientation: portrait) {
       .rotate-warning {
-        display: flex;
+        display: block;
       }
     }
     
-    /* Hide all UI elements during playback */
-    .hidden {
-      display: none !important;
-    }
-    
-    /* Hide status bar in fullscreen mode */
-    :fullscreen, :fullscreen #playerContainer {
-      overflow: hidden;
-      background: #000;
-    }
-    
-    /* Safari specific fullscreen styles */
-    :-webkit-full-screen, :-webkit-full-screen #playerContainer {
-      overflow: hidden;
-      background: #000;
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <div id="playerContainer">
-    <div class="overlay" id="clickBlocker">
-      <h1 class="title">07-GHOST</h1>
-      <p class="subtitle">Episode 1: The Boy in the Darkness</p>
-      <button class="play-btn" onclick="startPlayback()">Play Episode</button>
+  <div class="container">
+    <header>
+      <h1>A3! Season Autumn & Winter</h1>
+      <p class="subtitle">Select an episode below to start watching. Enjoy the adventures of the Autumn and Winter troupes as they grow and perform together!</p>
+    </header>
+    
+    <div class="episode-grid" id="episodeGrid">
+      <!-- Episode cards will be generated here -->
     </div>
     
-    <div id="playerWrapper">
-      <iframe id="animePlayer" src="" allow="autoplay; fullscreen" allowfullscreen></iframe>
+    <div class="player-section" id="playerSection">
+      <div class="player-header">
+        <div class="now-playing" id="nowPlaying">Now Playing: Episode 1</div>
+        <button class="close-player" id="closePlayer">✕</button>
+      </div>
+      <div id="playerWrapper">
+        <iframe id="animePlayer" allow="autoplay; fullscreen" allowfullscreen></iframe>
+      </div>
+      <div class="rotate-warning" id="rotateWarning">
+        <div class="rotate-icon">↻</div>
+        <h3>Rotate Your Device</h3>
+        <p>Please rotate to landscape for the best viewing experience</p>
+      </div>
     </div>
     
-    <div class="rotate-warning" id="rotateWarning">
-      <div class="rotate-icon">↻</div>
-      <h3>Rotate Your Device</h3>
-      <p>Please rotate to landscape for the best viewing experience</p>
+    <div class="mobile-info">
+      Tip: For the best viewing experience, use landscape mode on mobile devices
     </div>
+    
+    <footer>
+      <p>A3! Season Autumn & Winter Episode Selector | All episodes provided for demonstration purposes</p>
+    </footer>
   </div>
 
   <script>
-    function startPlayback() {
-      // Hide the overlay
-      document.getElementById('clickBlocker').classList.add('hidden');
-      
-      // Start loading the video
-      document.getElementById('animePlayer').src = "//databasegdriveplayer.xyz/player.php?type=anime&slug=07-ghost&episode=1";
-      
-      // Enter fullscreen mode to hide status bar
-      enterFullscreen();
-    }
-    
-    // Handle orientation changes
-    function checkOrientation() {
-      const warning = document.getElementById('rotateWarning');
-      if (window.matchMedia("(orientation: portrait)").matches) {
-        warning.style.display = 'flex';
-      } else {
-        warning.style.display = 'none';
+    // Episode data
+    const episodeList = [
+      {
+        "title": "A3 Season Autumn Winter",
+        "episode": "Episode 12",
+        "iframe": "<iframe src=\"https://databasegdriveplayer.xyz/player.php?type=anime&slug=a3-season-autumn-winter&episode=12\" frameborder=\"0\" width=\"100%\" height=\"400\" allowfullscreen=\"allowfullscreen\"></iframe>"
+      },
+      {
+        "title": "A3 Season Autumn Winter",
+        "episode": "Episode 11",
+        "iframe": "<iframe src=\"https://databasegdriveplayer.xyz/player.php?type=anime&slug=a3-season-autumn-winter&episode=11\" frameborder=\"0\" width=\"100%\" height=\"400\" allowfullscreen=\"allowfullscreen\"></iframe>"
+      },
+      {
+        "title": "A3 Season Autumn Winter",
+        "episode": "Episode 10",
+        "iframe": "<iframe src=\"https://databasegdriveplayer.xyz/player.php?type=anime&slug=a3-season-autumn-winter&episode=10\" frameborder=\"0\" width=\"100%\" height=\"400\" allowfullscreen=\"allowfullscreen\"></iframe>"
+      },
+      {
+        "title": "A3 Season Autumn Winter",
+        "episode": "Episode 9",
+        "iframe": "<iframe src=\"https://databasegdriveplayer.xyz/player.php?type=anime&slug=a3-season-autumn-winter&episode=9\" frameborder=\"0\" width=\"100%\" height=\"400\" allowfullscreen=\"allowfullscreen\"></iframe>"
+      },
+      {
+        "title": "A3 Season Autumn Winter",
+        "episode": "Episode 8",
+        "iframe": "<iframe src=\"https://databasegdriveplayer.xyz/player.php?type=anime&slug=a3-season-autumn-winter&episode=8\" frameborder=\"0\" width=\"100%\" height=\"400\" allowfullscreen=\"allowfullscreen\"></iframe>"
+      },
+      {
+        "title": "A3 Season Autumn Winter",
+        "episode": "Episode 7",
+        "iframe": "<iframe src=\"https://databasegdriveplayer.xyz/player.php?type=anime&slug=a3-season-autumn-winter&episode=7\" frameborder=\"0\" width=\"100%\" height=\"400\" allowfullscreen=\"allowfullscreen\"></iframe>"
+      },
+      {
+        "title": "A3 Season Autumn Winter",
+        "episode": "Episode 6",
+        "iframe": "<iframe src=\"https://databasegdriveplayer.xyz/player.php?type=anime&slug=a3-season-autumn-winter&episode=6\" frameborder=\"0\" width=\"100%\" height=\"400\" allowfullscreen=\"allowfullscreen\"></iframe>"
+      },
+      {
+        "title": "A3 Season Autumn Winter",
+        "episode": "Episode 5",
+        "iframe": "<iframe src=\"https://databasegdriveplayer.xyz/player.php?type=anime&slug=a3-season-autumn-winter&episode=5\" frameborder=\"0\" width=\"100%\" height=\"400\" allowfullscreen=\"allowfullscreen\"></iframe>"
+      },
+      {
+        "title": "A3 Season Autumn Winter",
+        "episode": "Episode 4",
+        "iframe": "<iframe src=\"https://databasegdriveplayer.xyz/player.php?type=anime&slug=a3-season-autumn-winter&episode=4\" frameborder=\"0\" width=\"100%\" height=\"400\" allowfullscreen=\"allowfullscreen\"></iframe>"
+      },
+      {
+        "title": "A3 Season Autumn Winter",
+        "episode": "Episode 3",
+        "iframe": "<iframe src=\"https://databasegdriveplayer.xyz/player.php?type=anime&slug=a3-season-autumn-winter&episode=3\" frameborder=\"0\" width=\"100%\" height=\"400\" allowfullscreen=\"allowfullscreen\"></iframe>"
+      },
+      {
+        "title": "A3 Season Autumn Winter",
+        "episode": "Episode 2",
+        "iframe": "<iframe src=\"https://databasegdriveplayer.xyz/player.php?type=anime&slug=a3-season-autumn-winter&episode=2\" frameborder=\"0\" width=\"100%\" height=\"400\" allowfullscreen=\"allowfullscreen\"></iframe>"
+      },
+      {
+        "title": "A3 Season Autumn Winter",
+        "episode": "Episode 1",
+        "iframe": "<iframe src=\"https://databasegdriveplayer.xyz/player.php?type=anime&slug=a3-season-autumn-winter&episode=1\" frameborder=\"0\" width=\"100%\" height=\"400\" allowfullscreen=\"allowfullscreen\"></iframe>"
       }
+    ];
+
+    // Extract the src from iframe string
+    function extractSrc(iframeString) {
+      const temp = document.createElement('div');
+      temp.innerHTML = iframeString;
+      return temp.querySelector('iframe').src;
     }
-    
-    // Fullscreen handling to hide status bar
-    function enterFullscreen() {
-      const elem = document.documentElement;
+
+    // Generate episode cards
+    function generateEpisodeCards() {
+      const grid = document.getElementById('episodeGrid');
+      grid.innerHTML = '';
       
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      } else if (elem.mozRequestFullScreen) { /* Firefox */
-        elem.mozRequestFullScreen();
-      } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-        elem.webkitRequestFullscreen();
-      } else if (elem.msRequestFullscreen) { /* IE/Edge */
-        elem.msRequestFullscreen();
-      }
+      episodeList.forEach(ep => {
+        const episodeNum = ep.episode.split(' ')[1];
+        
+        const card = document.createElement('div');
+        card.className = 'episode-card';
+        card.innerHTML = `
+          <div class="episode-thumb">
+            <div class="episode-number">${episodeNum}</div>
+            <div class="episode-title">${ep.episode}</div>
+          </div>
+          <div class="episode-info">
+            <div>${ep.title}</div>
+            <button class="play-btn" data-episode="${episodeNum}" data-src="${extractSrc(ep.iframe)}">Play</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
     }
-    
+
+    // Play selected episode
+    function playEpisode(episodeNum, src) {
+      const playerSection = document.getElementById('playerSection');
+      const nowPlaying = document.getElementById('nowPlaying');
+      const player = document.getElementById('animePlayer');
+      
+      nowPlaying.textContent = `Now Playing: Episode ${episodeNum}`;
+      player.src = src;
+      playerSection.style.display = 'block';
+      
+      // Scroll to player
+      playerSection.scrollIntoView({ behavior: 'smooth' });
+    }
+
     // Initialize
-    window.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
+      generateEpisodeCards();
+      
+      // Add event listeners to play buttons
+      document.querySelectorAll('.play-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const episodeNum = btn.dataset.episode;
+          const src = btn.dataset.src;
+          playEpisode(episodeNum, src);
+        });
+      });
+      
+      // Close player
+      document.getElementById('closePlayer').addEventListener('click', () => {
+        document.getElementById('playerSection').style.display = 'none';
+        document.getElementById('animePlayer').src = '';
+      });
+      
+      // Check orientation
+      function checkOrientation() {
+        const warning = document.getElementById('rotateWarning');
+        if (window.matchMedia("(orientation: portrait)").matches) {
+          warning.style.display = 'block';
+        } else {
+          warning.style.display = 'none';
+        }
+      }
+      
       checkOrientation();
       window.addEventListener('resize', checkOrientation);
       window.addEventListener('orientationchange', checkOrientation);
     });
-    
-    // Hide status bar on mobile devices
-    if (window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches) {
-      document.documentElement.style.setProperty('--status-bar-height', '0px');
-    }
-    
-    // Prevent default touch actions
-    document.addEventListener('touchmove', function(e) {
-      if (!e.target.classList.contains('play-btn')) {
-        e.preventDefault();
-      }
-    }, { passive: false });
   </script>
 </body>
 </html>
