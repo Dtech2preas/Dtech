@@ -827,6 +827,13 @@
   padding: 20px;
   box-sizing: border-box;
 }
+
+#ad-layer.bold {
+  background: rgba(0,0,0,0.9);
+  font-size: 28px;
+  font-weight: bold;
+  color: yellow;
+}
 </style>
 
 <div id="ad-layer" style="display: none;">
@@ -835,32 +842,68 @@
 
 <script>
 const layer = document.getElementById("ad-layer");
+const AD_DURATION = 10000; // 10 seconds
+const COOLDOWN = 3600000;  // 1 hour in ms
+
+function showLayer(bold = false) {
+  if (bold) {
+    layer.classList.add("bold");
+    layer.innerHTML = "⏳ You must wait at least 10 seconds<br><small>Try again, but stay longer.</small>";
+  } else {
+    layer.classList.remove("bold");
+    layer.innerHTML = "👆 Tap to Continue<br><small>(Ad will open once per hour)</small>";
+  }
+
+  layer.style.display = "flex";
+}
 
 function checkAndShowLayer() {
   const lastClick = localStorage.getItem("direct_ad_last_click");
   const now = Date.now();
 
-  if (!lastClick || (now - parseInt(lastClick)) > 3600000) {
-    layer.style.display = "flex";
+  if (!lastClick || (now - parseInt(lastClick)) > COOLDOWN) {
+    showLayer(false);
   }
 }
 
 layer.addEventListener("click", () => {
   const now = Date.now();
   const lastClick = localStorage.getItem("direct_ad_last_click");
+  const lastWatch = localStorage.getItem("direct_ad_watch_start");
 
-  if (!lastClick || (now - parseInt(lastClick)) > 3600000) {
+  // if allowed
+  if (!lastClick || (now - parseInt(lastClick)) > COOLDOWN) {
+    // store when ad opened
+    localStorage.setItem("direct_ad_watch_start", now);
+
+    // call native ad popup
     if (typeof Android !== "undefined" && Android.openAdWindow) {
-      Android.openAdWindow(); // Call Android activity
+      Android.openAdWindow();
     }
-    localStorage.setItem("direct_ad_last_click", now);
   }
 
   layer.style.display = "none";
 });
 
+// When page regains focus (user returns from ad)
+window.addEventListener("focus", () => {
+  const watchStart = parseInt(localStorage.getItem("direct_ad_watch_start") || "0");
+  const now = Date.now();
+
+  if (watchStart > 0 && (now - watchStart) < AD_DURATION) {
+    // User returned too soon — retry ad popup
+    localStorage.removeItem("direct_ad_last_click"); // force retry
+    setTimeout(() => showLayer(true), 500); // bold version
+  } else if (watchStart > 0 && (now - watchStart) >= AD_DURATION) {
+    // Success — store the full success time
+    localStorage.setItem("direct_ad_last_click", now);
+    localStorage.removeItem("direct_ad_watch_start");
+  }
+});
+
+// Start
 checkAndShowLayer();
-setInterval(checkAndShowLayer, 600000); // re-check every 10 minutes
+setInterval(checkAndShowLayer, 600000);
 </script>
 </body>
 </html>
