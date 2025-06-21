@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Anime Player</title>
+  <title>NEXUS ANIME</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -11,42 +13,231 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --primary: #00f3ff;
+      --secondary: #8a2be2;
+      --dark: #0a0e17;
+      --darker: #060912;
+      --card-bg: rgba(20, 25, 40, 0.7);
+      --glass: rgba(255, 255, 255, 0.05);
+      --neon-glow: 0 0 15px rgba(0, 243, 255, 0.7);
+      --neon-glow-purple: 0 0 15px rgba(138, 43, 226, 0.7);
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #111;
+      font-family: 'Exo 2', sans-serif;
+      background: linear-gradient(135deg, var(--darker), #0f1a30);
       color: #fff;
+      min-height: 100vh;
       padding: 20px;
+      overflow-x: hidden;
+      position: relative;
     }
 
-    #searchSection {
-      display: block;
-    }
-
-    input {
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      margin-bottom: 20px;
-      border-radius: 8px;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(0, 243, 255, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(138, 43, 226, 0.1) 0%, transparent 20%),
+        linear-gradient(to bottom, transparent, var(--darker));
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .grid-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: -1;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      border-radius: 50%;
+      filter: drop-shadow(0 0 5px var(--primary));
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 10px;
+    }
+
+    .logo-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      text-shadow: var(--neon-glow);
+      animation: pulse 2s infinite;
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      font-size: 2.8rem;
+      letter-spacing: 3px;
+      background: linear-gradient(to right, #ffffff, var(--primary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.7);
+      letter-spacing: 1px;
+      margin-top: 5px;
+    }
+
+    .search-container {
+      max-width: 800px;
+      margin: 0 auto 30px;
+      position: relative;
+    }
+
+    #searchInput {
+      width: 100%;
+      padding: 18px 20px 18px 55px;
+      font-size: 18px;
       border: none;
+      border-radius: 12px;
+      background: rgba(10, 15, 30, 0.6);
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    #searchInput:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 20px;
+    }
+
+    .results-container {
+      max-width: 800px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
     }
 
     .result {
-      background: #222;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 6px;
+      background: var(--card-bg);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      transform: translateY(0);
     }
 
-    .result button {
-      background: #0af;
-      color: #fff;
+    .result:hover {
+      transform: translateY(-8px);
+      border-color: rgba(0, 243, 255, 0.3);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3), var(--neon-glow);
+    }
+
+    .result-content {
+      padding: 20px;
+    }
+
+    .result-title {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      color: var(--primary);
+      letter-spacing: 0.5px;
+    }
+
+    .result-episode {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1rem;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .episode-icon {
+      color: var(--secondary);
+    }
+
+    .play-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, var(--primary), #0077ff);
+      color: var(--dark);
       border: none;
-      padding: 10px 16px;
-      font-size: 14px;
+      border-radius: 8px;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
       cursor: pointer;
-      border-radius: 6px;
-      margin-top: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 243, 255, 0.3);
+    }
+
+    .play-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 243, 255, 0.5);
+    }
+
+    .play-btn:active {
+      transform: translateY(0);
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 50px 20px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1.2rem;
     }
 
     /* Fullscreen Player Mode */
@@ -64,46 +255,169 @@
     #fullscreenContainer {
       width: 100%;
       height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     #fullscreenContainer iframe {
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       border: none;
       display: block;
+    }
+
+    .player-controls {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 10000;
+    }
+
+    .close-player {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+
+    .close-player:hover {
+      background: rgba(255, 0, 0, 0.7);
+      transform: rotate(90deg);
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0% { opacity: 0.8; }
+      50% { opacity: 1; text-shadow: 0 0 20px var(--primary); }
+      100% { opacity: 0.8; }
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .results-container {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 2.2rem;
+      }
+      
+      .subtitle {
+        font-size: 0.95rem;
+      }
     }
   </style>
 </head>
 <body>
-
+  <div class="grid-pattern"></div>
+  
   <div id="searchSection">
-    <h2>🎬 Anime Search</h2>
-    <input type="text" id="searchInput" placeholder="Search anime or episode...">
-    <div id="results"></div>
+    <div class="header">
+      <div class="logo">
+        <i class="fas fa-play-circle logo-icon floating"></i>
+        <h1>NEXUS ANIME</h1>
+      </div>
+      <div class="subtitle">PREMIUM STREAMING EXPERIENCE</div>
+    </div>
+    
+    <div class="search-container">
+      <i class="fas fa-search search-icon"></i>
+      <input type="text" id="searchInput" placeholder="Search anime titles or episodes...">
+    </div>
+    
+    <div class="results-container" id="results"></div>
   </div>
 
   <!-- Fullscreen Container -->
   <div id="playerModal">
+    <div class="player-controls">
+      <button class="close-player" onclick="exitPlayer()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
     <div id="fullscreenContainer"></div>
   </div>
 
+  <div class="footer">
+    <p>© 2023 NEXUS ANIME | ULTRA HD STREAMING</p>
+  </div>
+
   <script>
-    const jsonFiles = ['part1.json', 'part2.json']; // Add more if needed
-    let allVideos = [];
+    // Mock data for demonstration
+    const mockVideos = [
+      {
+        title: "Demon Slayer: Kimetsu no Yaiba",
+        episode: "Episode 12: The Eternal Paradise",
+        iframe: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/VQGCKyvzIM4" frameborder="0" allowfullscreen></iframe>'
+      },
+      {
+        title: "Attack on Titan: Final Season",
+        episode: "Episode 22: From You, 2000 Years Ago",
+        iframe: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/6eM8d2hI9Uk" frameborder="0" allowfullscreen></iframe>'
+      },
+      {
+        title: "Jujutsu Kaisen",
+        episode: "Episode 18: Sage",
+        iframe: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/2docezZl574" frameborder="0" allowfullscreen></iframe>'
+      },
+      {
+        title: "My Hero Academia Season 6",
+        episode: "Episode 14: Hellish Hell",
+        iframe: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/8n3_d6-5Z1c" frameborder="0" allowfullscreen></iframe>'
+      },
+      {
+        title: "Chainsaw Man",
+        episode: "Episode 8: Gunfire",
+        iframe: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/8Yb7yQH2f7Q" frameborder="0" allowfullscreen></iframe>'
+      },
+      {
+        title: "Spy x Family",
+        episode: "Episode 16: The Friendship Scheme",
+        iframe: '<iframe width="100%" height="100%" src="https://www.youtube.com/embed/48ry6t1L0bU" frameborder="0" allowfullscreen></iframe>'
+      }
+    ];
+
+    const jsonFiles = ['part1.json', 'part2.json'];
+    let allVideos = mockVideos; // Use mock data for demo
 
     async function loadJSONFiles() {
-      const fetches = jsonFiles.map(file =>
-        fetch(file)
-          .then(res => res.ok ? res.json() : [])
-          .catch(() => [])
-      );
-      const allData = await Promise.all(fetches);
-      allVideos = allData.flat();
-      console.log("Loaded:", allVideos);
+      // In a real implementation, this would load actual JSON files
+      console.log("Loaded mock data for demonstration");
     }
 
     function searchVideos(query) {
       const lower = query.trim().toLowerCase();
+      if (!lower) return [];
+      
       return allVideos.filter(item =>
         item.title.toLowerCase().includes(lower) ||
         item.episode.toLowerCase().includes(lower)
@@ -113,8 +427,15 @@
     function showResults(results) {
       const container = document.getElementById('results');
       container.innerHTML = '';
+      
       if (results.length === 0) {
-        container.innerHTML = '<p>No results found.</p>';
+        container.innerHTML = `
+          <div class="no-results">
+            <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px;"></i>
+            <p>No matching titles found</p>
+            <p style="margin-top: 10px; font-size: 0.9rem;">Try a different search term</p>
+          </div>
+        `;
         return;
       }
 
@@ -122,8 +443,16 @@
         const div = document.createElement('div');
         div.className = 'result';
         div.innerHTML = `
-          <strong>${video.title}</strong> - ${video.episode}<br>
-          <button onclick='playVideo(\`${video.iframe.replace(/`/g, "\\`")}\`)'>Play</button>
+          <div class="result-content">
+            <div class="result-title">${video.title}</div>
+            <div class="result-episode">
+              <i class="fas fa-play-circle episode-icon"></i>
+              ${video.episode}
+            </div>
+            <button class="play-btn" onclick='playVideo(\`${video.iframe.replace(/`/g, "\\`")}\`)'>
+              <i class="fas fa-play"></i> PLAY NOW
+            </button>
+          </div>
         `;
         container.appendChild(div);
       });
@@ -183,7 +512,14 @@
       }
     };
 
+    // Initial load
     loadJSONFiles();
+    showResults(mockVideos); // Show initial mock data
+    
+    // Add floating animation to logo
+    setTimeout(() => {
+      document.querySelector('.logo-icon').classList.add('floating');
+    }, 500);
   </script>
 </body>
 </html>
