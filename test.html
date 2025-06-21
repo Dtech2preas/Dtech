@@ -807,6 +807,71 @@
       document.querySelector('.logo-icon').classList.add('floating');
     }, 500);
   </script>
+<style>
+#ad-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.6); /* semi-transparent dark background */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-family: sans-serif;
+  z-index: 9999;
+  cursor: pointer;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+</style>
 
+<div id="ad-layer" style="display: none;">
+  👆 Tap to Continue<br><small>(Ad will open once per hour)</small>
+</div>
+
+<script>
+const directLink = "https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365";
+const layer = document.getElementById("ad-layer");
+
+// Check if it's time to show the layer
+function checkAndShowLayer() {
+  const lastClick = localStorage.getItem("direct_ad_last_click");
+  const now = Date.now();
+
+  if (!lastClick || (now - parseInt(lastClick)) > 3600000) {
+    layer.style.display = "flex";
+  }
+}
+
+// Handle click to open ad
+layer.addEventListener("click", () => {
+  const now = Date.now();
+  const lastClick = localStorage.getItem("direct_ad_last_click");
+
+  // Make sure it's allowed
+  if (!lastClick || (now - parseInt(lastClick)) > 3600000) {
+    window.open(directLink, "_blank");
+    localStorage.setItem("direct_ad_last_click", now);
+  }
+
+  // Hide the layer immediately
+  layer.style.display = "none";
+
+  // Schedule it to reappear in 1 hour
+  setTimeout(() => {
+    layer.style.display = "flex";
+  }, 3600000);
+});
+
+// Check on load
+checkAndShowLayer();
+
+// Check again every 10 minutes in case page stays open
+setInterval(checkAndShowLayer, 600000);
+</script>
 </body>
 </html>
