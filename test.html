@@ -1,127 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <title>07-Ghost - Episode 1</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>07-Ghost - Full Screen Player</title>
   <style>
-    html, body {
+    * {
       margin: 0;
       padding: 0;
-      background: #000;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-      height: 100%;
-      overflow: hidden;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
-
-    #fullContainer {
-      display: flex;
-      flex-direction: column;
-      height: 100%;
+    
+    body {
+      background: #000;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      position: fixed;
       width: 100%;
     }
-
-    .overlay {
-      position: absolute;
-      z-index: 10;
+    
+    #playerContainer {
+      position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background-color: rgba(0,0,0,0.9);
       display: flex;
       justify-content: center;
       align-items: center;
-      flex-direction: column;
+      z-index: 1;
     }
-
-    .overlay button {
-      background-color: #4ef0f0;
-      color: #000;
-      font-weight: bold;
-      padding: 16px 28px;
-      font-size: 18px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-    }
-
-    .iframe-wrapper {
-      flex-grow: 1;
-      width: 100vw;
-      height: 100vh;
+    
+    #playerWrapper {
       position: relative;
+      width: 100%;
+      height: 100%;
       overflow: hidden;
+      background: #000;
     }
-
-    iframe {
+    
+    #animePlayer {
       position: absolute;
       top: 0;
       left: 0;
-      border: none;
       width: 100%;
       height: 100%;
+      border: none;
       z-index: 1;
     }
-
-    @media screen and (orientation: landscape) {
-      iframe {
-        width: 116vw; /* 100% + 8% left + 8% right = 116% */
-        left: -8vw;    /* shift left by 8% to center the visible part */
+    
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0a0a1a;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      transition: opacity 0.5s ease;
+    }
+    
+    .overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .title {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+      color: #4ef0f0;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px rgba(78, 240, 240, 0.5);
+    }
+    
+    .subtitle {
+      font-size: 1.1rem;
+      color: #a6f0f0;
+      margin-bottom: 30px;
+      max-width: 500px;
+      line-height: 1.5;
+      opacity: 0.9;
+    }
+    
+    .play-btn {
+      background: #4ef0f0;
+      color: #0a0a1a;
+      font-weight: bold;
+      padding: 14px 36px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(78, 240, 240, 0.4);
+    }
+    
+    .play-btn:hover {
+      background: #7af5f5;
+      transform: scale(1.05);
+    }
+    
+    .rotate-warning {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+    
+    .rotate-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #4ef0f0;
+      animation: rotateAnimation 2s infinite ease-in-out;
+    }
+    
+    .rotate-warning h3 {
+      font-size: 1.6rem;
+      margin-bottom: 15px;
+      color: #4ef0f0;
+    }
+    
+    .rotate-warning p {
+      font-size: 1rem;
+      max-width: 350px;
+      line-height: 1.5;
+      color: #a6f0f0;
+    }
+    
+    @keyframes rotateAnimation {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(90deg); }
+    }
+    
+    /* Aspect ratio solution */
+    @media (orientation: landscape) {
+      #playerWrapper {
+        overflow: hidden;
+      }
+      
+      #animePlayer {
+        width: 100vw;
+        height: 56.25vw; /* 16:9 aspect ratio */
+        min-height: 100vh;
+        min-width: 177.78vh; /* 16/9 = 1.7778 */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
       }
     }
-
+    
     @media screen and (orientation: portrait) {
       .rotate-warning {
         display: flex;
       }
     }
-
-    .rotate-warning {
-      display: none;
-      position: absolute;
-      z-index: 999;
-      background-color: #000;
-      color: #fff;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      text-align: center;
-      width: 100vw;
-      height: 100vh;
-      font-size: 20px;
-      padding: 20px;
+    
+    /* Hide all UI elements during playback */
+    .hidden {
+      display: none !important;
     }
-
-    footer {
-      display: none;
+    
+    /* Status bar hiding for mobile */
+    @media (display-mode: fullscreen) {
+      body {
+        padding-top: env(safe-area-inset-top);
+      }
     }
   </style>
 </head>
 <body>
-  <div id="fullContainer">
-    <div class="rotate-warning">
-      Please rotate your device to landscape to watch the video.
-    </div>
-
+  <div id="playerContainer">
     <div class="overlay" id="clickBlocker">
-      <button onclick="unblockIframe()">▶ Play Episode</button>
+      <h1 class="title">07-GHOST</h1>
+      <p class="subtitle">Episode 1: The Boy in the Darkness</p>
+      <button class="play-btn" onclick="startPlayback()">Play Episode</button>
     </div>
-
-    <div class="iframe-wrapper">
-      <iframe
-        id="animePlayer"
-        src=""
-        allowfullscreen
-      ></iframe>
+    
+    <div id="playerWrapper">
+      <iframe id="animePlayer" src="" allow="autoplay; fullscreen" allowfullscreen></iframe>
+    </div>
+    
+    <div class="rotate-warning" id="rotateWarning">
+      <div class="rotate-icon">↻</div>
+      <h3>Rotate Your Device</h3>
+      <p>Please rotate to landscape for the best viewing experience</p>
     </div>
   </div>
 
   <script>
-    function unblockIframe() {
-      document.getElementById("clickBlocker").style.display = "none";
-      document.getElementById("animePlayer").src = "//databasegdriveplayer.xyz/player.php?type=anime&slug=07-ghost&episode=1";
+    function startPlayback() {
+      // Hide the overlay
+      document.getElementById('clickBlocker').classList.add('hidden');
+      
+      // Start loading the video
+      document.getElementById('animePlayer').src = "//databasegdriveplayer.xyz/player.php?type=anime&slug=07-ghost&episode=1";
+      
+      // Enter fullscreen mode
+      requestFullscreen(document.documentElement);
+    }
+    
+    // Handle orientation changes
+    function checkOrientation() {
+      const warning = document.getElementById('rotateWarning');
+      if (window.matchMedia("(orientation: portrait)").matches) {
+        warning.style.display = 'flex';
+      } else {
+        warning.style.display = 'none';
+      }
+    }
+    
+    // Fullscreen handling
+    function requestFullscreen(element) {
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.mozRequestFullScreen) { /* Firefox */
+        element.mozRequestFullScreen();
+      } else if (element.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+        element.webkitRequestFullscreen();
+      } else if (element.msRequestFullscreen) { /* IE/Edge */
+        element.msRequestFullscreen();
+      }
+    }
+    
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      checkOrientation();
+      window.addEventListener('resize', checkOrientation);
+      window.addEventListener('orientationchange', checkOrientation);
+    });
+    
+    // Hide status bar on mobile
+    if ('standalone' in navigator || window.matchMedia('(display-mode: standalone)').matches) {
+      document.documentElement.style.setProperty('--status-bar-height', '0px');
     }
   </script>
 </body>
