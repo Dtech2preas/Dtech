@@ -2,648 +2,149 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Anime Episode Browser</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <title>Anime Player</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
     body {
-      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      font-family: Arial, sans-serif;
+      background: #111;
       color: #fff;
-      min-height: 100vh;
       padding: 20px;
-      position: relative;
-      overflow-x: hidden;
+      margin: 0;
     }
-    
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-    
-    header {
-      text-align: center;
-      margin-bottom: 30px;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.4);
-      border-radius: 15px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      position: relative;
-      overflow: hidden;
-    }
-    
-    header::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
+    input {
       width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, rgba(78, 240, 240, 0.1) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: -1;
+      padding: 10px;
+      font-size: 16px;
+      margin-bottom: 20px;
     }
-    
-    h1 {
-      font-size: 2.8rem;
+    .result {
       margin-bottom: 10px;
-      color: #4ef0f0;
-      text-shadow: 0 0 10px rgba(78, 240, 240, 0.7);
-      letter-spacing: 1px;
+      background: #222;
+      padding: 10px;
+      border-radius: 6px;
     }
-    
-    .subtitle {
-      font-size: 1.2rem;
-      color: #a6f0f0;
-      max-width: 700px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-    
-    .search-container {
-      display: flex;
-      margin: 30px 0;
-      max-width: 800px;
-      margin: 30px auto;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
-      border-radius: 50px;
-      overflow: hidden;
-    }
-    
-    .search-container input {
-      flex: 1;
-      padding: 18px 25px;
+    .result button {
+      margin-top: 5px;
+      padding: 6px 12px;
+      background: #0af;
       border: none;
-      background: rgba(0, 0, 0, 0.6);
-      color: #fff;
-      font-size: 1.1rem;
-      border-radius: 50px 0 0 50px;
-      outline: none;
-    }
-    
-    .search-container input::placeholder {
-      color: rgba(255, 255, 255, 0.5);
-    }
-    
-    .search-container button {
-      padding: 0 35px;
-      background: linear-gradient(to right, #4ef0f0, #2b9cff);
-      color: #0a0a1a;
-      font-weight: bold;
-      border: none;
-      font-size: 1.1rem;
+      color: white;
       cursor: pointer;
-      transition: all 0.3s ease;
+      border-radius: 4px;
     }
-    
-    .search-container button:hover {
-      background: linear-gradient(to right, #7af5f5, #4aafff);
-    }
-    
-    .json-selector {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin: 20px 0 30px;
-      flex-wrap: wrap;
-    }
-    
-    .json-btn {
-      background: rgba(0, 0, 0, 0.4);
-      color: #fff;
-      border: 1px solid rgba(78, 240, 240, 0.4);
-      padding: 10px 25px;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 1rem;
-    }
-    
-    .json-btn:hover, .json-btn.active {
-      background: linear-gradient(to right, #4ef0f0, #2b9cff);
-      color: #0a0a1a;
-      border-color: transparent;
-      box-shadow: 0 0 15px rgba(78, 240, 240, 0.5);
-    }
-    
-    .episode-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 25px;
-      margin-bottom: 40px;
-    }
-    
-    .episode-card {
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 12px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-      cursor: pointer;
-      border: 1px solid rgba(78, 240, 240, 0.3);
-      position: relative;
-    }
-    
-    .episode-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-      border-color: rgba(78, 240, 240, 0.7);
-    }
-    
-    .episode-thumb {
-      height: 180px;
-      background: linear-gradient(45deg, #1a2a6c, #b21f1f, #1a2a6c);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .episode-thumb::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(transparent 70%, rgba(0, 0, 0, 0.8));
-    }
-    
-    .episode-number {
-      font-size: 4.5rem;
-      font-weight: bold;
-      color: rgba(255, 255, 255, 0.2);
-      position: absolute;
-      top: 10px;
-      right: 15px;
-      z-index: 1;
-    }
-    
-    .episode-title {
-      font-size: 1.4rem;
-      font-weight: bold;
-      padding: 20px 20px 15px;
-      position: relative;
-      z-index: 2;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    }
-    
-    .episode-info {
-      padding: 0 20px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .play-btn {
-      background: linear-gradient(to right, #4ef0f0, #2b9cff);
-      color: #0a0a1a;
-      font-weight: bold;
-      padding: 8px 20px;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: none;
-      box-shadow: 0 4px 15px rgba(78, 240, 240, 0.4);
-    }
-    
-    .play-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 20px rgba(78, 240, 240, 0.6);
-    }
-    
-    .player-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
-    }
-    
-    .player-modal.active {
-      opacity: 1;
-      pointer-events: all;
-    }
-    
-    .player-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      width: 90%;
-      max-width: 1000px;
-      margin-bottom: 15px;
-    }
-    
-    .now-playing {
-      font-size: 1.6rem;
-      color: #4ef0f0;
-    }
-    
-    .close-player {
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
-      border: none;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .close-player:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: rotate(90deg);
-    }
-    
-    #playerWrapper {
-      position: relative;
-      width: 90%;
-      max-width: 1000px;
-      height: 0;
-      padding-bottom: 56.25%; /* 16:9 aspect ratio */
+
+    /* Fullscreen Player */
+    #playerModal {
+      display: none;
       background: #000;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 0 30px rgba(78, 240, 240, 0.3);
     }
-    
-    #animePlayer {
-      position: absolute;
-      top: 0;
-      left: 0;
+    #fullscreenContainer {
       width: 100%;
       height: 100%;
+    }
+    #fullscreenContainer iframe {
+      width: 100vw;
+      height: 100vh;
       border: none;
-    }
-    
-    .rotate-warning {
-      display: none;
-      text-align: center;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 10px;
-      margin-top: 20px;
-    }
-    
-    .rotate-icon {
-      font-size: 2.5rem;
-      margin-bottom: 15px;
-      color: #4ef0f0;
-      animation: rotateAnimation 2s infinite ease-in-out;
-    }
-    
-    @keyframes rotateAnimation {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(90deg); }
-    }
-    
-    .mobile-info {
-      display: none;
-      text-align: center;
-      padding: 15px;
-      background: rgba(78, 240, 240, 0.1);
-      border-radius: 10px;
-      margin-top: 20px;
-      font-size: 0.9rem;
-    }
-    
-    .no-results {
-      text-align: center;
-      grid-column: 1 / -1;
-      padding: 40px;
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 1.2rem;
-    }
-    
-    .loading {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 300px;
-      grid-column: 1 / -1;
-    }
-    
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid rgba(78, 240, 240, 0.3);
-      border-top: 5px solid #4ef0f0;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    
-    footer {
-      text-align: center;
-      margin-top: 40px;
-      padding: 20px;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 0.9rem;
-    }
-    
-    @media (max-width: 768px) {
-      .episode-grid {
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      }
-      
-      h1 {
-        font-size: 2.2rem;
-      }
-      
-      .mobile-info {
-        display: block;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .episode-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      h1 {
-        font-size: 1.8rem;
-      }
-      
-      .episode-title {
-        font-size: 1.2rem;
-      }
-      
-      .now-playing {
-        font-size: 1.3rem;
-      }
-      
-      .search-container input {
-        padding: 15px 20px;
-      }
-      
-      .search-container button {
-        padding: 0 25px;
-      }
-    }
-    
-    @media (orientation: portrait) {
-      .rotate-warning {
-        display: block;
-      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Anime Episode Browser</h1>
-      <p class="subtitle">Search and stream your favorite anime episodes from multiple sources</p>
-    </header>
-    
-    <div class="search-container">
-      <input type="text" id="searchInput" placeholder="Search by title or episode number...">
-      <button id="searchBtn"><i class="fas fa-search"></i> Search</button>
-    </div>
-    
-    <div class="json-selector">
-      <button class="json-btn active" data-file="part1.json">Season 1</button>
-      <button class="json-btn" data-file="part2.json">Season 2</button>
-      <button class="json-btn" data-file="part3.json">Season 3</button>
-      <button class="json-btn" data-file="specials.json">Specials</button>
-    </div>
-    
-    <div class="episode-grid" id="episodeGrid">
-      <div class="loading">
-        <div class="spinner"></div>
-      </div>
-    </div>
-    
-    <div class="mobile-info">
-      Tip: For the best viewing experience, use landscape mode on mobile devices
-    </div>
-    
-    <footer>
-      <p>Anime Episode Browser | Search and play your favorite episodes</p>
-    </footer>
-  </div>
-  
-  <!-- Fullscreen player modal -->
-  <div class="player-modal" id="playerModal">
-    <div class="player-header">
-      <div class="now-playing" id="nowPlaying">Now Playing: Episode 1</div>
-      <button class="close-player" id="closePlayer"><i class="fas fa-times"></i></button>
-    </div>
-    <div id="playerWrapper">
-      <iframe id="animePlayer" allow="autoplay; fullscreen" allowfullscreen></iframe>
-    </div>
-    <div class="rotate-warning" id="rotateWarning">
-      <div class="rotate-icon">↻</div>
-      <h3>Rotate Your Device</h3>
-      <p>Please rotate to landscape for the best viewing experience</p>
-    </div>
+
+  <h2>Search Anime</h2>
+  <input type="text" id="searchInput" placeholder="Search by title or episode...">
+
+  <div id="results"></div>
+
+  <!-- Fullscreen Container -->
+  <div id="playerModal">
+    <div id="fullscreenContainer"></div>
   </div>
 
   <script>
-    // Current episode data
-    let currentEpisodes = [];
-    
-    // DOM elements
-    const episodeGrid = document.getElementById('episodeGrid');
-    const searchInput = document.getElementById('searchInput');
-    const searchBtn = document.getElementById('searchBtn');
-    const playerModal = document.getElementById('playerModal');
-    const nowPlaying = document.getElementById('nowPlaying');
-    const animePlayer = document.getElementById('animePlayer');
-    const closePlayer = document.getElementById('closePlayer');
-    const jsonBtns = document.querySelectorAll('.json-btn');
-    
-    // Extract the src from iframe string
-    function extractSrc(iframeString) {
-      const temp = document.createElement('div');
-      temp.innerHTML = iframeString;
-      return temp.querySelector('iframe').src;
+    const jsonFiles = ['part1.json', 'part2.json']; // Add more if needed
+    let allVideos = [];
+
+    // Load all JSON parts
+    async function loadJSONFiles() {
+      const fetches = jsonFiles.map(file => fetch(file).then(res => res.json()));
+      const allData = await Promise.all(fetches);
+      allVideos = allData.flat();
     }
-    
-    // Load JSON data
-    async function loadJSON(file) {
-      try {
-        // Show loading spinner
-        episodeGrid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
-        
-        // Simulate fetching from different JSON files
-        await new Promise(resolve => setTimeout(resolve, 800));
-        
-        // In a real app, you would fetch the actual file:
-        // const response = await fetch(file);
-        // const data = await response.json();
-        
-        // For demo, we'll generate data based on the file name
-        const data = generateDemoData(file);
-        currentEpisodes = data;
-        renderEpisodes(data);
-        
-        // Update active button
-        jsonBtns.forEach(btn => {
-          btn.classList.toggle('active', btn.dataset.file === file);
-        });
-      } catch (error) {
-        console.error('Error loading JSON:', error);
-        episodeGrid.innerHTML = '<div class="no-results">Failed to load data. Please try again.</div>';
-      }
+
+    // Search videos
+    function searchVideos(query) {
+      const lower = query.toLowerCase();
+      return allVideos.filter(item =>
+        item.title.toLowerCase().includes(lower) ||
+        item.episode.toLowerCase().includes(lower)
+      );
     }
-    
-    // Generate demo data based on file name
-    function generateDemoData(file) {
-      const seasonMap = {
-        'part1.json': 'Season 1',
-        'part2.json': 'Season 2',
-        'part3.json': 'Season 3',
-        'specials.json': 'Specials'
-      };
-      
-      const season = seasonMap[file] || 'Season';
-      const count = file === 'specials.json' ? 5 : 12;
-      
-      const episodes = [];
-      for (let i = 1; i <= count; i++) {
-        const epNum = file === 'specials.json' ? `Special ${i}` : `Episode ${i}`;
-        episodes.push({
-          title: `A3 ${season}`,
-          episode: epNum,
-          iframe: `<iframe src="https://databasegdriveplayer.xyz/player.php?type=anime&slug=${file.replace('.json', '')}&episode=${i}" frameborder="0" width="100%" height="400" allowfullscreen="allowfullscreen"></iframe>`
-        });
-      }
-      
-      return episodes;
-    }
-    
-    // Render episodes to the grid
-    function renderEpisodes(episodes) {
-      if (episodes.length === 0) {
-        episodeGrid.innerHTML = '<div class="no-results">No episodes found matching your search</div>';
+
+    // Render search results
+    function showResults(results) {
+      const container = document.getElementById('results');
+      container.innerHTML = '';
+
+      if (results.length === 0) {
+        container.innerHTML = '<p>No results found.</p>';
         return;
       }
-      
-      episodeGrid.innerHTML = '';
-      
-      episodes.forEach(ep => {
-        const episodeNum = ep.episode.split(' ')[1] || ep.episode;
-        
-        const card = document.createElement('div');
-        card.className = 'episode-card';
-        card.innerHTML = `
-          <div class="episode-thumb">
-            <div class="episode-number">${episodeNum}</div>
-            <div class="episode-title">${ep.episode}</div>
-          </div>
-          <div class="episode-info">
-            <div>${ep.title}</div>
-            <button class="play-btn" data-title="${ep.title}" data-episode="${ep.episode}" data-src="${extractSrc(ep.iframe)}">Play</button>
-          </div>
+
+      results.forEach(video => {
+        const div = document.createElement('div');
+        div.className = 'result';
+        div.innerHTML = `
+          <strong>${video.title}</strong> - ${video.episode}<br>
+          <button onclick='playVideo(\`${video.iframe.replace(/`/g, "\\`")}\`)'>Play</button>
         `;
-        episodeGrid.appendChild(card);
-      });
-      
-      // Add event listeners to play buttons
-      document.querySelectorAll('.play-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const title = btn.dataset.title;
-          const episode = btn.dataset.episode;
-          const src = btn.dataset.src;
-          playEpisode(title, episode, src);
-        });
+        container.appendChild(div);
       });
     }
-    
-    // Play selected episode
-    function playEpisode(title, episode, src) {
-      nowPlaying.textContent = `Now Playing: ${title} - ${episode}`;
-      animePlayer.src = src;
-      playerModal.classList.add('active');
-      
-      // Check orientation on mobile
-      checkOrientation();
-    }
-    
-    // Search episodes
-    function searchEpisodes(query) {
-      if (!query.trim()) {
-        renderEpisodes(currentEpisodes);
-        return;
-      }
-      
-      const searchTerm = query.toLowerCase();
-      const filtered = currentEpisodes.filter(ep => {
-        return ep.title.toLowerCase().includes(searchTerm) || 
-               ep.episode.toLowerCase().includes(searchTerm);
-      });
-      
-      renderEpisodes(filtered);
-    }
-    
-    // Check device orientation
-    function checkOrientation() {
-      const warning = document.getElementById('rotateWarning');
-      if (window.matchMedia("(orientation: portrait)").matches) {
-        warning.style.display = 'block';
-      } else {
-        warning.style.display = 'none';
-      }
-    }
-    
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      // Load initial data
-      loadJSON('part1.json');
-      
-      // Search button event
-      searchBtn.addEventListener('click', () => {
-        searchEpisodes(searchInput.value);
-      });
-      
-      // Search on enter key
-      searchInput.addEventListener('keyup', (e) => {
-        if (e.key === 'Enter') {
-          searchEpisodes(searchInput.value);
+
+    // Enter fullscreen and play iframe
+    async function playVideo(iframeHtml) {
+      const container = document.getElementById('fullscreenContainer');
+      container.innerHTML = iframeHtml;
+
+      const modal = document.getElementById('playerModal');
+      modal.style.display = 'block';
+
+      try {
+        // Request full screen
+        if (modal.requestFullscreen) {
+          await modal.requestFullscreen();
+        } else if (modal.webkitRequestFullscreen) {
+          await modal.webkitRequestFullscreen();
+        } else if (modal.msRequestFullscreen) {
+          await modal.msRequestFullscreen();
         }
-      });
-      
-      // Close player
-      closePlayer.addEventListener('click', () => {
-        playerModal.classList.remove('active');
-        animePlayer.src = '';
-      });
-      
-      // JSON file buttons
-      jsonBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          loadJSON(btn.dataset.file);
-        });
-      });
-      
-      // Check orientation on resize
-      window.addEventListener('resize', checkOrientation);
-      window.addEventListener('orientationchange', checkOrientation);
+
+        // Lock to landscape if supported
+        if (screen.orientation && screen.orientation.lock) {
+          await screen.orientation.lock('landscape');
+        }
+      } catch (e) {
+        console.warn('Fullscreen or orientation lock failed:', e);
+      }
+    }
+
+    // Exit fullscreen when user exits
+    document.addEventListener('fullscreenchange', () => {
+      if (!document.fullscreenElement) {
+        document.getElementById('playerModal').style.display = 'none';
+        document.getElementById('fullscreenContainer').innerHTML = '';
+      }
     });
+
+    // On input
+    document.getElementById('searchInput').addEventListener('input', e => {
+      const results = searchVideos(e.target.value);
+      showResults(results);
+    });
+
+    loadJSONFiles();
   </script>
+
 </body>
 </html>
