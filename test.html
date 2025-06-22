@@ -526,6 +526,123 @@
       <div class="subtitle">PREMIUM VERSION</div>
     </div>
 
+   <button class="tg-join-btn" onclick="openPopup()">Join</button>
+
+<div id="tg-popup" class="popup">
+  <div class="popup-content">
+    <h3>Join Telegram Channel</h3>
+    <div class="url-box">
+      <input type="text" id="tg-url" value="https://t.me/DTECHX24" readonly>
+      <button onclick="copyToClipboard()">Copy</button>
+    </div>
+    <p class="chrome-hint">Paste this URL in Chrome to join</p>
+  </div>
+</div>
+
+<style>
+.tg-join-btn {
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #2AABEE, #229ED9);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+  transition: all 0.3s;
+}
+
+.tg-join-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+}
+
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: white;
+  padding: 25px 30px;
+  border-radius: 12px;
+  width: 320px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.url-box {
+  display: flex;
+  margin: 20px 0;
+}
+
+.url-box input {
+  flex: 1;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px 0 0 6px;
+  font-size: 14px;
+}
+
+.url-box button {
+  padding: 10px 16px;
+  background: #229ED9;
+  color: white;
+  border: none;
+  border-radius: 0 6px 6px 0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.url-box button:hover {
+  background: #1d8bc4;
+}
+
+.chrome-hint {
+  font-size: 13px;
+  color: #666;
+  margin-top: 5px;
+  font-style: italic;
+}
+</style>
+
+<script>
+function openPopup() {
+  document.getElementById('tg-popup').style.display = 'flex';
+  document.getElementById('tg-url').select();
+}
+
+function copyToClipboard() {
+  const url = document.getElementById('tg-url');
+  url.select();
+  navigator.clipboard.writeText(url.value);
+  
+  // Show copied confirmation
+  const copyBtn = document.querySelector('.url-box button');
+  copyBtn.textContent = '✓ Copied!';
+  setTimeout(() => {
+    copyBtn.textContent = 'Copy';
+  }, 2000);
+}
+
+// Close popup when clicking outside
+window.addEventListener('click', (e) => {
+  if(e.target.classList.contains('popup')) {
+    document.getElementById('tg-popup').style.display = 'none';
+  }
+});
+</script>
+
     <div class="nav-buttons">
       <a href="server.html" class="nav-btn">
         <i class="fas fa-server"></i>
