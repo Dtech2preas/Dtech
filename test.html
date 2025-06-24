@@ -750,4 +750,355 @@
         <div class="loader-text">Loading anime data...</div>
     </div>
 
-    <!--
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>AniStream</h3>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Help/FAQ</a></li>
+                    <li><a href="#">Affiliates</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Browse</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Simulcasts</a></li>
+                    <li><a href="#">Manga</a></li>
+                    <li><a href="#">News</a></li>
+                    <li><a href="#">Schedule</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Connect With Us</h3>
+                <ul class="footer-links">
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 AniStream. All rights reserved. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const featuredCarousel = document.getElementById('featuredCarousel');
+        const animeGrid = document.getElementById('animeGrid');
+        const genreButtons = document.querySelectorAll('.genre-btn');
+        const loader = document.getElementById('loader');
+        const searchInput = document.getElementById('searchInput');
+        
+        // Configuration
+        const jsonFiles = [
+            'part1.json',
+            'part2.json',
+            'finish.json',
+            'finis.json',
+            'part4.json'
+        ];
+        
+        let allAnime = [];
+        let currentGenre = 'all';
+        let displayedAnime = 12;
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Show loader
+            loader.style.display = 'flex';
+            
+            try {
+                // Fetch all JSON files
+                await fetchAllJsonFiles();
+                
+                // Get unique anime titles
+                const uniqueTitles = getUniqueAnimeTitles();
+                
+                // Fetch anime details from Jikan API
+                await fetchAnimeDetails(uniqueTitles);
+                
+                // Load UI components
+                loadFeaturedAnime();
+                loadAnimeGrid();
+                
+                // Add event listeners
+                setupEventListeners();
+                
+                // Hide loader
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+                
+            } catch (error) {
+                console.error('Error initializing page:', error);
+                loader.innerHTML = '<div class="loader-text">Failed to load anime data. Please try again later.</div>';
+            }
+        });
+
+        // Fetch all JSON files
+        async function fetchAllJsonFiles() {
+            const fetchPromises = jsonFiles.map(file => 
+                fetch(file)
+                    .then(response => response.json())
+                    .catch(error => {
+                        console.error(`Error fetching ${file}:`, error);
+                        return [];
+                    })
+            );
+            
+            const results = await Promise.all(fetchPromises);
+            allAnime = results.flat();
+        }
+
+        // Get unique anime titles
+        function getUniqueAnimeTitles() {
+            const titles = new Set();
+            return allAnime.filter(anime => {
+                if (!titles.has(anime.title)) {
+                    titles.add(anime.title);
+                    return true;
+                }
+                return false;
+            });
+        }
+
+        // Fetch anime details from Jikan API
+        async function fetchAnimeDetails(animeList) {
+            const promises = animeList.map(anime => 
+                fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(anime.title)}&limit=1`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.data && data.data.length > 0) {
+                            const details = data.data[0];
+                            return {
+                                ...anime,
+                                title: details.title || anime.title,
+                                image: details.images?.jpg?.image_url || 'https://via.placeholder.com/300x450?text=No+Image',
+                                description: details.synopsis || 'No description available.',
+                                rating: details.score ? details.score.toFixed(1) : 'N/A',
+                                episodes: details.episodes || '?',
+                                year: details.year || '?',
+                                genres: details.genres ? details.genres.map(g => g.name) : ['Unknown']
+                            };
+                        }
+                        return {
+                            ...anime,
+                            image: 'https://via.placeholder.com/300x450?text=No+Image',
+                            description: 'No description available.',
+                            rating: 'N/A',
+                            episodes: '?',
+                            year: '?',
+                            genres: ['Unknown']
+                        };
+                    })
+                    .catch(error => {
+                        console.error(`Error fetching details for ${anime.title}:`, error);
+                        return {
+                            ...anime,
+                            image: 'https://via.placeholder.com/300x450?text=No+Image',
+                            description: 'No description available.',
+                            rating: 'N/A',
+                            episodes: '?',
+                            year: '?',
+                            genres: ['Unknown']
+                        };
+                    })
+            );
+            
+            allAnime = await Promise.all(promises);
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            // Genre filter
+            genreButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelector('.genre-btn.active').classList.remove('active');
+                    button.classList.add('active');
+                    currentGenre = button.dataset.genre;
+                    displayedAnime = 12;
+                    loadAnimeGrid();
+                });
+            });
+            
+            // Search functionality
+            searchInput.addEventListener('input', () => {
+                displayedAnime = 12;
+                loadAnimeGrid();
+            });
+            
+            // Infinite scroll
+            window.addEventListener('scroll', handleInfiniteScroll);
+            
+            // Header scroll effect
+            window.addEventListener('scroll', handleHeaderScroll);
+        }
+
+        // Load featured anime
+        function loadFeaturedAnime() {
+            // Get random 6 anime for featured section
+            const featuredAnime = [...allAnime].sort(() => 0.5 - Math.random()).slice(0, 6);
+            
+            // Clear existing content
+            featuredCarousel.innerHTML = '';
+            
+            // Create cards for featured anime
+            featuredAnime.forEach(anime => {
+                const card = document.createElement('div');
+                card.className = 'anime-card';
+                card.innerHTML = `
+                    <div class="anime-img">
+                        <img src="${anime.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
+                    </div>
+                    <div class="anime-info">
+                        <div class="anime-title">${anime.title}</div>
+                        <div class="anime-meta">
+                            <span>${anime.year}</span>
+                            <span class="anime-rating">⭐ ${anime.rating}</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Add click event to open anime page
+                card.addEventListener('click', () => openAnime(anime));
+                
+                featuredCarousel.appendChild(card);
+            });
+        }
+
+        // Load anime grid with current filter
+        function loadAnimeGrid() {
+            // Clear existing grid
+            animeGrid.innerHTML = '';
+            
+            // Get search term
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            // Filter anime by current genre and search term
+            const filteredAnime = allAnime.filter(anime => {
+                const matchesGenre = currentGenre === 'all' || 
+                                    anime.genres.some(genre => 
+                                        genre.toLowerCase().includes(currentGenre.toLowerCase())
+                );
+                
+                const matchesSearch = anime.title.toLowerCase().includes(searchTerm) || 
+                                     anime.description.toLowerCase().includes(searchTerm) ||
+                                     anime.genres.some(genre => 
+                                         genre.toLowerCase().includes(searchTerm));
+                
+                return matchesGenre && matchesSearch;
+            });
+            
+            // Get anime to display (up to displayedAnime count)
+            const animeToDisplay = filteredAnime.slice(0, displayedAnime);
+            
+            // Create grid cards
+            animeToDisplay.forEach(anime => {
+                const card = document.createElement('div');
+                card.className = 'grid-anime-card';
+                card.innerHTML = `
+                    <div class="grid-img">
+                        <img src="${anime.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
+                    </div>
+                    <div class="grid-info">
+                        <div class="grid-title">${anime.title}</div>
+                        <div class="grid-episodes">${anime.episodes} episodes</div>
+                    </div>
+                `;
+                
+                // Add click event to open anime page
+                card.addEventListener('click', () => openAnime(anime));
+                
+                animeGrid.appendChild(card);
+            });
+            
+            // Show message if no results
+            if (animeToDisplay.length === 0) {
+                animeGrid.innerHTML = '<div class="no-results">No anime found matching your search criteria.</div>';
+            }
+        }
+
+        // Handle infinite scroll
+        function handleInfiniteScroll() {
+            const scrollPosition = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const bodyHeight = document.body.offsetHeight;
+            
+            // When user is near the bottom of the page
+            if (scrollPosition + windowHeight >= bodyHeight - 500) {
+                // Increase displayed anime count
+                displayedAnime += 12;
+                
+                // Reload grid with more anime
+                loadAnimeGrid();
+            }
+        }
+
+        // Handle header scroll effect
+        function handleHeaderScroll() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }
+
+        // Open anime player
+        function openAnime(anime) {
+            // Find the first episode for this anime
+            const episode = allAnime.find(a => a.title === anime.title);
+            
+            if (episode) {
+                // Create a new window with the player
+                const playerWindow = window.open('', '_blank');
+                
+                playerWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>${anime.title}</title>
+                        <style>
+                            body { 
+                                margin: 0; 
+                                padding: 0; 
+                                background: #000; 
+                                display: flex; 
+                                justify-content: center; 
+                                align-items: center; 
+                                height: 100vh;
+                            }
+                            .player-container {
+                                width: 100%;
+                                max-width: 1000px;
+                                padding: 20px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="player-container">
+                            ${episode.iframe}
+                        </div>
+                    </body>
+                    </html>
+                `);
+                
+                playerWindow.document.close();
+            } else {
+                alert(`Could not find episodes for ${anime.title}`);
+            }
+        }
+    </script>
+</body>
+</html>
