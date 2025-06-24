@@ -3,32 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimeFlix - Your Anime Streaming Destination</title>
+    <title>AniStream - Your Anime Destination</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Oswald:wght@500;600;700&display=swap">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
         :root {
             --primary: #f47521;
+            --primary-dark: #d8641a;
             --dark: #12151a;
             --dark-alt: #1a1e26;
             --light: #f0f2f5;
             --light-alt: #b8bcc2;
             --card-bg: #1e232b;
             --card-hover: #2a303a;
+            --overlay: rgba(0, 0, 0, 0.9);
         }
-        
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
         body {
             background-color: var(--dark);
             color: var(--light);
             overflow-x: hidden;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 20% 30%, rgba(26, 30, 38, 0.8) 0%, rgba(18, 21, 26, 1) 70%);
         }
-        
+
         /* Header Styles */
         header {
             background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.7));
@@ -39,42 +44,64 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: background 0.3s ease;
+            transition: all 0.3s ease;
         }
-        
+
         header.scrolled {
             background: rgba(18, 21, 26, 0.95);
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
         }
-        
+
         .logo {
             font-size: 28px;
             font-weight: 700;
             color: var(--primary);
             display: flex;
             align-items: center;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        
+
         .logo i {
             margin-right: 8px;
+            color: #fff;
         }
-        
+
         .nav-links {
             display: flex;
             gap: 30px;
         }
-        
+
         .nav-links a {
             color: var(--light);
             text-decoration: none;
             font-weight: 500;
             transition: color 0.3s;
+            position: relative;
+            padding: 5px 0;
         }
-        
+
         .nav-links a:hover, .nav-links a.active {
             color: var(--primary);
         }
-        
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after, .nav-links a.active::after {
+            width: 100%;
+        }
+
         .search-bar {
             display: flex;
             align-items: center;
@@ -82,8 +109,13 @@
             border-radius: 4px;
             padding: 8px 15px;
             width: 300px;
+            transition: all 0.3s;
         }
-        
+
+        .search-bar:focus-within {
+            box-shadow: 0 0 0 2px var(--primary);
+        }
+
         .search-bar input {
             background: transparent;
             border: none;
@@ -91,18 +123,19 @@
             width: 100%;
             padding: 5px 10px;
             outline: none;
+            font-size: 1rem;
         }
-        
+
         .search-bar i {
             color: var(--light-alt);
         }
-        
+
         .user-actions {
             display: flex;
             align-items: center;
             gap: 20px;
         }
-        
+
         .btn {
             padding: 8px 20px;
             border-radius: 4px;
@@ -111,58 +144,78 @@
             transition: all 0.3s;
             text-decoration: none;
             display: inline-block;
+            font-size: 0.9rem;
         }
-        
+
         .btn-login {
             color: var(--light);
             background: transparent;
             border: 1px solid var(--primary);
         }
-        
+
         .btn-login:hover {
             background: rgba(244, 117, 33, 0.1);
         }
-        
+
         .btn-signup {
             color: var(--dark);
             background: var(--primary);
             border: 1px solid var(--primary);
         }
-        
+
         .btn-signup:hover {
-            background: #e06a1d;
+            background: var(--primary-dark);
         }
-        
+
         /* Hero Section */
         .hero {
             height: 80vh;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://source.unsplash.com/random/1600x900/?anime') no-repeat center center/cover;
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1533279443086-d1c19a186416?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
             display: flex;
             align-items: center;
             padding: 0 40px;
             position: relative;
+            overflow: hidden;
         }
-        
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(18,21,26,0.8) 0%, rgba(18,21,26,0.5) 50%, rgba(18,21,26,0.8) 100%);
+        }
+
         .hero-content {
-            max-width: 600px;
+            max-width: 700px;
             z-index: 2;
+            position: relative;
+            animation: fadeInUp 0.8s ease-out;
         }
-        
+
         .hero h1 {
             font-size: 3.5rem;
             margin-bottom: 20px;
             line-height: 1.1;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
-        
+
         .hero p {
             font-size: 1.2rem;
             margin-bottom: 30px;
             color: var(--light-alt);
             line-height: 1.6;
+            max-width: 600px;
         }
-        
+
         .btn-hero {
-            padding: 12px 30px;
+            padding: 14px 35px;
             font-size: 1.1rem;
             background: var(--primary);
             color: var(--dark);
@@ -170,32 +223,40 @@
             border-radius: 4px;
             font-weight: 700;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(244, 117, 33, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        
+
         .btn-hero:hover {
-            background: #e06a1d;
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(244, 117, 33, 0.4);
         }
-        
+
         /* Featured Section */
         .featured {
             padding: 50px 40px;
         }
-        
+
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
         }
-        
+
         .section-title {
             font-size: 1.8rem;
             font-weight: 700;
             position: relative;
             padding-bottom: 10px;
+            font-family: 'Oswald', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        
+
         .section-title::after {
             content: '';
             position: absolute;
@@ -205,18 +266,19 @@
             height: 3px;
             background: var(--primary);
         }
-        
+
         .view-all {
             color: var(--primary);
             text-decoration: none;
             font-weight: 600;
             transition: opacity 0.3s;
+            font-size: 1rem;
         }
-        
+
         .view-all:hover {
             opacity: 0.8;
         }
-        
+
         .featured-carousel {
             display: flex;
             gap: 20px;
@@ -224,53 +286,74 @@
             padding: 10px 5px;
             scrollbar-width: thin;
         }
-        
+
         .featured-carousel::-webkit-scrollbar {
             height: 8px;
         }
-        
+
         .featured-carousel::-webkit-scrollbar-track {
             background: var(--dark-alt);
             border-radius: 4px;
         }
-        
+
         .featured-carousel::-webkit-scrollbar-thumb {
             background: var(--primary);
             border-radius: 4px;
         }
-        
+
         .anime-card {
             min-width: 250px;
             background: var(--card-bg);
             border-radius: 8px;
             overflow: hidden;
-            transition: transform 0.3s, background 0.3s;
+            transition: all 0.3s;
             cursor: pointer;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
-        
+
         .anime-card:hover {
             transform: translateY(-10px);
             background: var(--card-hover);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
         }
-        
+
         .anime-img {
             height: 350px;
             width: 100%;
-            background: #2a303a;
             position: relative;
+            overflow: hidden;
         }
-        
+
+        .anime-img::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            z-index: 1;
+        }
+
         .anime-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
+            transition: transform 0.5s;
         }
-        
+
+        .anime-card:hover .anime-img img {
+            transform: scale(1.05);
+        }
+
         .anime-info {
             padding: 15px;
+            position: relative;
+            z-index: 2;
         }
-        
+
         .anime-title {
             font-weight: 700;
             font-size: 1.1rem;
@@ -279,32 +362,32 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
         .anime-meta {
             display: flex;
             justify-content: space-between;
             color: var(--light-alt);
             font-size: 0.9rem;
         }
-        
+
         .anime-rating {
             color: var(--primary);
             font-weight: 600;
         }
-        
+
         /* Genre Filter */
         .genre-filter {
             padding: 20px 40px;
             background: var(--dark-alt);
         }
-        
+
         .genre-buttons {
             display: flex;
             gap: 15px;
             overflow-x: auto;
             padding: 5px 0;
         }
-        
+
         .genre-btn {
             padding: 8px 20px;
             background: var(--card-bg);
@@ -314,13 +397,14 @@
             cursor: pointer;
             transition: all 0.3s;
             white-space: nowrap;
+            font-size: 0.9rem;
         }
-        
+
         .genre-btn:hover, .genre-btn.active {
             background: var(--primary);
             color: var(--dark);
         }
-        
+
         /* Anime Grid */
         .anime-grid {
             padding: 30px 40px;
@@ -328,35 +412,58 @@
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 25px;
         }
-        
+
         .grid-anime-card {
             background: var(--card-bg);
             border-radius: 8px;
             overflow: hidden;
-            transition: transform 0.3s, background 0.3s;
+            transition: all 0.3s;
             cursor: pointer;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
-        
+
         .grid-anime-card:hover {
             transform: translateY(-5px);
             background: var(--card-hover);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
         }
-        
+
         .grid-img {
             height: 280px;
-            background: #2a303a;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .grid-img::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            z-index: 1;
+        }
+
         .grid-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
+            transition: transform 0.5s;
         }
-        
+
+        .grid-anime-card:hover .grid-img img {
+            transform: scale(1.05);
+        }
+
         .grid-info {
             padding: 15px;
+            position: relative;
+            z-index: 2;
         }
-        
+
         .grid-title {
             font-weight: 600;
             margin-bottom: 5px;
@@ -365,34 +472,35 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
         .grid-episodes {
             color: var(--light-alt);
             font-size: 0.85rem;
         }
-        
+
         /* Footer */
         footer {
             background: var(--dark-alt);
             padding: 50px 40px 20px;
             margin-top: 50px;
         }
-        
+
         .footer-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 40px;
             margin-bottom: 40px;
         }
-        
+
         .footer-column h3 {
             color: var(--light);
             margin-bottom: 20px;
             font-size: 1.2rem;
             position: relative;
             padding-bottom: 10px;
+            font-family: 'Oswald', sans-serif;
         }
-        
+
         .footer-column h3::after {
             content: '';
             position: absolute;
@@ -402,31 +510,32 @@
             height: 2px;
             background: var(--primary);
         }
-        
+
         .footer-links {
             list-style: none;
         }
-        
+
         .footer-links li {
             margin-bottom: 12px;
         }
-        
+
         .footer-links a {
             color: var(--light-alt);
             text-decoration: none;
             transition: color 0.3s;
+            font-size: 0.95rem;
         }
-        
+
         .footer-links a:hover {
             color: var(--primary);
         }
-        
+
         .social-icons {
             display: flex;
             gap: 15px;
             margin-top: 15px;
         }
-        
+
         .social-icons a {
             display: flex;
             align-items: center;
@@ -438,12 +547,12 @@
             color: var(--light);
             transition: all 0.3s;
         }
-        
+
         .social-icons a:hover {
             background: var(--primary);
             transform: translateY(-3px);
         }
-        
+
         .copyright {
             text-align: center;
             padding-top: 20px;
@@ -451,28 +560,48 @@
             color: var(--light-alt);
             font-size: 0.9rem;
         }
-        
+
         /* Loading spinner */
         .loader {
             text-align: center;
             padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
         }
-        
+
         .spinner {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             border: 4px solid rgba(255,255,255,0.1);
             border-left: 4px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto;
+            margin-bottom: 20px;
         }
-        
+
+        .loader-text {
+            color: var(--light-alt);
+            font-size: 1.1rem;
+        }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .hero h1 {
@@ -556,7 +685,7 @@
     <header>
         <div class="logo">
             <i class="fas fa-play-circle"></i>
-            AnimeFlix
+            AniStream
         </div>
         <nav class="nav-links">
             <a href="#" class="active">Home</a>
@@ -567,7 +696,7 @@
         </nav>
         <div class="search-bar">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search anime...">
+            <input type="text" id="searchInput" placeholder="Search anime...">
         </div>
         <div class="user-actions">
             <a href="#" class="btn btn-login">Log In</a>
@@ -599,14 +728,14 @@
     <section class="genre-filter">
         <div class="genre-buttons" id="genreButtons">
             <button class="genre-btn active" data-genre="all">All</button>
-            <button class="genre-btn" data-genre="action">Action</button>
-            <button class="genre-btn" data-genre="adventure">Adventure</button>
-            <button class="genre-btn" data-genre="comedy">Comedy</button>
-            <button class="genre-btn" data-genre="drama">Drama</button>
-            <button class="genre-btn" data-genre="fantasy">Fantasy</button>
-            <button class="genre-btn" data-genre="romance">Romance</button>
-            <button class="genre-btn" data-genre="sci-fi">Sci-Fi</button>
-            <button class="genre-btn" data-genre="slice of life">Slice of Life</button>
+            <button class="genre-btn" data-genre="Action">Action</button>
+            <button class="genre-btn" data-genre="Adventure">Adventure</button>
+            <button class="genre-btn" data-genre="Comedy">Comedy</button>
+            <button class="genre-btn" data-genre="Drama">Drama</button>
+            <button class="genre-btn" data-genre="Fantasy">Fantasy</button>
+            <button class="genre-btn" data-genre="Romance">Romance</button>
+            <button class="genre-btn" data-genre="Sci-Fi">Sci-Fi</button>
+            <button class="genre-btn" data-genre="Slice of Life">Slice of Life</button>
         </div>
     </section>
 
@@ -618,222 +747,7 @@
     <!-- Loading Spinner -->
     <div class="loader" id="loader">
         <div class="spinner"></div>
+        <div class="loader-text">Loading anime data...</div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-column">
-                <h3>AnimeFlix</h3>
-                <ul class="footer-links">
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Help/FAQ</a></li>
-                    <li><a href="#">Affiliates</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Browse</h3>
-                <ul class="footer-links">
-                    <li><a href="#">Simulcasts</a></li>
-                    <li><a href="#">Manga</a></li>
-                    <li><a href="#">News</a></li>
-                    <li><a href="#">Schedule</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Connect With Us</h3>
-                <ul class="footer-links">
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">YouTube</a></li>
-                </ul>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="copyright">
-            &copy; 2023 AnimeFlix. All rights reserved. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
-        </div>
-    </footer>
-
-    <script>
-        // Sample anime data (in a real app, this would come from an API)
-        const animeData = [
-            { id: 1, title: "Demon Slayer: Kimetsu no Yaiba", rating: 9.1, episodes: 26, year: 2019, genre: ["action", "adventure", "fantasy"], image: "https://source.unsplash.com/random/300x450/?anime,demonslayer" },
-            { id: 2, title: "Attack on Titan: The Final Season", rating: 9.5, episodes: 16, year: 2020, genre: ["action", "drama", "fantasy"], image: "https://source.unsplash.com/random/300x450/?anime,titan" },
-            { id: 3, title: "My Hero Academia Season 5", rating: 8.7, episodes: 25, year: 2021, genre: ["action", "comedy", "sci-fi"], image: "https://source.unsplash.com/random/300x450/?anime,hero" },
-            { id: 4, title: "Jujutsu Kaisen", rating: 8.9, episodes: 24, year: 2020, genre: ["action", "fantasy", "horror"], image: "https://source.unsplash.com/random/300x450/?anime,jujutsukaisen" },
-            { id: 5, title: "One Piece: Wano Country", rating: 9.0, episodes: 100, year: 2021, genre: ["action", "adventure", "comedy"], image: "https://source.unsplash.com/random/300x450/?anime,onepiece" },
-            { id: 6, title: "Horimiya", rating: 8.3, episodes: 13, year: 2021, genre: ["comedy", "romance", "slice of life"], image: "https://source.unsplash.com/random/300x450/?anime,romance" },
-            { id: 7, title: "Dr. Stone: Stone Wars", rating: 8.5, episodes: 11, year: 2021, genre: ["adventure", "comedy", "sci-fi"], image: "https://source.unsplash.com/random/300x450/?anime,science" },
-            { id: 8, title: "The Promised Neverland Season 2", rating: 7.8, episodes: 11, year: 2021, genre: ["drama", "fantasy", "sci-fi"], image: "https://source.unsplash.com/random/300x450/?anime,neverland" },
-            { id: 9, title: "That Time I Got Reincarnated as a Slime Season 2", rating: 8.4, episodes: 24, year: 2021, genre: ["action", "adventure", "fantasy"], image: "https://source.unsplash.com/random/300x450/?anime,slime" },
-            { id: 10, title: "Haikyu!! To The Top", rating: 8.9, episodes: 25, year: 2020, genre: ["comedy", "drama", "sports"], image: "https://source.unsplash.com/random/300x450/?anime,volleyball" },
-            { id: 11, title: "Your Lie in April", rating: 8.7, episodes: 22, year: 2014, genre: ["drama", "music", "romance"], image: "https://source.unsplash.com/random/300x450/?anime,piano" },
-            { id: 12, title: "Violet Evergarden", rating: 8.9, episodes: 13, year: 2018, genre: ["drama", "fantasy", "slice of life"], image: "https://source.unsplash.com/random/300x450/?anime,violet" },
-            { id: 13, title: "Cowboy Bebop", rating: 8.8, episodes: 26, year: 1998, genre: ["action", "adventure", "sci-fi"], image: "https://source.unsplash.com/random/300x450/?anime,cowboy" },
-            { id: 14, title: "Death Note", rating: 9.0, episodes: 37, year: 2006, genre: ["drama", "mystery", "psychological"], image: "https://source.unsplash.com/random/300x450/?anime,deathnote" },
-            { id: 15, title: "Fullmetal Alchemist: Brotherhood", rating: 9.2, episodes: 64, year: 2009, genre: ["action", "adventure", "fantasy"], image: "https://source.unsplash.com/random/300x450/?anime,fullmetal" },
-            { id: 16, title: "Naruto Shippuden", rating: 8.7, episodes: 500, year: 2007, genre: ["action", "adventure", "comedy"], image: "https://source.unsplash.com/random/300x450/?anime,naruto" },
-            { id: 17, title: "Bleach: Thousand-Year Blood War", rating: 9.3, episodes: 13, year: 2022, genre: ["action", "adventure", "fantasy"], image: "https://source.unsplash.com/random/300x450/?anime,bleach" },
-            { id: 18, title: "Spy x Family", rating: 8.9, episodes: 25, year: 2022, genre: ["action", "comedy", "slice of life"], image: "https://source.unsplash.com/random/300x450/?anime,spy" },
-            { id: 19, title: "Chainsaw Man", rating: 8.8, episodes: 12, year: 2022, genre: ["action", "horror", "fantasy"], image: "https://source.unsplash.com/random/300x450/?anime,chainsaw" },
-            { id: 20, title: "Solo Leveling", rating: 9.0, episodes: 12, year: 2023, genre: ["action", "adventure", "fantasy"], image: "https://source.unsplash.com/random/300x450/?anime,sololeveling" }
-        ];
-
-        // DOM Elements
-        const featuredCarousel = document.getElementById('featuredCarousel');
-        const animeGrid = document.getElementById('animeGrid');
-        const genreButtons = document.querySelectorAll('.genre-btn');
-        const loader = document.getElementById('loader');
-        let currentGenre = 'all';
-        let displayedAnime = 12;
-
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', () => {
-            // Load featured anime
-            loadFeaturedAnime();
-            
-            // Load anime grid
-            loadAnimeGrid();
-            
-            // Add scroll event for infinite scroll
-            window.addEventListener('scroll', handleInfiniteScroll);
-            
-            // Add header scroll effect
-            window.addEventListener('scroll', handleHeaderScroll);
-            
-            // Add genre filter event listeners
-            genreButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    // Update active button
-                    document.querySelector('.genre-btn.active').classList.remove('active');
-                    button.classList.add('active');
-                    
-                    // Update current genre
-                    currentGenre = button.dataset.genre;
-                    
-                    // Reset displayed anime count
-                    displayedAnime = 12;
-                    
-                    // Reload grid
-                    loadAnimeGrid();
-                });
-            });
-        });
-
-        // Load featured anime
-        function loadFeaturedAnime() {
-            // Get first 6 anime for featured section
-            const featuredAnime = animeData.slice(0, 6);
-            
-            // Clear existing content
-            featuredCarousel.innerHTML = '';
-            
-            // Create cards for featured anime
-            featuredAnime.forEach(anime => {
-                const card = document.createElement('div');
-                card.className = 'anime-card';
-                card.innerHTML = `
-                    <div class="anime-img">
-                        <img src="${anime.image}" alt="${anime.title}">
-                    </div>
-                    <div class="anime-info">
-                        <div class="anime-title">${anime.title}</div>
-                        <div class="anime-meta">
-                            <span>${anime.year}</span>
-                            <span class="anime-rating">⭐ ${anime.rating}</span>
-                        </div>
-                    </div>
-                `;
-                
-                // Add click event to open anime page
-                card.addEventListener('click', () => openAnimePage(anime.id));
-                
-                featuredCarousel.appendChild(card);
-            });
-        }
-
-        // Load anime grid with current filter
-        function loadAnimeGrid() {
-            // Show loader
-            loader.style.display = 'block';
-            
-            // Clear existing grid
-            animeGrid.innerHTML = '';
-            
-            // Filter anime by current genre
-            const filteredAnime = currentGenre === 'all' 
-                ? animeData 
-                : animeData.filter(anime => anime.genre.includes(currentGenre));
-            
-            // Get anime to display (up to displayedAnime count)
-            const animeToDisplay = filteredAnime.slice(0, displayedAnime);
-            
-            // Create grid cards
-            animeToDisplay.forEach(anime => {
-                const card = document.createElement('div');
-                card.className = 'grid-anime-card';
-                card.innerHTML = `
-                    <div class="grid-img">
-                        <img src="${anime.image}" alt="${anime.title}">
-                    </div>
-                    <div class="grid-info">
-                        <div class="grid-title">${anime.title}</div>
-                        <div class="grid-episodes">${anime.episodes} episodes</div>
-                    </div>
-                `;
-                
-                // Add click event to open anime page
-                card.addEventListener('click', () => openAnimePage(anime.id));
-                
-                animeGrid.appendChild(card);
-            });
-            
-            // Hide loader after short delay to simulate loading
-            setTimeout(() => {
-                loader.style.display = 'none';
-            }, 500);
-        }
-
-        // Handle infinite scroll
-        function handleInfiniteScroll() {
-            const scrollPosition = window.scrollY;
-            const windowHeight = window.innerHeight;
-            const bodyHeight = document.body.offsetHeight;
-            
-            // When user is near the bottom of the page
-            if (scrollPosition + windowHeight >= bodyHeight - 500) {
-                // Increase displayed anime count
-                displayedAnime += 8;
-                
-                // Reload grid with more anime
-                loadAnimeGrid();
-            }
-        }
-
-        // Handle header scroll effect
-        function handleHeaderScroll() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        }
-
-        // Open anime page (simulated)
-        function openAnimePage(animeId) {
-            alert(`Opening anime with ID: ${animeId}\nIn a real app, this would navigate to the anime page.`);
-            // In your actual implementation, this would be:
-            // window.location.href = `watch.html?id=${animeId}`;
-        }
-    </script>
-</body>
-</html>
+    <!--
