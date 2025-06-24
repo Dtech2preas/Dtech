@@ -1,1104 +1,576 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AniStream - Your Anime Destination</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Oswald:wght@500;600;700&display=swap">
-    <style>
-        :root {
-            --primary: #f47521;
-            --primary-dark: #d8641a;
-            --dark: #12151a;
-            --dark-alt: #1a1e26;
-            --light: #f0f2f5;
-            --light-alt: #b8bcc2;
-            --card-bg: #1e232b;
-            --card-hover: #2a303a;
-            --overlay: rgba(0, 0, 0, 0.9);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        body {
-            background-color: var(--dark);
-            color: var(--light);
-            overflow-x: hidden;
-            min-height: 100vh;
-            background-image: radial-gradient(circle at 20% 30%, rgba(26, 30, 38, 0.8) 0%, rgba(18, 21, 26, 1) 70%);
-        }
-
-        /* Header Styles */
-        header {
-            background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.7));
-            padding: 15px 40px;
-            position: fixed;
-            width: 100%;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        header.scrolled {
-            background: rgba(18, 21, 26, 0.95);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-        }
-
-        .logo {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .logo i {
-            margin-right: 8px;
-            color: #fff;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-            position: relative;
-            padding: 5px 0;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--primary);
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--primary);
-            transition: width 0.3s;
-        }
-
-        .nav-links a:hover::after, .nav-links a.active::after {
-            width: 100%;
-        }
-
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background: var(--dark-alt);
-            border-radius: 4px;
-            padding: 8px 15px;
-            width: 300px;
-            transition: all 0.3s;
-        }
-
-        .search-bar:focus-within {
-            box-shadow: 0 0 0 2px var(--primary);
-        }
-
-        .search-bar input {
-            background: transparent;
-            border: none;
-            color: var(--light);
-            width: 100%;
-            padding: 5px 10px;
-            outline: none;
-            font-size: 1rem;
-        }
-
-        .search-bar i {
-            color: var(--light-alt);
-        }
-
-        .user-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .btn {
-            padding: 8px 20px;
-            border-radius: 4px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 0.9rem;
-        }
-
-        .btn-login {
-            color: var(--light);
-            background: transparent;
-            border: 1px solid var(--primary);
-        }
-
-        .btn-login:hover {
-            background: rgba(244, 117, 33, 0.1);
-        }
-
-        .btn-signup {
-            color: var(--dark);
-            background: var(--primary);
-            border: 1px solid var(--primary);
-        }
-
-        .btn-signup:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 80vh;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('https://images.unsplash.com/photo-1533279443086-d1c19a186416?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
-            display: flex;
-            align-items: center;
-            padding: 0 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(18,21,26,0.8) 0%, rgba(18,21,26,0.5) 50%, rgba(18,21,26,0.8) 100%);
-        }
-
-        .hero-content {
-            max-width: 700px;
-            z-index: 2;
-            position: relative;
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            line-height: 1.1;
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            color: var(--light-alt);
-            line-height: 1.6;
-            max-width: 600px;
-        }
-
-        .btn-hero {
-            padding: 14px 35px;
-            font-size: 1.1rem;
-            background: var(--primary);
-            color: var(--dark);
-            border: none;
-            border-radius: 4px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(244, 117, 33, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-hero:hover {
-            background: var(--primary-dark);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(244, 117, 33, 0.4);
-        }
-
-        /* Featured Section */
-        .featured {
-            padding: 50px 40px;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .section-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            position: relative;
-            padding-bottom: 10px;
-            font-family: 'Oswald', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: var(--primary);
-        }
-
-        .view-all {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            transition: opacity 0.3s;
-            font-size: 1rem;
-        }
-
-        .view-all:hover {
-            opacity: 0.8;
-        }
-
-        .featured-carousel {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            padding: 10px 5px;
-            scrollbar-width: thin;
-        }
-
-        .featured-carousel::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .featured-carousel::-webkit-scrollbar-track {
-            background: var(--dark-alt);
-            border-radius: 4px;
-        }
-
-        .featured-carousel::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 4px;
-        }
-
-        .anime-card {
-            min-width: 250px;
-            background: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-
-        .anime-card:hover {
-            transform: translateY(-10px);
-            background: var(--card-hover);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-        }
-
-        .anime-img {
-            height: 350px;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .anime-img::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 40%;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
-            z-index: 1;
-        }
-
-        .anime-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.5s;
-        }
-
-        .anime-card:hover .anime-img img {
-            transform: scale(1.05);
-        }
-
-        .anime-info {
-            padding: 15px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .anime-title {
-            font-weight: 700;
-            font-size: 1.1rem;
-            margin-bottom: 8px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .anime-meta {
-            display: flex;
-            justify-content: space-between;
-            color: var(--light-alt);
-            font-size: 0.9rem;
-        }
-
-        .anime-rating {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        /* Genre Filter */
-        .genre-filter {
-            padding: 20px 40px;
-            background: var(--dark-alt);
-        }
-
-        .genre-buttons {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            padding: 5px 0;
-        }
-
-        .genre-btn {
-            padding: 8px 20px;
-            background: var(--card-bg);
-            border: none;
-            border-radius: 20px;
-            color: var(--light);
-            cursor: pointer;
-            transition: all 0.3s;
-            white-space: nowrap;
-            font-size: 0.9rem;
-        }
-
-        .genre-btn:hover, .genre-btn.active {
-            background: var(--primary);
-            color: var(--dark);
-        }
-
-        /* Anime Grid */
-        .anime-grid {
-            padding: 30px 40px;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 25px;
-        }
-
-        .grid-anime-card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            overflow: hidden;
-            transition: all 0.3s;
-            cursor: pointer;
-            position: relative;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-
-        .grid-anime-card:hover {
-            transform: translateY(-5px);
-            background: var(--card-hover);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-        }
-
-        .grid-img {
-            height: 280px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .grid-img::before {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 30%;
-            background: linear-gradient(transparent, rgba(0,0,0,0.7));
-            z-index: 1;
-        }
-
-        .grid-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            transition: transform 0.5s;
-        }
-
-        .grid-anime-card:hover .grid-img img {
-            transform: scale(1.05);
-        }
-
-        .grid-info {
-            padding: 15px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .grid-title {
-            font-weight: 600;
-            margin-bottom: 5px;
-            font-size: 1rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .grid-episodes {
-            color: var(--light-alt);
-            font-size: 0.85rem;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--dark-alt);
-            padding: 50px 40px 20px;
-            margin-top: 50px;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-column h3 {
-            color: var(--light);
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            position: relative;
-            padding-bottom: 10px;
-            font-family: 'Oswald', sans-serif;
-        }
-
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 30px;
-            height: 2px;
-            background: var(--primary);
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: var(--light-alt);
-            text-decoration: none;
-            transition: color 0.3s;
-            font-size: 0.95rem;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
-        .social-icons {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .social-icons a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            background: var(--card-bg);
-            border-radius: 50%;
-            color: var(--light);
-            transition: all 0.3s;
-        }
-
-        .social-icons a:hover {
-            background: var(--primary);
-            transform: translateY(-3px);
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: var(--light-alt);
-            font-size: 0.9rem;
-        }
-
-        /* Loading spinner */
-        .loader {
-            text-align: center;
-            padding: 40px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 4px solid rgba(255,255,255,0.1);
-            border-left: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-
-        .loader-text {
-            color: var(--light-alt);
-            font-size: 1.1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive */
-        @media (max-width: 992px) {
-            .hero h1 {
-                font-size: 2.8rem;
-            }
-            
-            .search-bar {
-                width: 200px;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            header {
-                padding: 15px 20px;
-                flex-wrap: wrap;
-            }
-            
-            .nav-links {
-                order: 3;
-                margin-top: 15px;
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .hero {
-                height: 70vh;
-                padding: 0 20px;
-            }
-            
-            .hero h1 {
-                font-size: 2.3rem;
-            }
-            
-            .hero p {
-                font-size: 1rem;
-            }
-            
-            .featured, .genre-filter, .anime-grid, footer {
-                padding: 30px 20px;
-            }
-            
-            .featured-carousel {
-                gap: 15px;
-            }
-            
-            .anime-card {
-                min-width: 220px;
-            }
-        }
-        
-        @media (max-width: 576px) {
-            .user-actions {
-                display: none;
-            }
-            
-            .search-bar {
-                width: 150px;
-            }
-            
-            .hero {
-                height: 60vh;
-            }
-            
-            .hero h1 {
-                font-size: 1.8rem;
-            }
-            
-            .anime-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 15px;
-            }
-            
-            .grid-img {
-                height: 220px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DTECH Termux Tools</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3b82f6;
+      --secondary: #10b981;
+      --accent: #f59e0b;
+      --dark: #0f172a;
+      --darker: #020617;
+    }
+    
+    body {
+      background: linear-gradient(to bottom right, var(--darker), var(--dark));
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .glow {
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.7);
+      transition: all 0.3s ease;
+    }
+    
+    .glow:hover {
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.9);
+    }
+    
+    .tool-card {
+      transition: all 0.3s ease;
+      background: linear-gradient(145deg, #1e293b, #0f172a);
+      border-radius: 12px;
+      overflow: hidden;
+      border-left: 4px solid var(--primary);
+    }
+    
+    .tool-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+    }
+    
+    .neon-text {
+      text-shadow: 0 0 8px rgba(59, 130, 246, 0.7);
+    }
+    
+    .command-box {
+      background: rgba(15, 23, 42, 0.7);
+      border-left: 3px solid var(--accent);
+    }
+    
+    .copy-btn {
+      transition: all 0.2s ease;
+    }
+    
+    .copy-btn:hover {
+      transform: scale(1.05);
+    }
+    
+    .copy-btn.copied {
+      background-color: var(--secondary) !important;
+    }
+    
+    .gradient-text {
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .floating {
+      animation: float 3s ease-in-out infinite;
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #3b82f6;
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #60a5fa;
+    }
+  </style>
 </head>
-<body>
-    <!-- Header -->
-    <header>
-        <div class="logo">
-            <i class="fas fa-play-circle"></i>
-            AniStream
-        </div>
-        <nav class="nav-links">
-            <a href="#" class="active">Home</a>
-            <a href="#">Browse</a>
-            <a href="#">Simulcasts</a>
-            <a href="#">Manga</a>
-            <a href="#">News</a>
-        </nav>
-        <div class="search-bar">
-            <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Search anime...">
-        </div>
-        <div class="user-actions">
-            <a href="#" class="btn btn-login">Log In</a>
-            <a href="#" class="btn btn-signup">Sign Up Free</a>
-        </div>
-    </header>
+<body class="text-gray-200">
+  <!-- Floating Support Button -->
+  <a href="https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365" 
+     class="fixed top-4 right-4 z-50 bg-gradient-to-r from-blue-600 to-blue-400 text-white px-4 py-2 rounded-full shadow-lg glow flex items-center hover:scale-105 transition-transform">
+    <i class="fas fa-heart mr-2"></i> Support Us
+  </a>
+   
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-blue-900 to-blue-700 text-white p-6 shadow-xl">
+    <div class="container mx-auto flex items-center">
+      <img src="logo.png" alt="DTECH Logo" class="h-16 w-16 rounded-full bg-white p-1 border-4 border-blue-400 shadow-lg floating mr-4">
+      <div>
+        <h1 class="text-4xl font-extrabold tracking-tight neon-text">DTECH Termux Tools</h1>
+        <p class="text-blue-200 italic">Ultimate collection of hacking & security tools</p>
+      </div>
+    </div>
+  </header>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Unlimited Anime Streaming Anytime, Anywhere</h1>
-            <p>Watch thousands of episodes from hundreds of anime series, all ad-free. New episodes added shortly after Japanese broadcast.</p>
-            <button class="btn-hero">Start 14-Day Free Trial</button>
-        </div>
-    </section>
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 py-8">
+    <!-- Featured Tools Section -->
+    <section class="mb-12">
+      <h2 class="text-3xl font-bold mb-6 gradient-text flex items-center">
+        <i class="fas fa-fire mr-3"></i> Termux Tools Collection
+      </h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Termux initial requirements Tool Card -->
+<div class="tool-card group relative overflow-hidden shadow-xl">
+  <div class="absolute inset-0 bg-gradient-to-br from-amber-600 to-red-800 opacity-20 group-hover:opacity-30 transition"></div>
+  <div class="relative p-6">
+    <div class="flex items-center mb-4">
+      <div class="bg-amber-600 p-3 rounded-lg mr-4">
+        <i class="fas fa-database text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold">Termux initial requirements</h3>
+    </div>
+    <p class="text-gray-300 mb-4">commands you should excute right after downloading termux (very important)</p>
 
-    <!-- Featured Anime -->
-    <section class="featured">
-        <div class="section-header">
-            <h2 class="section-title">Popular This Season</h2>
-            <a href="#" class="view-all">View All</a>
-        </div>
-        <div class="featured-carousel" id="featuredCarousel">
-            <!-- Featured anime will be loaded here -->
-        </div>
-    </section>
-
-    <!-- Genre Filter -->
-    <section class="genre-filter">
-        <div class="genre-buttons" id="genreButtons">
-            <button class="genre-btn active" data-genre="all">All</button>
-            <button class="genre-btn" data-genre="Action">Action</button>
-            <button class="genre-btn" data-genre="Adventure">Adventure</button>
-            <button class="genre-btn" data-genre="Comedy">Comedy</button>
-            <button class="genre-btn" data-genre="Drama">Drama</button>
-            <button class="genre-btn" data-genre="Fantasy">Fantasy</button>
-            <button class="genre-btn" data-genre="Romance">Romance</button>
-            <button class="genre-btn" data-genre="Sci-Fi">Sci-Fi</button>
-            <button class="genre-btn" data-genre="Slice of Life">Slice of Life</button>
-        </div>
-    </section>
-
-    <!-- Anime Grid -->
-    <section class="anime-grid" id="animeGrid">
-        <!-- Anime cards will be loaded here -->
-    </section>
-
-    <!-- Loading Spinner -->
-    <div class="loader" id="loader">
-        <div class="spinner"></div>
-        <div class="loader-text">Loading anime data...</div>
+    <div class="mb-4">
+      <label class="text-sm text-blue-300 mb-1 block">Installation:</label>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">pkg update && pkg upgrade -y</code>
+        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="pkg update && pkg upgrade -y">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">pkg install python git curl wget -y</code>
+        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="pkg install python git curl wget -y">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-column">
-                <h3>AniStream</h3>
-                <ul class="footer-links">
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Help/FAQ</a></li>
-                    <li><a href="#">Affiliates</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Browse</h3>
-                <ul class="footer-links">
-                    <li><a href="#">Simulcasts</a></li>
-                    <li><a href="#">Manga</a></li>
-                    <li><a href="#">News</a></li>
-                    <li><a href="#">Schedule</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Connect With Us</h3>
-                <ul class="footer-links">
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">YouTube</a></li>
-                </ul>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="copyright">
-            &copy; 2023 AniStream. All rights reserved. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
-        </div>
-    </footer>
+    <div class="flex justify-between mt-6">
+      <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365','_blank')">
+        <i class="fas fa-info-circle mr-2"></i> More Info
+      </button>
+      <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://youtube.com/shorts/x_wMwxZbwMo?si=VsCiC4Qof0Ziw2gW','_blank')">
+        <i class="fab fa-youtube mr-2"></i> Tutorial
+      </button>
+    </div>
+  </div>
+</div>
+        
+        <!-- DTECH URL VIDEO DOWNLOADER Tool Card -->
+<div class="tool-card group relative overflow-hidden shadow-xl">
+  <div class="absolute inset-0 bg-gradient-to-br from-amber-600 to-red-800 opacity-20 group-hover:opacity-30 transition"></div>
+  <div class="relative p-6">
+    <div class="flex items-center mb-4">
+      <div class="bg-amber-600 p-3 rounded-lg mr-4">
+        <i class="fas fa-database text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold">DTECH URL VIDEO DOWNLOADER</h3>
+    </div>
+    <p class="text-gray-300 mb-4">this tools lets you download any kind of video from any type of url (tik tok ,facebook,youtube,instagram and any other site)</p>
 
-    <script>
-        // DOM Elements
-        const featuredCarousel = document.getElementById('featuredCarousel');
-        const animeGrid = document.getElementById('animeGrid');
-        const genreButtons = document.querySelectorAll('.genre-btn');
-        const loader = document.getElementById('loader');
-        const searchInput = document.getElementById('searchInput');
+    <div class="mb-4">
+      <label class="text-sm text-green-300 mb-1 block">Installation:</label>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">curl -o load.py https://raw.githubusercontent.com/x24em/Dtech/e9105ff06335482fa1f52711128d685b40c22b0d/load.py</code>
+        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="curl -o load.py https://raw.githubusercontent.com/x24em/Dtech/e9105ff06335482fa1f52711128d685b40c22b0d/load.py">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">python load.py</code>
+        <button class="copy-btn bg-green-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="python load.py">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365','_blank')">
+        <i class="fas fa-info-circle mr-2"></i> More Info
+      </button>
+      <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://drive.google.com/file/d/1anXK0dNX-hg-kZqnuT2KCGQRuqHd7g_k/view?usp=drivesdk','_blank')">
+        <i class="fab fa-youtube mr-2"></i> Tutorial
+      </button>
+    </div>
+  </div>
+</div>
         
-        // Configuration
-        const jsonFiles = [
-            'part1.json',
-            'part2.json',
-            'finish.json',
-            'finis.json',
-            'part4.json'
-        ];
+        <!-- SNI HOST TESTER Tool Card -->
+<div class="tool-card group relative overflow-hidden shadow-xl">
+  <div class="absolute inset-0 bg-gradient-to-br from-amber-600 to-red-800 opacity-20 group-hover:opacity-30 transition"></div>
+  <div class="relative p-6">
+    <div class="flex items-center mb-4">
+      <div class="bg-amber-600 p-3 rounded-lg mr-4">
+        <i class="fas fa-database text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold">SNI HOST TESTER</h3>
+    </div>
+    <p class="text-gray-300 mb-4">test host and give you a detail report , good for looking for zero rated sites</p>
+
+    <div class="mb-4">
+      <label class="text-sm text-blue-300 mb-1 block">Installation:</label>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">pip install requests colorama
+pkg install openssl
+pkg install clang</code>
+        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="pip install requests colorama
+pkg install openssl
+pkg install clang">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">curl -o sni.py https://raw.githubusercontent.com/Dtech2preas/100mb/main/sni.py</code>
+        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="curl -o sni.py https://raw.githubusercontent.com/Dtech2preas/100mb/main/sni.py">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">python sni.py</code>
+        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="python sni.py">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://www.preasx24.co.za/more-info.html','_blank')">
+        <i class="fas fa-info-circle mr-2"></i> More Info
+      </button>
+      <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://drive.google.com/file/d/1bIHGwB-2SrV6WwPR1d5jYBJc2rvRRV5M/view?usp=drivesdk','_blank')">
+        <i class="fab fa-youtube mr-2"></i> Tutorial
+      </button>
+    </div>
+  </div>
+</div>
+
+        <!-- neo fetch Tool Card -->
+<div class="tool-card group relative overflow-hidden shadow-xl">
+  <div class="absolute inset-0 bg-gradient-to-br from-amber-600 to-red-800 opacity-20 group-hover:opacity-30 transition"></div>
+  <div class="relative p-6">
+    <div class="flex items-center mb-4">
+      <div class="bg-amber-600 p-3 rounded-lg mr-4">
+        <i class="fas fa-database text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold">neo fetch</h3>
+    </div>
+    <p class="text-gray-300 mb-4">show your system infoo</p>
+
+    <div class="mb-4">
+      <label class="text-sm text-blue-300 mb-1 block">Installation:</label>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">pkg install neofetch -y</code>
+        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="pkg install neofetch -y">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+      <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+        <code class="text-green-400">neofetch</code>
+        <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" data-cmd="neofetchneofetch">
+          <i class="far fa-copy"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://www.preasx24.co.za/more-info.html','_blank')">
+        <i class="fas fa-info-circle mr-2"></i> More Info
+      </button>
+      <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://drive.google.com/file/d/1g0nB85EJVqOFI8Mcr5dbl5hii8Y22RyZ/view?usp=drivesdk','_blank')">
+        <i class="fab fa-youtube mr-2"></i> Tutorial
+      </button>
+    </div>
+  </div>
+</div>
         
-        let allAnime = [];
-        let currentGenre = 'all';
-        let displayedAnime = 12;
+        <!-- account extract Tool Card -->
+<div class="tool-card group relative overflow-hidden shadow-xl">
+  <div class="absolute inset-0 bg-gradient-to-br from-amber-600 to-red-800 opacity-20 group-hover:opacity-30 transition"></div>
+  <div class="relative p-6">
+    <div class="flex items-center mb-4">
+      <div class="bg-amber-600 p-3 rounded-lg mr-4">
+        <i class="fas fa-database text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold">account extract</h3>
+    </div>
+    <p class="text-gray-300 mb-4">lets you extract email:password combinations from a txt file</p>
+
+    <!-- ✅ Replaced command box with button -->
+    <div class="mb-4">
+      <label class="text-sm text-blue-300 mb-1 block">Tool Link:</label>
+      <button 
+        onclick="window.open('https://ext.dtech24.co.za', '_blank')" 
+        class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm flex items-center justify-center">
+        <i class="fas fa-external-link-alt mr-2"></i> Open Tool
+      </button>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365','_blank')">
+        <i class="fas fa-info-circle mr-2"></i> More Info
+      </button>
+      <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://drive.google.com/file/d/1fuXwpD60DjBAqW4rotwdex_o54JrtdB1/view?usp=drivesdk','_blank')">
+        <i class="fab fa-youtube mr-2"></i> Tutorial
+      </button>
+    </div>
+  </div>
+</div>
         
-        // Initialize the page
-        document.addEventListener('DOMContentLoaded', async () => {
-            // Show loader
-            loader.style.display = 'flex';
+        <!-- web host tester Tool Card -->
+<div class="tool-card group relative overflow-hidden shadow-xl">
+  <div class="absolute inset-0 bg-gradient-to-br from-amber-600 to-red-800 opacity-20 group-hover:opacity-30 transition"></div>
+  <div class="relative p-6">
+    <div class="flex items-center mb-4">
+      <div class="bg-amber-600 p-3 rounded-lg mr-4">
+        <i class="fas fa-database text-2xl"></i>
+      </div>
+      <h3 class="text-xl font-bold">web host tester</h3>
+    </div>
+    <p class="text-gray-300 mb-4">lets you test host via API</p>
+
+    <!-- ✅ Replaced command box with button -->
+    <div class="mb-4">
+      <label class="text-sm text-blue-300 mb-1 block">Tool Link:</label>
+      <button 
+        onclick="window.open('https://host.dtech24.co.za', '_blank')" 
+        class="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-sm flex items-center justify-center">
+        <i class="fas fa-external-link-alt mr-2"></i> Open Tool
+      </button>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365','_blank')">
+        <i class="fas fa-info-circle mr-2"></i> More Info
+      </button>
+      <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded glow flex items-center" onclick="window.open('https://drive.google.com/file/d/1fvjyvrhkKYe79QC-hkPedIxjfmZvZ-kz/view?usp=drivesdk','_blank')">
+        <i class="fab fa-youtube mr-2"></i> Tutorial
+      </button>
+    </div>
+  </div>
+</div>
             
-            try {
-                // Fetch all JSON files
-                await fetchAllJsonFiles();
-                
-                // Get unique anime titles
-                const uniqueTitles = getUniqueAnimeTitles();
-                
-                // Fetch anime details from Jikan API
-                await fetchAnimeDetails(uniqueTitles);
-                
-                // Load UI components
-                loadFeaturedAnime();
-                loadAnimeGrid();
-                
-                // Add event listeners
-                setupEventListeners();
-                
-                // Hide loader
-                setTimeout(() => {
-                    loader.style.display = 'none';
-                }, 500);
-                
-            } catch (error) {
-                console.error('Error initializing page:', error);
-                loader.innerHTML = '<div class="loader-text">Failed to load anime data. Please try again later.</div>';
-            }
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-blue-900 to-blue-700 text-white py-8 mt-12">
+    <div class="container mx-auto px-4 text-center">
+      <div class="mb-6">
+        <div class="flex items-center justify-center">
+          <img src="logo.png" alt="DTECH Logo" class="h-12 w-12 rounded-full bg-white p-1 border-2 border-blue-400 mr-3">
+          <h2 class="text-2xl font-bold">DTECH Termux Tools</h2>
+        </div>
+        <p class="text-blue-200 mt-2">Empowering ethical hackers and security researchers</p>
+      </div>
+      
+      <div class="border-t border-blue-700 pt-6 text-blue-300">
+        <p>© 2025 DTECH Termux Tools. All rights reserved. | Powered by Preasx24</p>
+        <p class="text-sm mt-2">For educational purposes only. Use responsibly.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Tool Details Modal -->
+  <div id="toolModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center hidden">
+    <div class="bg-gray-900 rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative" style="border: 2px solid #3b82f6;">
+      <button id="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">
+        <i class="fas fa-times"></i>
+      </button>
+      
+      <div class="p-6">
+        <div class="flex items-center mb-6">
+          <div id="modalIcon" class="bg-blue-600 p-4 rounded-lg mr-4">
+            <i class="fas fa-toolbox text-3xl"></i>
+          </div>
+          <h2 id="modalTitle" class="text-2xl font-bold gradient-text">Tool Name</h2>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-xl font-semibold mb-2 text-blue-300">Description</h3>
+          <p id="modalDescription" class="text-gray-300">Tool description goes here with detailed information about its functionality and use cases.</p>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-xl font-semibold mb-2 text-blue-300">Installation</h3>
+          <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+            <code id="modalInstallCmd" class="text-green-400">pkg install tool-name</code>
+            <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                    data-cmd="pkg install tool-name">
+              <i class="far fa-copy"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-xl font-semibold mb-2 text-blue-300">Basic Usage</h3>
+          <div class="space-y-3">
+            <div>
+              <label class="text-sm text-blue-300 mb-1 block">Command 1:</label>
+              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+                <code class="text-green-400">tool-name --option</code>
+                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                        data-cmd="tool-name --option">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            <div>
+              <label class="text-sm text-blue-300 mb-1 block">Command 2:</label>
+              <div class="command-box p-3 rounded mb-2 flex justify-between items-center">
+                <code class="text-green-400">tool-name --another-option</code>
+                <button class="copy-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-sm" 
+                        data-cmd="tool-name --another-option">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mb-6">
+          <h3 class="text-xl font-semibold mb-2 text-blue-300">Video Tutorial</h3>
+          <div class="aspect-w-16 aspect-h-9 bg-gray-800 rounded-lg overflow-hidden">
+            <iframe id="modalVideo" class="w-full h-64" src="https://www.youtube.com/embed/" frameborder="0" allowfullscreen></iframe>
+          </div>
+        </div>
+        
+        <div class="flex justify-center">
+          <button class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded glow flex items-center"
+                  id="modalTutorialBtn">
+            <i class="fab fa-youtube mr-2"></i> Watch Full Tutorial
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Copy command functionality
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const cmd = this.getAttribute('data-cmd');
+        navigator.clipboard.writeText(cmd).then(() => {
+          // Visual feedback
+          this.innerHTML = '<i class="fas fa-check"></i>';
+          this.classList.add('copied');
+          setTimeout(() => {
+            this.innerHTML = '<i class="far fa-copy"></i>';
+            this.classList.remove('copied');
+          }, 2000);
         });
+      });
+    });
+    
+    // Modal functionality
+    const modal = document.getElementById('toolModal');
+    const closeModal = document.getElementById('closeModal');
+    
+    // Close modal
+    closeModal.addEventListener('click', () => {
+      modal.classList.add('hidden');
+    });
+    
+    // Close when clicking outside
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+      }
+    });
+    
+    // Example of opening modal (would be connected to your "More Info" buttons)
+    function openToolModal(toolData) {
+      // This would be populated with actual tool data
+      document.getElementById('modalTitle').textContent = toolData.name;
+      document.getElementById('modalDescription').textContent = toolData.description;
+      document.getElementById('modalInstallCmd').textContent = toolData.installCmd;
+      document.getElementById('modalVideo').src = `https://www.youtube.com/embed/${toolData.videoId}`;
+      document.getElementById('modalTutorialBtn').onclick = () => window.open(toolData.videoUrl, '_blank');
+      
+      // Set icon based on category
+      const icon = document.getElementById('modalIcon');
+      icon.className = `p-4 rounded-lg mr-4 ${toolData.iconColor}`;
+      icon.innerHTML = `<i class="${toolData.iconClass} text-3xl"></i>`;
+      
+      modal.classList.remove('hidden');
+    }
+  </script>
 
-        // Fetch all JSON files
-        async function fetchAllJsonFiles() {
-            const fetchPromises = jsonFiles.map(file => 
-                fetch(file)
-                    .then(response => response.json())
-                    .catch(error => {
-                        console.error(`Error fetching ${file}:`, error);
-                        return [];
-                    })
-            );
-            
-            const results = await Promise.all(fetchPromises);
-            allAnime = results.flat();
-        }
+<style>
+#ad-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.6); /* semi-transparent dark background */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-family: sans-serif;
+  z-index: 9999;
+  cursor: pointer;
+  text-align: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+</style>
 
-        // Get unique anime titles
-        function getUniqueAnimeTitles() {
-            const titles = new Set();
-            return allAnime.filter(anime => {
-                if (!titles.has(anime.title)) {
-                    titles.add(anime.title);
-                    return true;
-                }
-                return false;
-            });
-        }
+<div id="ad-layer" style="display: none;">
+  👆 Tap to Continue<br><small>(Ad will open once per hour)</small>
+</div>
 
-        // Fetch anime details from Jikan API
-        async function fetchAnimeDetails(animeList) {
-            const promises = animeList.map(anime => 
-                fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(anime.title)}&limit=1`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.data && data.data.length > 0) {
-                            const details = data.data[0];
-                            return {
-                                ...anime,
-                                title: details.title || anime.title,
-                                image: details.images?.jpg?.image_url || 'https://via.placeholder.com/300x450?text=No+Image',
-                                description: details.synopsis || 'No description available.',
-                                rating: details.score ? details.score.toFixed(1) : 'N/A',
-                                episodes: details.episodes || '?',
-                                year: details.year || '?',
-                                genres: details.genres ? details.genres.map(g => g.name) : ['Unknown']
-                            };
-                        }
-                        return {
-                            ...anime,
-                            image: 'https://via.placeholder.com/300x450?text=No+Image',
-                            description: 'No description available.',
-                            rating: 'N/A',
-                            episodes: '?',
-                            year: '?',
-                            genres: ['Unknown']
-                        };
-                    })
-                    .catch(error => {
-                        console.error(`Error fetching details for ${anime.title}:`, error);
-                        return {
-                            ...anime,
-                            image: 'https://via.placeholder.com/300x450?text=No+Image',
-                            description: 'No description available.',
-                            rating: 'N/A',
-                            episodes: '?',
-                            year: '?',
-                            genres: ['Unknown']
-                        };
-                    })
-            );
-            
-            allAnime = await Promise.all(promises);
-        }
+<script>
+const directLink = "https://cafewarriors.com/spymr251ew?key=ce76edf7e5c6e4907177e712dc143365";
+const layer = document.getElementById("ad-layer");
 
-        // Set up event listeners
-        function setupEventListeners() {
-            // Genre filter
-            genreButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    document.querySelector('.genre-btn.active').classList.remove('active');
-                    button.classList.add('active');
-                    currentGenre = button.dataset.genre;
-                    displayedAnime = 12;
-                    loadAnimeGrid();
-                });
-            });
-            
-            // Search functionality
-            searchInput.addEventListener('input', () => {
-                displayedAnime = 12;
-                loadAnimeGrid();
-            });
-            
-            // Infinite scroll
-            window.addEventListener('scroll', handleInfiniteScroll);
-            
-            // Header scroll effect
-            window.addEventListener('scroll', handleHeaderScroll);
-        }
+// Check if it's time to show the layer
+function checkAndShowLayer() {
+  const lastClick = localStorage.getItem("direct_ad_last_click");
+  const now = Date.now();
 
-        // Load featured anime
-        function loadFeaturedAnime() {
-            // Get random 6 anime for featured section
-            const featuredAnime = [...allAnime].sort(() => 0.5 - Math.random()).slice(0, 6);
-            
-            // Clear existing content
-            featuredCarousel.innerHTML = '';
-            
-            // Create cards for featured anime
-            featuredAnime.forEach(anime => {
-                const card = document.createElement('div');
-                card.className = 'anime-card';
-                card.innerHTML = `
-                    <div class="anime-img">
-                        <img src="${anime.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
-                    </div>
-                    <div class="anime-info">
-                        <div class="anime-title">${anime.title}</div>
-                        <div class="anime-meta">
-                            <span>${anime.year}</span>
-                            <span class="anime-rating">⭐ ${anime.rating}</span>
-                        </div>
-                    </div>
-                `;
-                
-                // Add click event to open anime page
-                card.addEventListener('click', () => openAnime(anime));
-                
-                featuredCarousel.appendChild(card);
-            });
-        }
+  if (!lastClick || (now - parseInt(lastClick)) > 3600000) {
+    layer.style.display = "flex";
+  }
+}
 
-        // Load anime grid with current filter
-        function loadAnimeGrid() {
-            // Clear existing grid
-            animeGrid.innerHTML = '';
-            
-            // Get search term
-            const searchTerm = searchInput.value.toLowerCase();
-            
-            // Filter anime by current genre and search term
-            const filteredAnime = allAnime.filter(anime => {
-                const matchesGenre = currentGenre === 'all' || 
-                                    anime.genres.some(genre => 
-                                        genre.toLowerCase().includes(currentGenre.toLowerCase())
-                );
-                
-                const matchesSearch = anime.title.toLowerCase().includes(searchTerm) || 
-                                     anime.description.toLowerCase().includes(searchTerm) ||
-                                     anime.genres.some(genre => 
-                                         genre.toLowerCase().includes(searchTerm));
-                
-                return matchesGenre && matchesSearch;
-            });
-            
-            // Get anime to display (up to displayedAnime count)
-            const animeToDisplay = filteredAnime.slice(0, displayedAnime);
-            
-            // Create grid cards
-            animeToDisplay.forEach(anime => {
-                const card = document.createElement('div');
-                card.className = 'grid-anime-card';
-                card.innerHTML = `
-                    <div class="grid-img">
-                        <img src="${anime.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
-                    </div>
-                    <div class="grid-info">
-                        <div class="grid-title">${anime.title}</div>
-                        <div class="grid-episodes">${anime.episodes} episodes</div>
-                    </div>
-                `;
-                
-                // Add click event to open anime page
-                card.addEventListener('click', () => openAnime(anime));
-                
-                animeGrid.appendChild(card);
-            });
-            
-            // Show message if no results
-            if (animeToDisplay.length === 0) {
-                animeGrid.innerHTML = '<div class="no-results">No anime found matching your search criteria.</div>';
-            }
-        }
+// Handle click to open ad
+layer.addEventListener("click", () => {
+  const now = Date.now();
+  const lastClick = localStorage.getItem("direct_ad_last_click");
 
-        // Handle infinite scroll
-        function handleInfiniteScroll() {
-            const scrollPosition = window.scrollY;
-            const windowHeight = window.innerHeight;
-            const bodyHeight = document.body.offsetHeight;
-            
-            // When user is near the bottom of the page
-            if (scrollPosition + windowHeight >= bodyHeight - 500) {
-                // Increase displayed anime count
-                displayedAnime += 12;
-                
-                // Reload grid with more anime
-                loadAnimeGrid();
-            }
-        }
+  // Make sure it's allowed
+  if (!lastClick || (now - parseInt(lastClick)) > 3600000) {
+    window.open(directLink, "_blank");
+    localStorage.setItem("direct_ad_last_click", now);
+  }
 
-        // Handle header scroll effect
-        function handleHeaderScroll() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        }
+  // Hide the layer immediately
+  layer.style.display = "none";
 
-        // Open anime player
-        function openAnime(anime) {
-            // Find the first episode for this anime
-            const episode = allAnime.find(a => a.title === anime.title);
-            
-            if (episode) {
-                // Create a new window with the player
-                const playerWindow = window.open('', '_blank');
-                
-                playerWindow.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>${anime.title}</title>
-                        <style>
-                            body { 
-                                margin: 0; 
-                                padding: 0; 
-                                background: #000; 
-                                display: flex; 
-                                justify-content: center; 
-                                align-items: center; 
-                                height: 100vh;
-                            }
-                            .player-container {
-                                width: 100%;
-                                max-width: 1000px;
-                                padding: 20px;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="player-container">
-                            ${episode.iframe}
-                        </div>
-                    </body>
-                    </html>
-                `);
-                
-                playerWindow.document.close();
-            } else {
-                alert(`Could not find episodes for ${anime.title}`);
-            }
-        }
-    </script>
+  // Schedule it to reappear in 1 hour
+  setTimeout(() => {
+    layer.style.display = "flex";
+  }, 3600000);
+});
+
+// Check on load
+checkAndShowLayer();
+
+// Check again every 10 minutes in case page stays open
+setInterval(checkAndShowLayer, 600000);
+</script>
+
 </body>
 </html>
