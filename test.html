@@ -521,40 +521,44 @@
                 grid-template-columns: 1fr;
             }
         }
-        
+
         @media (max-width: 768px) {
             header {
                 padding: 15px 20px;
             }
-            
+
             .featured, .genre-filter, .anime-grid {
                 padding: 30px 20px;
             }
-            
+
             .featured-carousel {
                 gap: 15px;
             }
-            
+
             .anime-card {
                 min-width: 220px;
             }
         }
-        
+
         @media (max-width: 576px) {
-            .search-container {
-                width: 100%;
-                margin-top: 15px;
+            header {
+                flex-direction: column;
+                gap: 15px;
             }
             
+            .search-container {
+                width: 100%;
+            }
+
             .search-bar {
                 width: 100%;
             }
-            
+
             .anime-grid {
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
                 gap: 15px;
             }
-            
+
             .grid-img {
                 height: 220px;
             }
@@ -652,15 +656,15 @@
                             <div class="meta-value" id="animeStatus">Unknown</div>
                         </div>
                     </div>
-                    
+
                     <div class="genre-tags" id="animeGenres">
                         <!-- Genres will be inserted here -->
                     </div>
-                    
+
                     <div class="anime-description" id="animeDescription">
                         Loading description...
                     </div>
-                    
+
                     <div class="episodes-section">
                         <h3>Episodes</h3>
                         <div class="episodes-grid" id="episodesGrid">
@@ -691,7 +695,7 @@
         const animeGenres = document.getElementById('animeGenres');
         const animeDescription = document.getElementById('animeDescription');
         const episodesGrid = document.getElementById('episodesGrid');
-        
+
         // Configuration
         const jsonFiles = [
             'part1.json',
@@ -700,7 +704,7 @@
             'finis.json',
             'part4.json'
         ];
-        
+
         // Popular anime titles by genre
         const popularAnimeByGenre = {
             "Action": [
@@ -760,31 +764,32 @@
                 "Hyouka"
             ]
         };
-        
+
         let allAnime = [];
         let animeDetailsCache = {};
         let currentGenre = 'all';
         let displayedAnime = 12;
         let isSearching = false;
         let searchTerm = '';
-        
+        let scrollTimeout = null;
+
         // Initialize the page
         document.addEventListener('DOMContentLoaded', async () => {
             // Show loader
             loader.style.display = 'flex';
-            
+
             // Close modal event
             closeModal.addEventListener('click', () => {
                 animeModal.classList.remove('active');
             });
-            
+
             // Search button event
             searchButton.addEventListener('click', () => {
                 searchTerm = searchInput.value.trim().toLowerCase();
                 displayedAnime = 12;
                 loadAnimeGrid();
             });
-            
+
             // Search on Enter key
             searchInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
@@ -793,22 +798,22 @@
                     loadAnimeGrid();
                 }
             });
-            
+
             // Load cached data if available
             const cachedAnime = localStorage.getItem('cachedAnime');
             const cachedDetails = localStorage.getItem('cachedAnimeDetails');
-            
+
             if (cachedAnime && cachedDetails) {
                 try {
                     allAnime = JSON.parse(cachedAnime);
                     animeDetailsCache = JSON.parse(cachedDetails);
-                    
+
                     // Hide loader
                     loader.style.display = 'none';
-                    
+
                     // Load UI components
                     loadInitialUI();
-                    
+
                     // Load remaining anime in background
                     loadRemainingAnime();
                 } catch (e) {
@@ -825,7 +830,7 @@
         async function loadPopularAnime() {
             // Get all popular anime titles
             const popularTitles = new Set(Object.values(popularAnimeByGenre).flat());
-            
+
             // Load data for popular anime
             for (const title of popularTitles) {
                 try {
@@ -833,7 +838,7 @@
                     const anime = await findAnimeInJsonFiles(title);
                     if (anime) {
                         allAnime.push(anime);
-                        
+
                         // Preload details
                         await loadAnimeDetails(title);
                     }
@@ -841,17 +846,17 @@
                     console.error(`Error loading ${title}:`, error);
                 }
             }
-            
+
             // Save to cache
             localStorage.setItem('cachedAnime', JSON.stringify(allAnime));
             localStorage.setItem('cachedAnimeDetails', JSON.stringify(animeDetailsCache));
-            
+
             // Hide loader
             loader.style.display = 'none';
-            
+
             // Load UI components
             loadInitialUI();
-            
+
             // Load remaining anime in background
             loadRemainingAnime();
         }
@@ -875,13 +880,13 @@
         async function loadRemainingAnime() {
             // Get all anime titles we already have
             const existingTitles = new Set(allAnime.map(a => a.title));
-            
+
             // Load other anime
             for (const file of jsonFiles) {
                 try {
                     const response = await fetch(file);
                     const data = await response.json();
-                    
+
                     for (const anime of data) {
                         if (!existingTitles.has(anime.title)) {
                             allAnime.push(anime);
@@ -892,10 +897,10 @@
                     console.error(`Error loading ${file}:`, error);
                 }
             }
-            
+
             // Update cache
             localStorage.setItem('cachedAnime', JSON.stringify(allAnime));
-            
+
             // Update the grid
             loadAnimeGrid();
         }
@@ -912,10 +917,13 @@
                     loadAnimeGrid();
                 });
             });
-            
-            // Infinite scroll
-            window.addEventListener('scroll', handleInfiniteScroll);
-            
+
+            // Infinite scroll with debounce
+            window.addEventListener('scroll', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(handleInfiniteScroll, 200);
+            });
+
             // Header scroll effect
             window.addEventListener('scroll', handleHeaderScroll);
         }
@@ -924,10 +932,10 @@
         function loadInitialUI() {
             // Setup event listeners
             setupEventListeners();
-            
+
             // Load featured anime
             loadFeaturedAnime();
-            
+
             // Load anime grid
             loadAnimeGrid();
         }
@@ -937,18 +945,18 @@
             // Get popular anime for featured section
             const featuredTitles = new Set(Object.values(popularAnimeByGenre).flat());
             const featuredAnime = allAnime.filter(anime => featuredTitles.has(anime.title));
-            
+
             // Clear existing content
             featuredCarousel.innerHTML = '';
-            
+
             // Create cards for featured anime
             featuredAnime.forEach(anime => {
                 const card = document.createElement('div');
                 card.className = 'anime-card';
-                
+
                 // Check if we have cached details
                 const details = animeDetailsCache[anime.title];
-                
+
                 if (details) {
                     card.innerHTML = `
                         <div class="anime-img">
@@ -977,10 +985,10 @@
                         </div>
                     `;
                 }
-                
+
                 // Add click event to open anime page
                 card.addEventListener('click', () => openAnimeDetail(anime));
-                
+
                 featuredCarousel.appendChild(card);
             });
         }
@@ -991,11 +999,11 @@
             if (animeDetailsCache[title]) {
                 return animeDetailsCache[title];
             }
-            
+
             try {
                 const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(title)}&limit=1`);
                 const data = await response.json();
-                
+
                 if (data.data && data.data.length > 0) {
                     const details = data.data[0];
                     const animeDetails = {
@@ -1004,23 +1012,23 @@
                         description: details.synopsis || 'No description available.',
                         rating: details.score ? details.score.toFixed(1) : 'N/A',
                         episodes: details.episodes || '?',
-                        year: details.year || '?',
+                        year: details.year || (details.aired?.prop?.from?.year || '?'),
                         status: details.status || 'Unknown',
                         genres: details.genres ? details.genres.map(g => g.name) : ['Unknown']
                     };
-                    
+
                     // Add to cache
                     animeDetailsCache[title] = animeDetails;
-                    
+
                     // Update cache
                     localStorage.setItem('cachedAnimeDetails', JSON.stringify(animeDetailsCache));
-                    
+
                     return animeDetails;
                 }
             } catch (error) {
                 console.error(`Error fetching details for ${title}:`, error);
             }
-            
+
             // Return default if no data found
             const defaultDetails = {
                 title,
@@ -1032,7 +1040,7 @@
                 status: 'Unknown',
                 genres: ['Unknown']
             };
-            
+
             animeDetailsCache[title] = defaultDetails;
             return defaultDetails;
         }
@@ -1041,10 +1049,10 @@
         function loadAnimeGrid() {
             // Clear existing grid
             animeGrid.innerHTML = '';
-            
+
             // Filter anime by current genre and search term
             let filteredAnime = allAnime;
-            
+
             // Apply genre filter
             if (currentGenre !== 'all') {
                 filteredAnime = filteredAnime.filter(anime => {
@@ -1055,13 +1063,13 @@
                            );
                 });
             }
-            
+
             // Apply search filter
             if (searchTerm) {
                 filteredAnime = filteredAnime.filter(anime => {
                     // Search in title
                     if (anime.title.toLowerCase().includes(searchTerm)) return true;
-                    
+
                     // Search in genres
                     const details = animeDetailsCache[anime.title];
                     if (details && details.genres) {
@@ -1069,11 +1077,11 @@
                             genre.toLowerCase().includes(searchTerm)
                         );
                     }
-                    
+
                     return false;
                 });
             }
-            
+
             // Prioritize popular anime for the current genre
             if (currentGenre !== 'all' || searchTerm) {
                 const popularTitles = new Set(popularAnimeByGenre[currentGenre] || []);
@@ -1081,18 +1089,18 @@
                 const otherAnime = filteredAnime.filter(anime => !popularTitles.has(anime.title));
                 filteredAnime = [...popularAnime, ...otherAnime];
             }
-            
+
             // Get anime to display (up to displayedAnime count)
             const animeToDisplay = filteredAnime.slice(0, displayedAnime);
-            
+
             // Create grid cards
             animeToDisplay.forEach(anime => {
                 const card = document.createElement('div');
                 card.className = 'grid-anime-card';
-                
+
                 // Check if we have cached details
                 const details = animeDetailsCache[anime.title];
-                
+
                 if (details) {
                     card.innerHTML = `
                         <div class="grid-img">
@@ -1116,13 +1124,13 @@
                         </div>
                     `;
                 }
-                
+
                 // Add click event to open anime page
                 card.addEventListener('click', () => openAnimeDetail(anime));
-                
+
                 animeGrid.appendChild(card);
             });
-            
+
             // Show message if no results
             if (animeToDisplay.length === 0) {
                 animeGrid.innerHTML = '<div class="no-results">No anime found matching your search criteria.</div>';
@@ -1134,12 +1142,12 @@
             const scrollPosition = window.scrollY;
             const windowHeight = window.innerHeight;
             const bodyHeight = document.body.offsetHeight;
-            
+
             // When user is near the bottom of the page
             if (scrollPosition + windowHeight >= bodyHeight - 500) {
                 // Increase displayed anime count
                 displayedAnime += 12;
-                
+
                 // Reload grid with more anime
                 loadAnimeGrid();
             }
@@ -1167,14 +1175,14 @@
             animeGenres.innerHTML = '';
             animeDescription.textContent = 'Loading description...';
             episodesGrid.innerHTML = '<div class="loader-text">Loading episodes...</div>';
-            
+
             // Show the modal
             animeModal.classList.add('active');
-            
+
             try {
                 // Load anime details
                 const details = await loadAnimeDetails(anime.title);
-                
+
                 // Update modal with details
                 animePoster.src = details.image;
                 animeRating.textContent = details.rating;
@@ -1182,7 +1190,7 @@
                 animeYear.textContent = details.year;
                 animeStatus.textContent = details.status;
                 animeDescription.textContent = details.description;
-                
+
                 // Add genres
                 animeGenres.innerHTML = '';
                 details.genres.forEach(genre => {
@@ -1191,10 +1199,10 @@
                     tag.textContent = genre;
                     animeGenres.appendChild(tag);
                 });
-                
+
                 // Load episodes for this anime
                 const episodes = await findEpisodesForAnime(anime.title);
-                
+
                 // Display episodes
                 episodesGrid.innerHTML = '';
                 episodes.forEach(ep => {
@@ -1210,6 +1218,11 @@
                             <head>
                                 <title>${anime.title} - ${ep.episode}</title>
                                 <style>
+                                    * {
+                                        margin: 0;
+                                        padding: 0;
+                                        box-sizing: border-box;
+                                    }
                                     body { 
                                         margin: 0; 
                                         padding: 0; 
@@ -1218,18 +1231,94 @@
                                         justify-content: center; 
                                         align-items: center; 
                                         height: 100vh;
+                                        position: relative;
                                     }
                                     .player-container {
                                         width: 100%;
                                         max-width: 1000px;
                                         padding: 20px;
+                                        position: relative;
+                                    }
+                                    .close-btn {
+                                        position: fixed;
+                                        top: 20px;
+                                        right: 20px;
+                                        background: rgba(0,0,0,0.7);
+                                        color: white;
+                                        border: none;
+                                        width: 40px;
+                                        height: 40px;
+                                        border-radius: 50%;
+                                        font-size: 20px;
+                                        cursor: pointer;
+                                        z-index: 100;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                    }
+                                    .close-btn:hover {
+                                        background: rgba(255,255,255,0.2);
+                                    }
+                                    .loading-overlay {
+                                        position: fixed;
+                                        top: 0;
+                                        left: 0;
+                                        width: 100%;
+                                        height: 100%;
+                                        background: #000;
+                                        display: flex;
+                                        flex-direction: column;
+                                        justify-content: center;
+                                        align-items: center;
+                                        z-index: 99;
+                                        color: white;
+                                        font-family: Arial, sans-serif;
+                                    }
+                                    .loading-spinner {
+                                        width: 50px;
+                                        height: 50px;
+                                        border: 4px solid rgba(255,255,255,0.1);
+                                        border-left: 4px solid #f47521;
+                                        border-radius: 50%;
+                                        animation: spin 1s linear infinite;
+                                        margin-bottom: 20px;
+                                    }
+                                    .loading-text {
+                                        margin-top: 15px;
+                                        font-size: 1.2rem;
+                                    }
+                                    @keyframes spin {
+                                        0% { transform: rotate(0deg); }
+                                        100% { transform: rotate(360deg); }
                                     }
                                 </style>
                             </head>
                             <body>
-                                <div class="player-container">
+                                <button class="close-btn" onclick="window.close()">×</button>
+
+                                <div class="loading-overlay" id="loadingOverlay">
+                                    <div class="loading-spinner"></div>
+                                    <div class="loading-text">Loading episode...</div>
+                                </div>
+
+                                <div class="player-container" id="playerContainer" style="display: none;">
                                     ${ep.iframe}
                                 </div>
+
+                                <script>
+                                    // Show loading animation for 5 seconds
+                                    setTimeout(() => {
+                                        document.getElementById('loadingOverlay').style.display = 'none';
+                                        document.getElementById('playerContainer').style.display = 'block';
+                                    }, 5000);
+
+                                    // Close button functionality
+                                    document.addEventListener('keydown', (e) => {
+                                        if (e.key === 'Escape') {
+                                            window.close();
+                                        }
+                                    });
+                                </script>
                             </body>
                             </html>
                         `);
@@ -1246,7 +1335,7 @@
         // Find all episodes for an anime
         async function findEpisodesForAnime(title) {
             const episodes = [];
-            
+
             for (const file of jsonFiles) {
                 try {
                     const response = await fetch(file);
@@ -1257,7 +1346,7 @@
                     console.error(`Error fetching episodes from ${file}:`, error);
                 }
             }
-            
+
             return episodes;
         }
     </script>
