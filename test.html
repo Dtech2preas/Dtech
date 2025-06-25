@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AniFlix - Optimized Anime Streaming</title>
+    <title>AniStream - Premium Anime Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -64,20 +64,10 @@
             margin-right: 8px;
         }
 
-        .nav-links {
+        .search-container {
             display: flex;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: var(--light);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--primary);
+            gap: 10px;
+            align-items: center;
         }
 
         .search-bar {
@@ -107,92 +97,24 @@
             color: var(--light-alt);
         }
 
-        .user-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .btn {
+        .search-btn {
             padding: 8px 20px;
-            border-radius: 4px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-login {
-            color: var(--light);
-            background: transparent;
-            border: 1px solid var(--primary);
-        }
-
-        .btn-login:hover {
-            background: rgba(244, 117, 33, 0.1);
-        }
-
-        .btn-signup {
-            color: var(--dark);
-            background: var(--primary);
-            border: 1px solid var(--primary);
-        }
-
-        .btn-signup:hover {
-            background: var(--primary-dark);
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 80vh;
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                        url('https://images.unsplash.com/photo-1533279443086-d1c19a186416?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
-            display: flex;
-            align-items: center;
-            padding: 0 40px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-content {
-            max-width: 700px;
-            z-index: 2;
-            position: relative;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
-            line-height: 1.1;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            color: var(--light-alt);
-            line-height: 1.6;
-        }
-
-        .btn-hero {
-            padding: 12px 30px;
-            font-size: 1.1rem;
             background: var(--primary);
             color: var(--dark);
             border: none;
             border-radius: 4px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
         }
 
-        .btn-hero:hover {
+        .search-btn:hover {
             background: var(--primary-dark);
         }
 
         /* Featured Section */
         .featured {
-            padding: 50px 40px;
+            padding: 100px 40px 50px;
         }
 
         .section-header {
@@ -382,87 +304,6 @@
         .grid-episodes {
             color: var(--light-alt);
             font-size: 0.85rem;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--dark-alt);
-            padding: 50px 40px 20px;
-            margin-top: 50px;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-column h3 {
-            color: var(--light);
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            position: relative;
-            padding-bottom: 10px;
-        }
-
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 30px;
-            height: 2px;
-            background: var(--primary);
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: var(--light-alt);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary);
-        }
-
-        .social-icons {
-            display: flex;
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .social-icons a {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            background: var(--card-bg);
-            border-radius: 50%;
-            color: var(--light);
-            transition: all 0.3s;
-        }
-
-        .social-icons a:hover {
-            background: var(--primary);
-            transform: translateY(-3px);
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: var(--light-alt);
-            font-size: 0.9rem;
         }
 
         /* Loading spinner */
@@ -663,12 +504,15 @@
             background: rgba(0,0,0,0.3);
         }
 
+        .no-results {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 40px;
+            color: var(--light-alt);
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
-            .hero h1 {
-                font-size: 2.8rem;
-            }
-            
             .search-bar {
                 width: 200px;
             }
@@ -681,30 +525,9 @@
         @media (max-width: 768px) {
             header {
                 padding: 15px 20px;
-                flex-wrap: wrap;
             }
             
-            .nav-links {
-                order: 3;
-                margin-top: 15px;
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .hero {
-                height: 70vh;
-                padding: 0 20px;
-            }
-            
-            .hero h1 {
-                font-size: 2.3rem;
-            }
-            
-            .hero p {
-                font-size: 1rem;
-            }
-            
-            .featured, .genre-filter, .anime-grid, footer {
+            .featured, .genre-filter, .anime-grid {
                 padding: 30px 20px;
             }
             
@@ -718,20 +541,13 @@
         }
         
         @media (max-width: 576px) {
-            .user-actions {
-                display: none;
+            .search-container {
+                width: 100%;
+                margin-top: 15px;
             }
             
             .search-bar {
-                width: 150px;
-            }
-            
-            .hero {
-                height: 60vh;
-            }
-            
-            .hero h1 {
-                font-size: 1.8rem;
+                width: 100%;
             }
             
             .anime-grid {
@@ -758,33 +574,16 @@
     <header>
         <div class="logo">
             <i class="fas fa-play-circle"></i>
-            AniFlix
+            AniStream
         </div>
-        <nav class="nav-links">
-            <a href="#" class="active">Home</a>
-            <a href="#">Browse</a>
-            <a href="#">Simulcasts</a>
-            <a href="#">Manga</a>
-            <a href="#">News</a>
-        </nav>
-        <div class="search-bar">
-            <i class="fas fa-search"></i>
-            <input type="text" id="searchInput" placeholder="Search anime...">
-        </div>
-        <div class="user-actions">
-            <a href="#" class="btn btn-login">Log In</a>
-            <a href="#" class="btn btn-signup">Sign Up Free</a>
+        <div class="search-container">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Search anime...">
+            </div>
+            <button class="search-btn" id="searchButton">Search</button>
         </div>
     </header>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1>Unlimited Anime Streaming Anytime, Anywhere</h1>
-            <p>Watch thousands of episodes from hundreds of anime series, all ad-free. New episodes added shortly after Japanese broadcast.</p>
-            <button class="btn-hero">Start 14-Day Free Trial</button>
-        </div>
-    </section>
 
     <!-- Featured Anime -->
     <section class="featured">
@@ -873,48 +672,6 @@
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="footer-content">
-            <div class="footer-column">
-                <h3>AniFlix</h3>
-                <ul class="footer-links">
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Help/FAQ</a></li>
-                    <li><a href="#">Affiliates</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Browse</h3>
-                <ul class="footer-links">
-                    <li><a href="#">Simulcasts</a></li>
-                    <li><a href="#">Manga</a></li>
-                    <li><a href="#">News</a></li>
-                    <li><a href="#">Schedule</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Connect With Us</h3>
-                <ul class="footer-links">
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">Twitter</a></li>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">YouTube</a></li>
-                </ul>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                </div>
-            </div>
-        </div>
-        <div class="copyright">
-            &copy; 2023 AniFlix. All rights reserved. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
-        </div>
-    </footer>
-
     <script>
         // DOM Elements
         const featuredCarousel = document.getElementById('featuredCarousel');
@@ -922,6 +679,7 @@
         const genreButtons = document.querySelectorAll('.genre-btn');
         const loader = document.getElementById('loader');
         const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
         const animeModal = document.getElementById('animeModal');
         const closeModal = document.getElementById('closeModal');
         const modalTitle = document.getElementById('modalTitle');
@@ -943,7 +701,7 @@
             'part4.json'
         ];
         
-        // Popular anime titles by genre (for prioritized loading)
+        // Popular anime titles by genre
         const popularAnimeByGenre = {
             "Action": [
                 "Demon Slayer: Kimetsu no Yaiba",
@@ -1007,6 +765,8 @@
         let animeDetailsCache = {};
         let currentGenre = 'all';
         let displayedAnime = 12;
+        let isSearching = false;
+        let searchTerm = '';
         
         // Initialize the page
         document.addEventListener('DOMContentLoaded', async () => {
@@ -1018,16 +778,46 @@
                 animeModal.classList.remove('active');
             });
             
-            try {
+            // Search button event
+            searchButton.addEventListener('click', () => {
+                searchTerm = searchInput.value.trim().toLowerCase();
+                displayedAnime = 12;
+                loadAnimeGrid();
+            });
+            
+            // Search on Enter key
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    searchTerm = searchInput.value.trim().toLowerCase();
+                    displayedAnime = 12;
+                    loadAnimeGrid();
+                }
+            });
+            
+            // Load cached data if available
+            const cachedAnime = localStorage.getItem('cachedAnime');
+            const cachedDetails = localStorage.getItem('cachedAnimeDetails');
+            
+            if (cachedAnime && cachedDetails) {
+                try {
+                    allAnime = JSON.parse(cachedAnime);
+                    animeDetailsCache = JSON.parse(cachedDetails);
+                    
+                    // Hide loader
+                    loader.style.display = 'none';
+                    
+                    // Load UI components
+                    loadInitialUI();
+                    
+                    // Load remaining anime in background
+                    loadRemainingAnime();
+                } catch (e) {
+                    console.error('Error loading cached data', e);
+                    loadPopularAnime();
+                }
+            } else {
                 // Load popular anime first
-                await loadPopularAnime();
-                
-                // Load the rest in background
-                loadRemainingAnime();
-                
-            } catch (error) {
-                console.error('Error initializing page:', error);
-                loader.innerHTML = '<div class="loader-text">Failed to load anime data. Please try again later.</div>';
+                loadPopularAnime();
             }
         });
 
@@ -1052,11 +842,18 @@
                 }
             }
             
+            // Save to cache
+            localStorage.setItem('cachedAnime', JSON.stringify(allAnime));
+            localStorage.setItem('cachedAnimeDetails', JSON.stringify(animeDetailsCache));
+            
             // Hide loader
             loader.style.display = 'none';
             
             // Load UI components
             loadInitialUI();
+            
+            // Load remaining anime in background
+            loadRemainingAnime();
         }
 
         // Find anime in JSON files
@@ -1076,9 +873,31 @@
 
         // Load remaining anime in background
         async function loadRemainingAnime() {
-            // This would be implemented to load other anime after initial display
-            // For now, we'll just simulate the process
-            console.log("Loading other anime in background...");
+            // Get all anime titles we already have
+            const existingTitles = new Set(allAnime.map(a => a.title));
+            
+            // Load other anime
+            for (const file of jsonFiles) {
+                try {
+                    const response = await fetch(file);
+                    const data = await response.json();
+                    
+                    for (const anime of data) {
+                        if (!existingTitles.has(anime.title)) {
+                            allAnime.push(anime);
+                            existingTitles.add(anime.title);
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error loading ${file}:`, error);
+                }
+            }
+            
+            // Update cache
+            localStorage.setItem('cachedAnime', JSON.stringify(allAnime));
+            
+            // Update the grid
+            loadAnimeGrid();
         }
 
         // Set up event listeners
@@ -1092,12 +911,6 @@
                     displayedAnime = 12;
                     loadAnimeGrid();
                 });
-            });
-            
-            // Search functionality
-            searchInput.addEventListener('input', () => {
-                displayedAnime = 12;
-                loadAnimeGrid();
             });
             
             // Infinite scroll
@@ -1198,6 +1011,10 @@
                     
                     // Add to cache
                     animeDetailsCache[title] = animeDetails;
+                    
+                    // Update cache
+                    localStorage.setItem('cachedAnimeDetails', JSON.stringify(animeDetailsCache));
+                    
                     return animeDetails;
                 }
             } catch (error) {
@@ -1225,23 +1042,40 @@
             // Clear existing grid
             animeGrid.innerHTML = '';
             
-            // Get search term
-            const searchTerm = searchInput.value.toLowerCase();
-            
             // Filter anime by current genre and search term
-            let filteredAnime = allAnime.filter(anime => {
-                const matchesGenre = currentGenre === 'all' || 
-                                    (animeDetailsCache[anime.title]?.genres || []).some(genre => 
-                                        genre.toLowerCase().includes(currentGenre.toLowerCase())
-                );
-                
-                const matchesSearch = anime.title.toLowerCase().includes(searchTerm);
-                
-                return matchesGenre && matchesSearch;
-            });
+            let filteredAnime = allAnime;
+            
+            // Apply genre filter
+            if (currentGenre !== 'all') {
+                filteredAnime = filteredAnime.filter(anime => {
+                    const details = animeDetailsCache[anime.title];
+                    return details && details.genres && 
+                           details.genres.some(genre => 
+                               genre.toLowerCase().includes(currentGenre.toLowerCase())
+                           );
+                });
+            }
+            
+            // Apply search filter
+            if (searchTerm) {
+                filteredAnime = filteredAnime.filter(anime => {
+                    // Search in title
+                    if (anime.title.toLowerCase().includes(searchTerm)) return true;
+                    
+                    // Search in genres
+                    const details = animeDetailsCache[anime.title];
+                    if (details && details.genres) {
+                        return details.genres.some(genre => 
+                            genre.toLowerCase().includes(searchTerm)
+                        );
+                    }
+                    
+                    return false;
+                });
+            }
             
             // Prioritize popular anime for the current genre
-            if (currentGenre !== 'all') {
+            if (currentGenre !== 'all' || searchTerm) {
                 const popularTitles = new Set(popularAnimeByGenre[currentGenre] || []);
                 const popularAnime = filteredAnime.filter(anime => popularTitles.has(anime.title));
                 const otherAnime = filteredAnime.filter(anime => !popularTitles.has(anime.title));
@@ -1291,7 +1125,7 @@
             
             // Show message if no results
             if (animeToDisplay.length === 0) {
-                animeGrid.innerHTML = '<div class="no-results" style="grid-column: 1/-1; text-align: center; padding: 40px; color: #b8bcc2;">No anime found matching your search criteria.</div>';
+                animeGrid.innerHTML = '<div class="no-results">No anime found matching your search criteria.</div>';
             }
         }
 
