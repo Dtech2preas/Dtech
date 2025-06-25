@@ -6,106 +6,99 @@
     <title>AniStream - Premium Anime Platform</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* (All existing CSS remains unchanged) */
-        
-        /* New loading indicator styles */
-        .progress-container {
-            width: 100%;
-            height: 4px;
-            background: var(--dark-alt);
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: 1000;
-            display: none;
+        :root {
+            --primary: #f47521;
+            --primary-dark: #d8641a;
+            --dark: #12151a;
+            --dark-alt: #1a1e26;
+            --light: #f0f2f5;
+            --light-alt: #b8bcc2;
+            --card-bg: #1e232b;
+            --card-hover: #2a303a;
+            --overlay: rgba(0, 0, 0, 0.95);
         }
-        
-        .progress-bar {
-            height: 100%;
-            background: var(--primary);
-            width: 0%;
-            transition: width 0.3s ease;
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
-        .progress-text {
-            position: absolute;
-            top: 6px;
-            right: 10px;
+
+        body {
+            background-color: var(--dark);
             color: var(--light);
-            font-size: 0.8rem;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 20% 30%, rgba(26, 30, 38, 0.8) 0%, rgba(18, 21, 26, 1) 70%);
         }
-        
-        /* Visible loading spinner */
-        .visible-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255,255,255,0.1);
-            border-left: 2px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,0.7));
+            padding: 15px 40px;
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            background: rgba(18, 21, 26, 0.95);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
             margin-right: 8px;
-            vertical-align: middle;
         }
-        
-        /* Loading skeleton */
-        .skeleton {
-            background: linear-gradient(90deg, #2a303a 25%, #1e232b 50%, #2a303a 75%);
-            background-size: 200% 100%;
-            animation: skeleton 1.5s infinite linear;
+
+        .search-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--dark-alt);
             border-radius: 4px;
+            padding: 8px 15px;
+            width: 300px;
+            transition: all 0.3s;
         }
-        
-        @keyframes skeleton {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
+
+        .search-bar:focus-within {
+            box-shadow: 0 0 0 2px var(--primary);
         }
-        
-        .skeleton-img {
-            height: 350px;
+
+        .search-bar input {
+            background: transparent;
+            border: none;
+            color: var(--light);
             width: 100%;
+            padding: 5px 10px;
+            outline: none;
         }
-        
-        .skeleton-title {
-            height: 20px;
-            width: 80%;
-            margin: 10px 0;
-        }
-        
-        .skeleton-meta {
-            height: 16px;
-            width: 60%;
-        }
-        
-        .grid-skeleton-img {
-            height: 280px;
-            width: 100%;
-        }
-        
-        .grid-skeleton-title {
-            height: 18px;
-            width: 90%;
-            margin: 8px 0;
-        }
-        
-        .grid-skeleton-episodes {
-            height: 14px;
-            width: 70%;
-        }
-        
-        /* Loading status text */
-        .loading-status {
-            text-align: center;
-            padding: 20px;
+
+        .search-bar i {
             color: var(--light-alt);
-            font-size: 0.9rem;
         }
-        
-        .load-more {
-            display: block;
-            width: 200px;
-            margin: 20px auto;
-            padding: 10px 20px;
+
+        .search-btn {
+            padding: 8px 20px;
             background: var(--primary);
             color: var(--dark);
             border: none;
@@ -113,32 +106,490 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            text-align: center;
         }
-        
-        .load-more:hover {
+
+        .search-btn:hover {
             background: var(--primary-dark);
         }
-        
-        /* Priority loading for visible items */
-        .priority-loading {
-            animation: priority-pulse 1.5s infinite;
+
+        /* Featured Section */
+        .featured {
+            padding: 100px 40px 50px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        .view-all {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s;
+        }
+
+        .view-all:hover {
+            opacity: 0.8;
+        }
+
+        .featured-carousel {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 10px 5px;
+            scrollbar-width: thin;
+        }
+
+        .featured-carousel::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .featured-carousel::-webkit-scrollbar-track {
+            background: var(--dark-alt);
+            border-radius: 4px;
+        }
+
+        .featured-carousel::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+
+        .anime-card {
+            min-width: 250px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, background 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .anime-card:hover {
+            transform: translateY(-10px);
+            background: var(--card-hover);
+        }
+
+        .anime-img {
+            height: 350px;
+            width: 100%;
+            position: relative;
+        }
+
+        .anime-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .anime-info {
+            padding: 15px;
+        }
+
+        .anime-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .anime-meta {
+            display: flex;
+            justify-content: space-between;
+            color: var(--light-alt);
+            font-size: 0.9rem;
+        }
+
+        .anime-rating {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Genre Filter */
+        .genre-filter {
+            padding: 20px 40px;
+            background: var(--dark-alt);
+        }
+
+        .genre-buttons {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 5px 0;
+        }
+
+        .genre-btn {
+            padding: 8px 20px;
+            background: var(--card-bg);
+            border: none;
+            border-radius: 20px;
+            color: var(--light);
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .genre-btn:hover, .genre-btn.active {
+            background: var(--primary);
+            color: var(--dark);
+        }
+
+        /* Anime Grid */
+        .anime-grid {
+            padding: 30px 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .grid-anime-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, background 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .grid-anime-card:hover {
+            transform: translateY(-5px);
+            background: var(--card-hover);
+        }
+
+        .grid-img {
+            height: 280px;
+        }
+
+        .grid-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .grid-info {
+            padding: 15px;
+        }
+
+        .grid-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .grid-episodes {
+            color: var(--light-alt);
+            font-size: 0.85rem;
+        }
+
+        /* Loading spinner */
+        .loader {
+            text-align: center;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.1);
+            border-left: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loader-text {
+            color: var(--light-alt);
+            font-size: 1.1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Anime Detail Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--overlay);
+            z-index: 1000;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--dark);
+            border-radius: 8px;
+            overflow: hidden;
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: var(--dark-alt);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--light-alt);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: var(--primary);
+        }
+
+        .anime-detail-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .anime-poster {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .anime-poster img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .anime-info-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .anime-meta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .meta-item {
+            background: var(--dark-alt);
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .meta-label {
+            color: var(--light-alt);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .meta-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .rating-value {
+            color: var(--primary);
+        }
+
+        .genre-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .genre-tag {
+            background: rgba(244, 117, 33, 0.15);
+            color: var(--primary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+
+        .anime-description {
+            line-height: 1.6;
+            color: var(--light-alt);
+        }
+
+        .episodes-section {
+            margin-top: 20px;
+        }
+
+        .episodes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .episode-card {
+            background: var(--card-bg);
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .episode-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            background: var(--card-hover);
+        }
+
+        .episode-number {
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9rem;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .no-results {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 40px;
+            color: var(--light-alt);
+        }
+
+        /* Status bar */
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: var(--primary);
+            color: var(--dark);
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+            z-index: 100;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
         }
         
-        @keyframes priority-pulse {
-            0% { box-shadow: 0 0 0 0 rgba(244, 117, 33, 0.4); }
-            70% { box-shadow: 0 0 0 10px rgba(244, 117, 33, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(244, 117, 33, 0); }
+        .status-bar.active {
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .search-bar {
+                width: 200px;
+            }
+
+            .anime-detail-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 20px;
+            }
+
+            .featured, .genre-filter, .anime-grid {
+                padding: 30px 20px;
+            }
+
+            .featured-carousel {
+                gap: 15px;
+            }
+
+            .anime-card {
+                min-width: 220px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .search-container {
+                width: 100%;
+                margin-top: 15px;
+            }
+
+            .search-bar {
+                width: 100%;
+            }
+
+            .anime-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .grid-img {
+                height: 220px;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+
+            .episodes-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Progress bar -->
-    <div class="progress-container" id="progressContainer">
-        <div class="progress-bar" id="progressBar"></div>
-        <div class="progress-text" id="progressText">Loading...</div>
-    </div>
-    
     <!-- Header -->
     <header>
         <div class="logo">
@@ -153,6 +604,9 @@
             <button class="search-btn" id="searchButton">Search</button>
         </div>
     </header>
+
+    <!-- Status Bar -->
+    <div class="status-bar" id="statusBar">Checking for new anime...</div>
 
     <!-- Featured Anime -->
     <section class="featured">
@@ -184,12 +638,12 @@
     <section class="anime-grid" id="animeGrid">
         <!-- Anime cards will be loaded here -->
     </section>
-    
-    <!-- Load More Button -->
-    <button class="load-more" id="loadMore">Load More</button>
-    
-    <!-- Loading Status -->
-    <div class="loading-status" id="loadingStatus"></div>
+
+    <!-- Loading Spinner -->
+    <div class="loader" id="loader">
+        <div class="spinner"></div>
+        <div class="loader-text">Loading popular anime...</div>
+    </div>
 
     <!-- Anime Detail Modal -->
     <div class="modal" id="animeModal">
@@ -246,6 +700,7 @@
         const featuredCarousel = document.getElementById('featuredCarousel');
         const animeGrid = document.getElementById('animeGrid');
         const genreButtons = document.querySelectorAll('.genre-btn');
+        const loader = document.getElementById('loader');
         const searchInput = document.getElementById('searchInput');
         const searchButton = document.getElementById('searchButton');
         const animeModal = document.getElementById('animeModal');
@@ -259,11 +714,7 @@
         const animeGenres = document.getElementById('animeGenres');
         const animeDescription = document.getElementById('animeDescription');
         const episodesGrid = document.getElementById('episodesGrid');
-        const progressContainer = document.getElementById('progressContainer');
-        const progressBar = document.getElementById('progressBar');
-        const progressText = document.getElementById('progressText');
-        const loadingStatus = document.getElementById('loadingStatus');
-        const loadMore = document.getElementById('loadMore');
+        const statusBar = document.getElementById('statusBar');
 
         // Configuration
         const jsonFiles = [
@@ -273,12 +724,6 @@
             'finis.json',
             'part4.json'
         ];
-        
-        // Chunk size for loading
-        const CHUNK_SIZE = 20;
-        
-        // Animation frame for throttling
-        let lastAnimationFrame = 0;
 
         // Popular anime titles by genre
         const popularAnimeByGenre = {
@@ -343,17 +788,19 @@
         let allAnime = [];
         let animeDetailsCache = {};
         let currentGenre = 'all';
-        let displayedAnime = 0;
+        let displayedAnime = 12;
         let isSearching = false;
         let searchTerm = '';
-        let isLoading = false;
-        let visibleItems = new Set();
+        let animeQueue = [];
+        let isProcessingQueue = false;
+        let featuredAnimeSet = new Set(Object.values(popularAnimeByGenre).flat());
+        let displayedFeaturedAnime = new Set();
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', async () => {
-            // Show progress bar
-            showProgress(0, "Initializing...");
-            
+            // Show loader
+            loader.style.display = 'flex';
+
             // Close modal event
             closeModal.addEventListener('click', () => {
                 animeModal.classList.remove('active');
@@ -362,8 +809,7 @@
             // Search button event
             searchButton.addEventListener('click', () => {
                 searchTerm = searchInput.value.trim().toLowerCase();
-                displayedAnime = 0;
-                animeGrid.innerHTML = '';
+                displayedAnime = 12;
                 loadAnimeGrid();
             });
 
@@ -371,19 +817,13 @@
             searchInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     searchTerm = searchInput.value.trim().toLowerCase();
-                    displayedAnime = 0;
-                    animeGrid.innerHTML = '';
+                    displayedAnime = 12;
                     loadAnimeGrid();
                 }
             });
-            
-            // Load more button
-            loadMore.addEventListener('click', () => {
-                loadAnimeGrid();
-            });
-            
-            // Setup Intersection Observer for visible items
-            setupIntersectionObserver();
+
+            // Setup event listeners
+            setupEventListeners();
 
             // Load cached data if available
             const cachedAnime = localStorage.getItem('cachedAnime');
@@ -393,18 +833,12 @@
                 try {
                     allAnime = JSON.parse(cachedAnime);
                     animeDetailsCache = JSON.parse(cachedDetails);
-                    
-                    // Update progress
-                    showProgress(30, "Loading UI...");
-                    
-                    // Load UI components
-                    loadInitialUI();
-                    
-                    // Update progress
-                    showProgress(70, "Loading remaining anime...");
-                    
-                    // Load remaining anime in background
-                    setTimeout(() => loadRemainingAnime(), 500);
+
+                    // Display cached anime one by one
+                    displayCachedAnime();
+
+                    // Load new anime in background
+                    loadNewAnime();
                 } catch (e) {
                     console.error('Error loading cached data', e);
                     loadPopularAnime();
@@ -413,92 +847,11 @@
                 // Load popular anime first
                 loadPopularAnime();
             }
-            
-            // Setup event listeners
-            setupEventListeners();
+
+            // Set up periodic check for new anime
+            setInterval(checkForNewAnime, 1800000); // 30 minutes
         });
-        
-        // Show progress bar
-        function showProgress(percent, text) {
-            progressContainer.style.display = 'block';
-            progressBar.style.width = percent + '%';
-            progressText.textContent = text;
-        }
-        
-        // Hide progress bar
-        function hideProgress() {
-            setTimeout(() => {
-                progressContainer.style.display = 'none';
-            }, 300);
-        }
-        
-        // Setup Intersection Observer
-        function setupIntersectionObserver() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const card = entry.target;
-                        const title = card.dataset.title;
-                        visibleItems.add(title);
-                        
-                        // Prioritize loading for this item
-                        if (title && animeDetailsCache[title]) {
-                            updateCardWithDetails(card, animeDetailsCache[title]);
-                        } else if (title) {
-                            loadAnimeDetails(title).then(details => {
-                                updateCardWithDetails(card, details);
-                            });
-                        }
-                    }
-                });
-            }, { threshold: 0.1 });
-            
-            // Observe all anime cards
-            document.querySelectorAll('.anime-card, .grid-anime-card').forEach(card => {
-                observer.observe(card);
-            });
-        }
-        
-        // Update card with details
-        function updateCardWithDetails(card, details) {
-            if (card.classList.contains('anime-card')) {
-                // Featured card
-                card.innerHTML = `
-                    <div class="anime-img">
-                        <img src="${details.image}" alt="${details.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
-                    </div>
-                    <div class="anime-info">
-                        <div class="anime-title">${details.title}</div>
-                        <div class="anime-meta">
-                            <span>${details.year || '?'}</span>
-                            <span class="anime-rating">⭐ ${details.rating || 'N/A'}</span>
-                        </div>
-                    </div>
-                `;
-                // Reattach click event
-                const anime = allAnime.find(a => a.title === details.title);
-                if (anime) {
-                    card.addEventListener('click', () => openAnimeDetail(anime));
-                }
-            } else {
-                // Grid card
-                card.innerHTML = `
-                    <div class="grid-img">
-                        <img src="${details.image}" alt="${details.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
-                    </div>
-                    <div class="grid-info">
-                        <div class="grid-title">${details.title}</div>
-                        <div class="grid-episodes">${details.episodes} episodes</div>
-                    </div>
-                `;
-                // Reattach click event
-                const anime = allAnime.find(a => a.title === details.title);
-                if (anime) {
-                    card.addEventListener('click', () => openAnimeDetail(anime));
-                }
-            }
-        }
-        
+
         // Set up event listeners
         function setupEventListeners() {
             // Genre filter
@@ -507,322 +860,190 @@
                     document.querySelector('.genre-btn.active').classList.remove('active');
                     button.classList.add('active');
                     currentGenre = button.dataset.genre;
-                    displayedAnime = 0;
-                    animeGrid.innerHTML = '';
+                    displayedAnime = 12;
                     loadAnimeGrid();
                 });
             });
 
+            // Infinite scroll
+            window.addEventListener('scroll', handleInfiniteScroll);
+
             // Header scroll effect
             window.addEventListener('scroll', handleHeaderScroll);
         }
-        
-        // Handle header scroll effect
-        function handleHeaderScroll() {
-            const header = document.querySelector('header');
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
+
+        // Display cached anime one by one
+        function displayCachedAnime() {
+            let index = 0;
+            
+            function processNext() {
+                if (index >= allAnime.length) {
+                    // Hide loader when done
+                    loader.style.display = 'none';
+                    return;
+                }
+                
+                const anime = allAnime[index];
+                const details = animeDetailsCache[anime.title];
+                
+                if (details) {
+                    // Add to featured if applicable
+                    if (featuredAnimeSet.has(anime.title) {
+                        addAnimeToFeatured(anime, details);
+                        displayedFeaturedAnime.add(anime.title);
+                    }
+                    
+                    // Add to grid if it matches current filter
+                    if (matchesCurrentFilter(anime, details)) {
+                        addAnimeToGrid(anime, details);
+                    }
+                }
+                
+                index++;
+                setTimeout(processNext, 100); // Add slight delay between items
             }
             
-            // Check if we're near the bottom for infinite scroll
-            handleInfiniteScroll();
+            processNext();
+        }
+
+        // Check if anime matches current filter
+        function matchesCurrentFilter(anime, details) {
+            // Check genre
+            if (currentGenre !== 'all') {
+                if (!details.genres || !details.genres.some(genre => 
+                    genre.toLowerCase().includes(currentGenre.toLowerCase()))) {
+                    return false;
+                }
+            }
+
+            // Check search term
+            if (searchTerm) {
+                if (!anime.title.toLowerCase().includes(searchTerm) && 
+                    !(details.genres && details.genres.some(genre => genre.toLowerCase().includes(searchTerm)))) {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         // Load popular anime for initial display
         async function loadPopularAnime() {
-            showProgress(10, "Loading popular anime...");
-            
             // Get all popular anime titles
             const popularTitles = new Set(Object.values(popularAnimeByGenre).flat());
-            
-            // Show skeleton for featured section
-            featuredCarousel.innerHTML = '';
+
+            // Create queue for popular anime
             popularTitles.forEach(title => {
-                const card = document.createElement('div');
-                card.className = 'anime-card skeleton';
-                card.innerHTML = `
-                    <div class="skeleton-img"></div>
-                    <div class="anime-info">
-                        <div class="skeleton-title"></div>
-                        <div class="skeleton-meta"></div>
-                    </div>
-                `;
-                featuredCarousel.appendChild(card);
+                animeQueue.push({ title, isFeatured: true });
             });
+
+            // Start processing the queue
+            processAnimeQueue();
+        }
+
+        // Process anime queue one by one
+        async function processAnimeQueue() {
+            if (isProcessingQueue || animeQueue.length === 0) return;
             
-            // Load data for popular anime
-            let loadedCount = 0;
-            const totalCount = popularTitles.size;
+            isProcessingQueue = true;
             
-            for (const title of popularTitles) {
-                try {
-                    // Find the anime in JSON files
-                    const anime = await findAnimeInJsonFiles(title);
-                    if (anime) {
+            const animeData = animeQueue.shift();
+            const { title, isFeatured } = animeData;
+            
+            try {
+                // Find the anime in JSON files
+                const anime = await findAnimeInJsonFiles(title);
+                
+                if (anime) {
+                    // Add to allAnime if not already present
+                    if (!allAnime.some(a => a.title === anime.title)) {
                         allAnime.push(anime);
-                        
-                        // Immediately create card with basic info
-                        createFeaturedCard(anime);
-                        
-                        // Preload details in background
-                        loadAnimeDetails(title).then(details => {
-                            updateFeaturedCard(title, details);
-                        });
                     }
                     
-                    // Update progress
-                    loadedCount++;
-                    const percent = 10 + Math.floor((loadedCount / totalCount) * 50);
-                    showProgress(percent, `Loading popular anime (${loadedCount}/${totalCount})`);
+                    // Load details
+                    const details = await loadAnimeDetails(title);
                     
-                } catch (error) {
-                    console.error(`Error loading ${title}:`, error);
+                    // Add to featured if applicable
+                    if (isFeatured) {
+                        addAnimeToFeatured(anime, details);
+                        displayedFeaturedAnime.add(anime.title);
+                    }
+                    
+                    // Add to grid if it matches current filter
+                    if (matchesCurrentFilter(anime, details)) {
+                        addAnimeToGrid(anime, details);
+                    }
+                    
+                    // Save to cache
+                    localStorage.setItem('cachedAnime', JSON.stringify(allAnime));
+                    localStorage.setItem('cachedAnimeDetails', JSON.stringify(animeDetailsCache));
+                    
+                    // Hide loader after first anime is loaded
+                    if (loader.style.display === 'flex') {
+                        loader.style.display = 'none';
+                    }
                 }
+            } catch (error) {
+                console.error(`Error processing ${title}:`, error);
             }
             
-            // Save to cache
-            localStorage.setItem('cachedAnime', JSON.stringify(allAnime));
-            
-            // Load UI components
-            loadAnimeGrid();
-            
-            // Update progress
-            showProgress(70, "Loading remaining anime...");
-            
-            // Load remaining anime in background
-            setTimeout(() => loadRemainingAnime(), 300);
+            // Process next after a short delay
+            setTimeout(() => {
+                isProcessingQueue = false;
+                processAnimeQueue();
+            }, 200);
         }
-        
-        // Create featured card with basic info
-        function createFeaturedCard(anime) {
-            const existingCard = Array.from(featuredCarousel.children).find(card => 
-                card.querySelector('.anime-title')?.textContent === anime.title
-            );
-            
-            if (existingCard) return;
-            
+
+        // Add anime to featured section
+        function addAnimeToFeatured(anime, details) {
             const card = document.createElement('div');
-            card.className = 'anime-card priority-loading';
-            card.dataset.title = anime.title;
+            card.className = 'anime-card';
+
             card.innerHTML = `
                 <div class="anime-img">
-                    <div style="background: #2a303a; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #f47521;"></i>
-                    </div>
+                    <img src="${details.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
                 </div>
                 <div class="anime-info">
                     <div class="anime-title">${anime.title}</div>
                     <div class="anime-meta">
-                        <span>Loading details...</span>
+                        <span>${details.year || '?'}</span>
+                        <span class="anime-rating">⭐ ${details.rating || 'N/A'}</span>
                     </div>
                 </div>
             `;
-            
+
             // Add click event to open anime page
             card.addEventListener('click', () => openAnimeDetail(anime));
-            
+
             featuredCarousel.appendChild(card);
         }
-        
-        // Update featured card with details
-        function updateFeaturedCard(title, details) {
-            const card = featuredCarousel.querySelector(`.anime-card[data-title="${title}"]`);
-            if (card) {
-                card.classList.remove('priority-loading');
-                card.innerHTML = `
-                    <div class="anime-img">
-                        <img src="${details.image}" alt="${title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
-                    </div>
-                    <div class="anime-info">
-                        <div class="anime-title">${title}</div>
-                        <div class="anime-meta">
-                            <span>${details.year || '?'}</span>
-                            <span class="anime-rating">⭐ ${details.rating || 'N/A'}</span>
-                        </div>
-                    </div>
-                `;
-                // Reattach the click event
-                const anime = allAnime.find(a => a.title === title);
-                if (anime) {
-                    card.addEventListener('click', () => openAnimeDetail(anime));
-                }
-            }
-        }
 
-        // Find anime in JSON files
-        async function findAnimeInJsonFiles(title) {
-            for (const file of jsonFiles) {
-                try {
-                    const response = await fetch(file);
-                    const data = await response.json();
-                    const foundAnime = data.find(anime => anime.title === title);
-                    if (foundAnime) return foundAnime;
-                } catch (error) {
-                    console.error(`Error fetching ${file}:`, error);
-                }
-            }
-            return null;
-        }
+        // Add anime to grid
+        function addAnimeToGrid(anime, details) {
+            const card = document.createElement('div');
+            card.className = 'grid-anime-card';
 
-        // Load remaining anime in background
-        async function loadRemainingAnime() {
-            if (isLoading) return;
-            isLoading = true;
-            
-            // Get all anime titles we already have
-            const existingTitles = new Set(allAnime.map(a => a.title));
-            
-            // Show status
-            loadingStatus.textContent = "Loading more anime...";
-            
-            // Load other anime
-            let loadedCount = 0;
-            for (const file of jsonFiles) {
-                try {
-                    const response = await fetch(file);
-                    const data = await response.json();
-                    
-                    for (const anime of data) {
-                        if (!existingTitles.has(anime.title)) {
-                            allAnime.push(anime);
-                            existingTitles.add(anime.title);
-                            loadedCount++;
-                            
-                            // Update status
-                            if (loadedCount % 10 === 0) {
-                                loadingStatus.textContent = `Loaded ${loadedCount} additional anime...`;
-                            }
-                        }
-                    }
-                } catch (error) {
-                    console.error(`Error loading ${file}:`, error);
-                    loadingStatus.textContent = "Error loading some anime data";
-                }
-            }
-            
-            // Update cache
-            localStorage.setItem('cachedAnime', JSON.stringify(allAnime));
-            loadingStatus.textContent = `Loaded ${loadedCount} additional anime!`;
-            
-            // Update the grid
-            if (displayedAnime > 0) {
-                loadAnimeGrid();
-            }
-            
-            isLoading = false;
-            hideProgress();
-        }
+            card.innerHTML = `
+                <div class="grid-img">
+                    <img src="${details.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
+                </div>
+                <div class="grid-info">
+                    <div class="grid-title">${anime.title}</div>
+                    <div class="grid-episodes">${details.episodes} episodes</div>
+                </div>
+            `;
 
-        // Load initial UI components
-        function loadInitialUI() {
-            // Load featured anime
-            loadFeaturedAnime();
-            
-            // Load anime grid
-            loadAnimeGrid();
-        }
+            // Add click event to open anime page
+            card.addEventListener('click', () => openAnimeDetail(anime));
 
-        // Load featured anime
-        function loadFeaturedAnime() {
-            // Get popular anime for featured section
-            const featuredTitles = new Set(Object.values(popularAnimeByGenre).flat());
-            const featuredAnime = allAnime.filter(anime => featuredTitles.has(anime.title));
-            
-            // Clear existing content
-            featuredCarousel.innerHTML = '';
-            
-            // Create cards for featured anime
-            featuredAnime.forEach(anime => {
-                createFeaturedCard(anime);
-                
-                // Load details in background
-                loadAnimeDetails(anime.title).then(details => {
-                    updateFeaturedCard(anime.title, details);
-                });
-            });
-        }
-
-        // Load anime details from cache or API
-        async function loadAnimeDetails(title) {
-            // Check cache first
-            if (animeDetailsCache[title]) {
-                return animeDetailsCache[title];
-            }
-            
-            // Show loading indicator for this item
-            const cards = document.querySelectorAll(`[data-title="${title}"]`);
-            cards.forEach(card => {
-                card.classList.add('priority-loading');
-            });
-
-            try {
-                const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(title)}&limit=1`);
-                const data = await response.json();
-
-                if (data.data && data.data.length > 0) {
-                    const details = data.data[0];
-                    const animeDetails = {
-                        title: details.title || title,
-                        image: details.images?.jpg?.image_url || 'https://via.placeholder.com/300x450?text=No+Image',
-                        description: details.synopsis || 'No description available.',
-                        rating: details.score ? details.score.toFixed(1) : 'N/A',
-                        episodes: details.episodes || '?',
-                        year: details.year || '?',
-                        status: details.status || 'Unknown',
-                        genres: details.genres ? details.genres.map(g => g.name) : ['Unknown']
-                    };
-
-                    // Add to cache
-                    animeDetailsCache[title] = animeDetails;
-
-                    // Update cache
-                    localStorage.setItem('cachedAnimeDetails', JSON.stringify(animeDetailsCache));
-                    
-                    // Update cards
-                    cards.forEach(card => {
-                        card.classList.remove('priority-loading');
-                        updateCardWithDetails(card, animeDetails);
-                    });
-
-                    return animeDetails;
-                }
-            } catch (error) {
-                console.error(`Error fetching details for ${title}:`, error);
-            }
-
-            // Return default if no data found
-            const defaultDetails = {
-                title,
-                image: 'https://via.placeholder.com/300x450?text=No+Image',
-                description: 'No description available.',
-                rating: 'N/A',
-                episodes: '?',
-                year: '?',
-                status: 'Unknown',
-                genres: ['Unknown']
-            };
-
-            animeDetailsCache[title] = defaultDetails;
-            
-            // Update cards
-            cards.forEach(card => {
-                card.classList.remove('priority-loading');
-                updateCardWithDetails(card, defaultDetails);
-            });
-            
-            return defaultDetails;
+            animeGrid.appendChild(card);
         }
 
         // Load anime grid with current filter
         function loadAnimeGrid() {
-            if (isLoading) return;
-            isLoading = true;
-            
-            // Show status
-            loadingStatus.textContent = "Loading anime...";
-            
+            // Clear existing grid
+            animeGrid.innerHTML = '';
+
             // Filter anime by current genre and search term
             let filteredAnime = allAnime;
 
@@ -862,91 +1083,183 @@
                 const otherAnime = filteredAnime.filter(anime => !popularTitles.has(anime.title));
                 filteredAnime = [...popularAnime, ...otherAnime];
             }
-            
-            // Get anime to display (current chunk)
-            const start = displayedAnime;
-            const end = start + CHUNK_SIZE;
-            const animeToDisplay = filteredAnime.slice(start, end);
-            
-            // Update displayed count
-            displayedAnime = end;
-            
-            // Show/hide load more button
-            if (displayedAnime >= filteredAnime.length) {
-                loadMore.style.display = 'none';
-            } else {
-                loadMore.style.display = 'block';
-                loadMore.textContent = `Load More (${filteredAnime.length - displayedAnime} remaining)`;
-            }
-            
-            // Update status
-            loadingStatus.textContent = `Showing ${Math.min(displayedAnime, filteredAnime.length)} of ${filteredAnime.length} anime`;
-            
+
+            // Get anime to display (up to displayedAnime count)
+            const animeToDisplay = filteredAnime.slice(0, displayedAnime);
+
             // Create grid cards
             animeToDisplay.forEach(anime => {
-                const card = document.createElement('div');
-                card.className = 'grid-anime-card';
-                card.dataset.title = anime.title;
-                
-                // Check if we have cached details
                 const details = animeDetailsCache[anime.title];
-                
                 if (details) {
-                    card.innerHTML = `
-                        <div class="grid-img">
-                            <img src="${details.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
-                        </div>
-                        <div class="grid-info">
-                            <div class="grid-title">${anime.title}</div>
-                            <div class="grid-episodes">${details.episodes} episodes</div>
-                        </div>
-                    `;
-                } else {
-                    card.innerHTML = `
-                        <div class="grid-img">
-                            <div style="background: #2a303a; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; color: #f47521;"></i>
-                            </div>
-                        </div>
-                        <div class="grid-info">
-                            <div class="grid-title">${anime.title}</div>
-                            <div class="grid-episodes">Loading details...</div>
-                        </div>
-                    `;
-                    
-                    // Load details in background
-                    loadAnimeDetails(anime.title);
+                    addAnimeToGrid(anime, details);
                 }
-
-                // Add click event to open anime page
-                card.addEventListener('click', () => openAnimeDetail(anime));
-
-                animeGrid.appendChild(card);
             });
-            
+
             // Show message if no results
-            if (filteredAnime.length === 0) {
+            if (animeToDisplay.length === 0) {
                 animeGrid.innerHTML = '<div class="no-results">No anime found matching your search criteria.</div>';
-                loadMore.style.display = 'none';
+            }
+        }
+
+        // Find anime in JSON files
+        async function findAnimeInJsonFiles(title) {
+            for (const file of jsonFiles) {
+                try {
+                    const response = await fetch(file);
+                    const data = await response.json();
+                    const foundAnime = data.find(anime => anime.title === title);
+                    if (foundAnime) return foundAnime;
+                } catch (error) {
+                    console.error(`Error fetching ${file}:`, error);
+                }
+            }
+            return null;
+        }
+
+        // Load anime details from cache or API
+        async function loadAnimeDetails(title) {
+            // Check cache first
+            if (animeDetailsCache[title]) {
+                return animeDetailsCache[title];
+            }
+
+            try {
+                const response = await fetch(`https://api.jikan.moe/v4/anime?q=${encodeURIComponent(title)}&limit=1`);
+                const data = await response.json();
+
+                if (data.data && data.data.length > 0) {
+                    const details = data.data[0];
+                    const animeDetails = {
+                        title: details.title || title,
+                        image: details.images?.jpg?.image_url || 'https://via.placeholder.com/300x450?text=No+Image',
+                        description: details.synopsis || 'No description available.',
+                        rating: details.score ? details.score.toFixed(1) : 'N/A',
+                        episodes: details.episodes || '?',
+                        year: details.year || '?',
+                        status: details.status || 'Unknown',
+                        genres: details.genres ? details.genres.map(g => g.name) : ['Unknown']
+                    };
+
+                    // Add to cache
+                    animeDetailsCache[title] = animeDetails;
+
+                    // Update cache
+                    localStorage.setItem('cachedAnimeDetails', JSON.stringify(animeDetailsCache));
+
+                    return animeDetails;
+                }
+            } catch (error) {
+                console.error(`Error fetching details for ${title}:`, error);
+            }
+
+            // Return default if no data found
+            const defaultDetails = {
+                title,
+                image: 'https://via.placeholder.com/300x450?text=No+Image',
+                description: 'No description available.',
+                rating: 'N/A',
+                episodes: '?',
+                year: '?',
+                status: 'Unknown',
+                genres: ['Unknown']
+            };
+
+            animeDetailsCache[title] = defaultDetails;
+            return defaultDetails;
+        }
+
+        // Load new anime in background
+        async function loadNewAnime() {
+            // Get all anime titles we already have
+            const existingTitles = new Set(allAnime.map(a => a.title));
+
+            // Load other anime
+            for (const file of jsonFiles) {
+                try {
+                    const response = await fetch(file);
+                    const data = await response.json();
+
+                    for (const anime of data) {
+                        if (!existingTitles.has(anime.title)) {
+                            animeQueue.push({ title: anime.title, isFeatured: false });
+                            existingTitles.add(anime.title);
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error loading ${file}:`, error);
+                }
+            }
+
+            // Start processing the queue
+            processAnimeQueue();
+        }
+
+        // Check for new anime periodically
+        async function checkForNewAnime() {
+            // Show status bar
+            statusBar.classList.add('active');
+            
+            // Get all anime titles we already have
+            const existingTitles = new Set(allAnime.map(a => a.title));
+            let newAnimeCount = 0;
+            
+            // Check each JSON file
+            for (const file of jsonFiles) {
+                try {
+                    const response = await fetch(file);
+                    const data = await response.json();
+                    
+                    for (const anime of data) {
+                        if (!existingTitles.has(anime.title)) {
+                            animeQueue.push({ title: anime.title, isFeatured: false });
+                            existingTitles.add(anime.title);
+                            newAnimeCount++;
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Error checking ${file}:`, error);
+                }
             }
             
-            isLoading = false;
+            // Update status message
+            if (newAnimeCount > 0) {
+                statusBar.textContent = `Found ${newAnimeCount} new anime! Loading now...`;
+            } else {
+                statusBar.textContent = "No new anime found. Next check in 30 minutes.";
+            }
+            
+            // Start processing the queue
+            processAnimeQueue();
+            
+            // Hide status bar after 5 seconds
+            setTimeout(() => {
+                statusBar.classList.remove('active');
+            }, 5000);
         }
 
         // Handle infinite scroll
         function handleInfiniteScroll() {
-            // Throttle with requestAnimationFrame
-            const now = Date.now();
-            if (now - lastAnimationFrame < 100) return;
-            lastAnimationFrame = now;
-            
             const scrollPosition = window.scrollY;
             const windowHeight = window.innerHeight;
             const bodyHeight = document.body.offsetHeight;
 
             // When user is near the bottom of the page
             if (scrollPosition + windowHeight >= bodyHeight - 500) {
+                // Increase displayed anime count
+                displayedAnime += 12;
+
+                // Reload grid with more anime
                 loadAnimeGrid();
+            }
+        }
+
+        // Handle header scroll effect
+        function handleHeaderScroll() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
             }
         }
 
