@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AniStream - Premium Anime Platform</title>
+    <title>AniStream - Premium Anime Experience</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -336,6 +336,13 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Chunk Loader */
+        .chunk-loader {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+
         /* Anime Detail Modal */
         .modal {
             position: fixed;
@@ -511,6 +518,15 @@
             color: var(--light-alt);
         }
 
+        .database-info {
+            text-align: center;
+            padding: 20px;
+            color: var(--light-alt);
+            font-style: italic;
+            border-top: 1px solid var(--dark-alt);
+            margin-top: 20px;
+        }
+
         /* Responsive */
         @media (max-width: 992px) {
             .search-bar {
@@ -616,10 +632,11 @@
         <!-- Anime cards will be loaded here -->
     </section>
 
-    <!-- Loading Spinner -->
-    <div class="loader" id="loader">
+    <!-- Chunk Loader -->
+    <div class="chunk-loader" id="chunkLoader">
         <div class="spinner"></div>
-        <div class="loader-text">Loading popular anime...</div>
+        <div class="loader-text">Loading more anime from database...</div>
+        <p class="database-info">Search for specific anime while we load the database</p>
     </div>
 
     <!-- Anime Detail Modal -->
@@ -678,6 +695,7 @@
         const animeGrid = document.getElementById('animeGrid');
         const genreButtons = document.querySelectorAll('.genre-btn');
         const loader = document.getElementById('loader');
+        const chunkLoader = document.getElementById('chunkLoader');
         const searchInput = document.getElementById('searchInput');
         const searchButton = document.getElementById('searchButton');
         const animeModal = document.getElementById('animeModal');
@@ -700,6 +718,13 @@
             'finis.json',
             'part4.json'
         ];
+        
+        // Chunk loading settings
+        const CHUNK_SIZE = 20;
+        let currentChunkIndex = 0;
+        let currentFileIndex = 0;
+        let currentFileData = null;
+        let isLoadingChunk = false;
         
         // Popular anime titles by genre
         const popularAnimeByGenre = {
@@ -765,14 +790,10 @@
         let animeDetailsCache = {};
         let currentGenre = 'all';
         let displayedAnime = 12;
-        let isSearching = false;
         let searchTerm = '';
         
         // Initialize the page
         document.addEventListener('DOMContentLoaded', async () => {
-            // Show loader
-            loader.style.display = 'flex';
-            
             // Close modal event
             closeModal.addEventListener('click', () => {
                 animeModal.classList.remove('active');
@@ -803,14 +824,8 @@
                     allAnime = JSON.parse(cachedAnime);
                     animeDetailsCache = JSON.parse(cachedDetails);
                     
-                    // Hide loader
-                    loader.style.display = 'none';
-                    
                     // Load UI components
                     loadInitialUI();
-                    
-                    // Load remaining anime in background
-                    loadRemainingAnime();
                 } catch (e) {
                     console.error('Error loading cached data', e);
                     loadPopularAnime();
@@ -819,6 +834,12 @@
                 // Load popular anime first
                 loadPopularAnime();
             }
+            
+            // Add infinite scroll
+            window.addEventListener('scroll', handleInfiniteScroll);
+            
+            // Header scroll effect
+            window.addEventListener('scroll', handleHeaderScroll);
         });
 
         // Load popular anime for initial display
@@ -846,14 +867,8 @@
             localStorage.setItem('cachedAnime', JSON.stringify(allAnime));
             localStorage.setItem('cachedAnimeDetails', JSON.stringify(animeDetailsCache));
             
-            // Hide loader
-            loader.style.display = 'none';
-            
             // Load UI components
             loadInitialUI();
-            
-            // Load remaining anime in background
-            loadRemainingAnime();
         }
 
         // Find anime in JSON files
@@ -871,33 +886,59 @@
             return null;
         }
 
-        // Load remaining anime in background
-        async function loadRemainingAnime() {
-            // Get all anime titles we already have
-            const existingTitles = new Set(allAnime.map(a => a.title));
+        // Load next chunk of anime data
+        async function loadNextChunk() {
+            if (isLoadingChunk) return;
+            isLoadingChunk = true;
             
-            // Load other anime
-            for (const file of jsonFiles) {
-                try {
+            // Show chunk loader
+            chunkLoader.style.display = 'flex';
+            
+            try {
+                // If we haven't loaded a file yet, or we've processed the current file
+                if (!currentFileData && currentFileIndex < jsonFiles.length) {
+                    const file = jsonFiles[currentFileIndex];
                     const response = await fetch(file);
-                    const data = await response.json();
+                    currentFileData = await response.json();
+                    currentChunkIndex = 0;
+                }
+                
+                if (currentFileData) {
+                    // Get next chunk of data
+                    const chunk = currentFileData.slice(currentChunkIndex, currentChunkIndex + CHUNK_SIZE);
+                    currentChunkIndex += CHUNK_SIZE;
                     
-                    for (const anime of data) {
-                        if (!existingTitles.has(anime.title)) {
+                    // Process each anime in the chunk
+                    for (const anime of chunk) {
+                        // Skip if we already have this anime
+                        if (!allAnime.some(a => a.title === anime.title)) {
                             allAnime.push(anime);
-                            existingTitles.add(anime.title);
+                            
+                            // Preload details in background
+                            loadAnimeDetails(anime.title);
                         }
                     }
-                } catch (error) {
-                    console.error(`Error loading ${file}:`, error);
+                    
+                    // Update cache
+                    localStorage.setItem('cachedAnime', JSON.stringify(allAnime));
+                    
+                    // Update grid
+                    loadAnimeGrid();
+                    
+                    // Check if we've processed the entire file
+                    if (currentChunkIndex >= currentFileData.length) {
+                        // Move to next file
+                        currentFileIndex++;
+                        currentFileData = null;
+                        currentChunkIndex = 0;
+                    }
                 }
+            } catch (error) {
+                console.error('Error loading chunk', error);
+            } finally {
+                isLoadingChunk = false;
+                chunkLoader.style.display = 'none';
             }
-            
-            // Update cache
-            localStorage.setItem('cachedAnime', JSON.stringify(allAnime));
-            
-            // Update the grid
-            loadAnimeGrid();
         }
 
         // Set up event listeners
@@ -912,12 +953,6 @@
                     loadAnimeGrid();
                 });
             });
-            
-            // Infinite scroll
-            window.addEventListener('scroll', handleInfiniteScroll);
-            
-            // Header scroll effect
-            window.addEventListener('scroll', handleHeaderScroll);
         }
 
         // Load initial UI components
@@ -930,6 +965,9 @@
             
             // Load anime grid
             loadAnimeGrid();
+            
+            // Load first chunk
+            loadNextChunk();
         }
 
         // Load featured anime
@@ -1074,14 +1112,6 @@
                 });
             }
             
-            // Prioritize popular anime for the current genre
-            if (currentGenre !== 'all' || searchTerm) {
-                const popularTitles = new Set(popularAnimeByGenre[currentGenre] || []);
-                const popularAnime = filteredAnime.filter(anime => popularTitles.has(anime.title));
-                const otherAnime = filteredAnime.filter(anime => !popularTitles.has(anime.title));
-                filteredAnime = [...popularAnime, ...otherAnime];
-            }
-            
             // Get anime to display (up to displayedAnime count)
             const animeToDisplay = filteredAnime.slice(0, displayedAnime);
             
@@ -1137,11 +1167,15 @@
             
             // When user is near the bottom of the page
             if (scrollPosition + windowHeight >= bodyHeight - 500) {
-                // Increase displayed anime count
-                displayedAnime += 12;
-                
-                // Reload grid with more anime
-                loadAnimeGrid();
+                // If we have more anime to display
+                if (displayedAnime < allAnime.length) {
+                    displayedAnime += 20;
+                    loadAnimeGrid();
+                } 
+                // If we need to load more data
+                else if (currentFileIndex < jsonFiles.length) {
+                    loadNextChunk();
+                }
             }
         }
 
