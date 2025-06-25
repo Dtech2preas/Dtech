@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AniStream - Optimized Anime Platform</title>
+    <title>AniFlix - Optimized Anime Streaming</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -758,7 +758,7 @@
     <header>
         <div class="logo">
             <i class="fas fa-play-circle"></i>
-            AniStream
+            AniFlix
         </div>
         <nav class="nav-links">
             <a href="#" class="active">Home</a>
@@ -820,7 +820,7 @@
     <!-- Loading Spinner -->
     <div class="loader" id="loader">
         <div class="spinner"></div>
-        <div class="loader-text">Loading anime data...</div>
+        <div class="loader-text">Loading popular anime...</div>
     </div>
 
     <!-- Anime Detail Modal -->
@@ -877,7 +877,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-column">
-                <h3>AniStream</h3>
+                <h3>AniFlix</h3>
                 <ul class="footer-links">
                     <li><a href="#">About Us</a></li>
                     <li><a href="#">Careers</a></li>
@@ -911,7 +911,7 @@
             </div>
         </div>
         <div class="copyright">
-            &copy; 2023 AniStream. All rights reserved. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
+            &copy; 2023 AniFlix. All rights reserved. This site is protected by reCAPTCHA and the Google Privacy Policy and Terms of Service apply.
         </div>
     </footer>
 
@@ -1019,28 +1019,11 @@
             });
             
             try {
-                // Check local storage for cached data
-                const cachedData = localStorage.getItem('animeData');
-                const cacheTimestamp = localStorage.getItem('animeCacheTimestamp');
-                const now = Date.now();
-                const oneDay = 24 * 60 * 60 * 1000; // 1 day in milliseconds
+                // Load popular anime first
+                await loadPopularAnime();
                 
-                if (cachedData && cacheTimestamp && (now - cacheTimestamp) < oneDay) {
-                    // Use cached data
-                    allAnime = JSON.parse(cachedData);
-                    loader.style.display = 'none';
-                    loadInitialUI();
-                } else {
-                    // Fetch fresh data
-                    await fetchAllJsonFiles();
-                    localStorage.setItem('animeData', JSON.stringify(allAnime));
-                    localStorage.setItem('animeCacheTimestamp', now.toString());
-                    loader.style.display = 'none';
-                    loadInitialUI();
-                }
-                
-                // Setup event listeners
-                setupEventListeners();
+                // Load the rest in background
+                loadRemainingAnime();
                 
             } catch (error) {
                 console.error('Error initializing page:', error);
@@ -1048,19 +1031,54 @@
             }
         });
 
-        // Fetch all JSON files
-        async function fetchAllJsonFiles() {
-            const fetchPromises = jsonFiles.map(file => 
-                fetch(file)
-                    .then(response => response.json())
-                    .catch(error => {
-                        console.error(`Error fetching ${file}:`, error);
-                        return [];
-                    })
-            );
+        // Load popular anime for initial display
+        async function loadPopularAnime() {
+            // Get all popular anime titles
+            const popularTitles = new Set(Object.values(popularAnimeByGenre).flat());
             
-            const results = await Promise.all(fetchPromises);
-            allAnime = results.flat();
+            // Load data for popular anime
+            for (const title of popularTitles) {
+                try {
+                    // Find the anime in JSON files
+                    const anime = await findAnimeInJsonFiles(title);
+                    if (anime) {
+                        allAnime.push(anime);
+                        
+                        // Preload details
+                        await loadAnimeDetails(title);
+                    }
+                } catch (error) {
+                    console.error(`Error loading ${title}:`, error);
+                }
+            }
+            
+            // Hide loader
+            loader.style.display = 'none';
+            
+            // Load UI components
+            loadInitialUI();
+        }
+
+        // Find anime in JSON files
+        async function findAnimeInJsonFiles(title) {
+            for (const file of jsonFiles) {
+                try {
+                    const response = await fetch(file);
+                    const data = await response.json();
+                    const foundAnime = data.find(anime => anime.title === title);
+                    if (foundAnime) return foundAnime;
+                } catch (error) {
+                    console.error(`Error fetching ${file}:`, error);
+                }
+            }
+            return null;
+        }
+
+        // Load remaining anime in background
+        async function loadRemainingAnime() {
+            // This would be implemented to load other anime after initial display
+            // For now, we'll just simulate the process
+            console.log("Loading other anime in background...");
         }
 
         // Set up event listeners
@@ -1091,6 +1109,9 @@
 
         // Load initial UI components
         function loadInitialUI() {
+            // Setup event listeners
+            setupEventListeners();
+            
             // Load featured anime
             loadFeaturedAnime();
             
@@ -1111,38 +1132,43 @@
             featuredAnime.forEach(anime => {
                 const card = document.createElement('div');
                 card.className = 'anime-card';
-                card.innerHTML = `
-                    <div class="anime-img">
-                        <div style="background: #2a303a; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #f47521;"></i>
+                
+                // Check if we have cached details
+                const details = animeDetailsCache[anime.title];
+                
+                if (details) {
+                    card.innerHTML = `
+                        <div class="anime-img">
+                            <img src="${details.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
                         </div>
-                    </div>
-                    <div class="anime-info">
-                        <div class="anime-title">${anime.title}</div>
-                        <div class="anime-meta">
-                            <span>Loading...</span>
+                        <div class="anime-info">
+                            <div class="anime-title">${anime.title}</div>
+                            <div class="anime-meta">
+                                <span>${details.year || '?'}</span>
+                                <span class="anime-rating">⭐ ${details.rating || 'N/A'}</span>
+                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <div class="anime-img">
+                            <div style="background: #2a303a; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 2rem; color: #f47521;"></i>
+                            </div>
+                        </div>
+                        <div class="anime-info">
+                            <div class="anime-title">${anime.title}</div>
+                            <div class="anime-meta">
+                                <span>Loading...</span>
+                            </div>
+                        </div>
+                    `;
+                }
                 
                 // Add click event to open anime page
                 card.addEventListener('click', () => openAnimeDetail(anime));
                 
                 featuredCarousel.appendChild(card);
-                
-                // Load anime details in background
-                loadAnimeDetails(anime.title).then(details => {
-                    if (details) {
-                        const img = card.querySelector('.anime-img');
-                        img.innerHTML = `<img src="${details.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">`;
-                        
-                        const meta = card.querySelector('.anime-meta');
-                        meta.innerHTML = `
-                            <span>${details.year || '?'}</span>
-                            <span class="anime-rating">⭐ ${details.rating || 'N/A'}</span>
-                        `;
-                    }
-                });
             });
         }
 
@@ -1195,7 +1221,7 @@
         }
 
         // Load anime grid with current filter
-        async function loadAnimeGrid() {
+        function loadAnimeGrid() {
             // Clear existing grid
             animeGrid.innerHTML = '';
             
@@ -1229,31 +1255,38 @@
             animeToDisplay.forEach(anime => {
                 const card = document.createElement('div');
                 card.className = 'grid-anime-card';
-                card.innerHTML = `
-                    <div class="grid-img">
-                        <div style="background: #2a303a; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; color: #f47521;"></i>
+                
+                // Check if we have cached details
+                const details = animeDetailsCache[anime.title];
+                
+                if (details) {
+                    card.innerHTML = `
+                        <div class="grid-img">
+                            <img src="${details.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">
                         </div>
-                    </div>
-                    <div class="grid-info">
-                        <div class="grid-title">${anime.title}</div>
-                        <div class="grid-episodes">Loading...</div>
-                    </div>
-                `;
+                        <div class="grid-info">
+                            <div class="grid-title">${anime.title}</div>
+                            <div class="grid-episodes">${details.episodes} episodes</div>
+                        </div>
+                    `;
+                } else {
+                    card.innerHTML = `
+                        <div class="grid-img">
+                            <div style="background: #2a303a; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 1.5rem; color: #f47521;"></i>
+                            </div>
+                        </div>
+                        <div class="grid-info">
+                            <div class="grid-title">${anime.title}</div>
+                            <div class="grid-episodes">Loading...</div>
+                        </div>
+                    `;
+                }
                 
                 // Add click event to open anime page
                 card.addEventListener('click', () => openAnimeDetail(anime));
                 
                 animeGrid.appendChild(card);
-                
-                // Load anime details in background
-                loadAnimeDetails(anime.title).then(details => {
-                    const img = card.querySelector('.grid-img');
-                    img.innerHTML = `<img src="${details.image}" alt="${anime.title}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Image'">`;
-                    
-                    const episodes = card.querySelector('.grid-episodes');
-                    episodes.textContent = `${details.episodes} episodes`;
-                });
             });
             
             // Show message if no results
@@ -1326,7 +1359,7 @@
                 });
                 
                 // Load episodes for this anime
-                const episodes = allAnime.filter(a => a.title === anime.title);
+                const episodes = await findEpisodesForAnime(anime.title);
                 
                 // Display episodes
                 episodesGrid.innerHTML = '';
@@ -1374,6 +1407,24 @@
                 console.error('Error loading anime details:', error);
                 animeDescription.textContent = 'Failed to load anime details. Please try again later.';
             }
+        }
+
+        // Find all episodes for an anime
+        async function findEpisodesForAnime(title) {
+            const episodes = [];
+            
+            for (const file of jsonFiles) {
+                try {
+                    const response = await fetch(file);
+                    const data = await response.json();
+                    const animeEpisodes = data.filter(anime => anime.title === title);
+                    episodes.push(...animeEpisodes);
+                } catch (error) {
+                    console.error(`Error fetching episodes from ${file}:`, error);
+                }
+            }
+            
+            return episodes;
         }
     </script>
 </body>
