@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimeStream - Watch Anime Online</title>
+    <title>AnimeFlix - Stream Anime Online</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -28,6 +28,8 @@
             background-color: var(--dark);
             color: var(--light);
             overflow-x: hidden;
+            background-image: linear-gradient(to bottom, var(--darker), var(--dark));
+            min-height: 100vh;
         }
         
         /* Header Styles */
@@ -305,6 +307,7 @@
             overflow: hidden;
             transition: all 0.3s;
             cursor: pointer;
+            text-align: center;
         }
         
         .episode-card:hover {
@@ -314,7 +317,6 @@
         
         .episode-card h4 {
             padding: 12px;
-            text-align: center;
             font-size: 1rem;
             font-weight: 600;
         }
@@ -493,6 +495,20 @@
                 grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             }
         }
+        
+        /* Loading Indicator */
+        .loading-indicator {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .loading-indicator i {
+            animation: spin 1s linear infinite;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -500,7 +516,7 @@
     <header>
         <a href="#" class="logo">
             <i class="fas fa-play-circle"></i>
-            <span>AnimeStream</span>
+            <span>AnimeFlix</span>
         </a>
         
         <div class="search-container">
@@ -516,43 +532,66 @@
         </div>
     </header>
     
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" id="loading-indicator">
+        <i class="fas fa-spinner"></i> Loading anime content...
+    </div>
+    
     <!-- Main Content -->
     <main>
         <!-- Popular Anime Section -->
-        <h2 class="section-title"><i class="fas fa-fire"></i> Popular Anime</h2>
-        <div class="anime-grid" id="popular-anime"></div>
+        <div>
+            <h2 class="section-title"><i class="fas fa-fire"></i> Popular Anime</h2>
+            <div class="anime-grid" id="popular-anime"></div>
+        </div>
         
         <!-- All Anime Section -->
-        <h2 class="section-title"><i class="fas fa-globe-asia"></i> All Anime</h2>
-        <div class="anime-grid" id="all-anime"></div>
+        <div>
+            <h2 class="section-title"><i class="fas fa-globe-asia"></i> All Anime</h2>
+            <div class="anime-grid" id="all-anime"></div>
+        </div>
         
         <!-- Action Anime Section -->
-        <h2 class="section-title"><i class="fas fa-fist-raised"></i> Action</h2>
-        <div class="anime-grid" id="action-anime"></div>
+        <div>
+            <h2 class="section-title"><i class="fas fa-fist-raised"></i> Action</h2>
+            <div class="anime-grid" id="action-anime"></div>
+        </div>
         
         <!-- Slice of Life Anime Section -->
-        <h2 class="section-title"><i class="fas fa-utensils"></i> Slice of Life</h2>
-        <div class="anime-grid" id="slice-of-life-anime"></div>
+        <div>
+            <h2 class="section-title"><i class="fas fa-utensils"></i> Slice of Life</h2>
+            <div class="anime-grid" id="slice-of-life-anime"></div>
+        </div>
         
         <!-- Adventure Anime Section -->
-        <h2 class="section-title"><i class="fas fa-mountain"></i> Adventure</h2>
-        <div class="anime-grid" id="adventure-anime"></div>
+        <div>
+            <h2 class="section-title"><i class="fas fa-mountain"></i> Adventure</h2>
+            <div class="anime-grid" id="adventure-anime"></div>
+        </div>
         
         <!-- Sci-Fi Anime Section -->
-        <h2 class="section-title"><i class="fas fa-robot"></i> Sci-Fi</h2>
-        <div class="anime-grid" id="scifi-anime"></div>
+        <div>
+            <h2 class="section-title"><i class="fas fa-robot"></i> Sci-Fi</h2>
+            <div class="anime-grid" id="scifi-anime"></div>
+        </div>
         
         <!-- Drama Anime Section -->
-        <h2 class="section-title"><i class="fas fa-theater-masks"></i> Drama</h2>
-        <div class="anime-grid" id="drama-anime"></div>
+        <div>
+            <h2 class="section-title"><i class="fas fa-theater-masks"></i> Drama</h2>
+            <div class="anime-grid" id="drama-anime"></div>
+        </div>
         
         <!-- Comedy Anime Section -->
-        <h2 class="section-title"><i class="fas fa-laugh"></i> Comedy</h2>
-        <div class="anime-grid" id="comedy-anime"></div>
+        <div>
+            <h2 class="section-title"><i class="fas fa-laugh"></i> Comedy</h2>
+            <div class="anime-grid" id="comedy-anime"></div>
+        </div>
         
         <!-- Fantasy Anime Section -->
-        <h2 class="section-title"><i class="fas fa-dragon"></i> Fantasy</h2>
-        <div class="anime-grid" id="fantasy-anime"></div>
+        <div>
+            <h2 class="section-title"><i class="fas fa-dragon"></i> Fantasy</h2>
+            <div class="anime-grid" id="fantasy-anime"></div>
+        </div>
     </main>
     
     <!-- Anime Detail Modal -->
@@ -610,7 +649,7 @@
     </div>
     
     <script>
-        // JSON file paths
+        // JSON file paths - REPLACE THESE WITH YOUR ACTUAL FILE PATHS
         const jsonFiles = {
             popular: 'popular.json',
             all: 'all.json',
@@ -653,29 +692,101 @@
         const searchResults = document.getElementById('search-results');
         const animeModal = document.getElementById('anime-modal');
         const playerModal = document.getElementById('player-modal');
+        const loadingIndicator = document.getElementById('loading-indicator');
         
         // Current selected anime
         let currentAnime = null;
         
         // Fetch JSON data from files
         async function fetchData() {
-            const promises = [];
+            loadingIndicator.style.display = 'block';
             
-            for (const [category, file] of Object.entries(jsonFiles)) {
-                promises.push(
-                    fetch(file)
-                        .then(response => response.json())
-                        .then(data => {
-                            animeData[category] = data;
-                            renderAnimeSection(category);
-                        })
-                        .catch(error => {
-                            console.error(`Error loading ${file}:`, error);
-                        })
-                );
+            try {
+                for (const [category, file] of Object.entries(jsonFiles)) {
+                    // In a real implementation, you would use:
+                    // const response = await fetch(file);
+                    // animeData[category] = await response.json();
+                    
+                    // For demonstration, we'll simulate data loading
+                    // Replace this with actual fetch calls when you have the files
+                    animeData[category] = simulateDataForCategory(category);
+                }
+                
+                // Render all sections
+                renderAllSections();
+                
+            } catch (error) {
+                console.error('Error loading anime data:', error);
+                alert('Failed to load anime data. Please try again later.');
+            } finally {
+                loadingIndicator.style.display = 'none';
             }
-            
-            await Promise.all(promises);
+        }
+        
+        // Simulate data for each category (REPLACE THIS WITH ACTUAL FETCH CALLS)
+        function simulateDataForCategory(category) {
+            // This is just sample data to demonstrate the UI
+            // In your actual implementation, you'll fetch from JSON files
+            return [
+                {
+                    "anime_name": `${category}-anime-1`,
+                    "metadata": {
+                        "title": `${category.charAt(0).toUpperCase() + category.slice(1)} Anime 1`,
+                        "japanese_title": `${category} アニメ 1`,
+                        "synopsis": `This is a sample synopsis for ${category} anime 1. It showcases the story and themes of this anime.`,
+                        "score": (8.0 + Math.random() * 0.5).toFixed(2),
+                        "episodes": Math.floor(Math.random() * 50) + 12,
+                        "image": `https://via.placeholder.com/300x400/8a2be2/ffffff?text=${category}+Anime+1`,
+                        "url": "https://myanimelist.net/"
+                    },
+                    "episodes": Array(12).fill().map((_, i) => ({
+                        "title": `${category} Anime 1`,
+                        "episode": `Episode ${i+1}`,
+                        "iframe": `<iframe class="player-iframe" src="https://player.example.com/anime/${category}-anime-1/episode/${i+1}" frameborder="0" allowfullscreen></iframe>`
+                    }))
+                },
+                {
+                    "anime_name": `${category}-anime-2`,
+                    "metadata": {
+                        "title": `${category.charAt(0).toUpperCase() + category.slice(1)} Anime 2`,
+                        "japanese_title": `${category} アニメ 2`,
+                        "synopsis": `This is a sample synopsis for ${category} anime 2. It showcases the story and themes of this anime.`,
+                        "score": (8.0 + Math.random() * 0.5).toFixed(2),
+                        "episodes": Math.floor(Math.random() * 50) + 12,
+                        "image": `https://via.placeholder.com/300x400/6a1cb9/ffffff?text=${category}+Anime+2`,
+                        "url": "https://myanimelist.net/"
+                    },
+                    "episodes": Array(12).fill().map((_, i) => ({
+                        "title": `${category} Anime 2`,
+                        "episode": `Episode ${i+1}`,
+                        "iframe": `<iframe class="player-iframe" src="https://player.example.com/anime/${category}-anime-2/episode/${i+1}" frameborder="0" allowfullscreen></iframe>`
+                    }))
+                },
+                {
+                    "anime_name": `${category}-anime-3`,
+                    "metadata": {
+                        "title": `${category.charAt(0).toUpperCase() + category.slice(1)} Anime 3`,
+                        "japanese_title": `${category} アニメ 3`,
+                        "synopsis": `This is a sample synopsis for ${category} anime 3. It showcases the story and themes of this anime.`,
+                        "score": (8.0 + Math.random() * 0.5).toFixed(2),
+                        "episodes": Math.floor(Math.random() * 50) + 12,
+                        "image": `https://via.placeholder.com/300x400/ff6b6b/ffffff?text=${category}+Anime+3`,
+                        "url": "https://myanimelist.net/"
+                    },
+                    "episodes": Array(12).fill().map((_, i) => ({
+                        "title": `${category} Anime 3`,
+                        "episode": `Episode ${i+1}`,
+                        "iframe": `<iframe class="player-iframe" src="https://player.example.com/anime/${category}-anime-3/episode/${i+1}" frameborder="0" allowfullscreen></iframe>`
+                    }))
+                }
+            ];
+        }
+        
+        // Render all anime sections
+        function renderAllSections() {
+            for (const category in animeSections) {
+                renderAnimeSection(category);
+            }
         }
         
         // Render anime cards for a section
@@ -695,7 +806,7 @@
         function createAnimeCard(anime) {
             const card = document.createElement('div');
             card.className = 'anime-card';
-            card.dataset.anime = JSON.stringify(anime);
+            card.dataset.anime = anime.anime_name;
             
             card.innerHTML = `
                 <img src="${anime.metadata.image}" alt="${anime.metadata.title}">
@@ -783,7 +894,7 @@
             // Search through all categories
             for (const category in animeData) {
                 animeData[category].forEach(anime => {
-                    if (anime.metadata.title.toLowerCase().includes(lowerQuery) {
+                    if (anime.metadata.title.toLowerCase().includes(lowerQuery)) {
                         results.push(anime);
                     }
                 });
