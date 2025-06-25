@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimeStream - Watch Anime Online</title>
+    <title>AnimeFlix - Stream Anime Online</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -724,7 +724,7 @@
     <header>
         <div class="logo">
             <i class="fas fa-play-circle"></i>
-            <span>AnimeStream</span>
+            <span>AnimeFlix</span>
         </div>
         <nav>
             <ul>
@@ -820,6 +820,46 @@
         </div>
     </section>
 
+    <section class="category-section">
+        <div class="section-header">
+            <h2 class="section-title">Sci-Fi</h2>
+            <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <div class="anime-grid" id="sci-fi-anime">
+            <!-- Sci-Fi anime will be loaded here -->
+        </div>
+    </section>
+
+    <section class="category-section">
+        <div class="section-header">
+            <h2 class="section-title">Drama</h2>
+            <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <div class="anime-grid" id="drama-anime">
+            <!-- Drama anime will be loaded here -->
+        </div>
+    </section>
+
+    <section class="category-section">
+        <div class="section-header">
+            <h2 class="section-title">Comedy</h2>
+            <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <div class="anime-grid" id="comedy-anime">
+            <!-- Comedy anime will be loaded here -->
+        </div>
+    </section>
+
+    <section class="category-section">
+        <div class="section-header">
+            <h2 class="section-title">Fantasy</h2>
+            <a href="#" class="view-all">View All <i class="fas fa-chevron-right"></i></a>
+        </div>
+        <div class="anime-grid" id="fantasy-anime">
+            <!-- Fantasy anime will be loaded here -->
+        </div>
+    </section>
+
     <!-- Anime Detail Modal -->
     <div class="modal" id="anime-modal">
         <div class="modal-content">
@@ -849,7 +889,7 @@
     <footer>
         <div class="footer-content">
             <div class="footer-column">
-                <h3>AnimeStream</h3>
+                <h3>AnimeFlix</h3>
                 <p>Your premier destination for streaming anime. Watch thousands of episodes across all genres, anytime, anywhere.</p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-facebook-f"></i></a>
@@ -888,14 +928,100 @@
             </div>
         </div>
         <div class="copyright">
-            &copy; 2023 AnimeStream. All rights reserved. This site is for demonstration purposes only.
+            &copy; 2023 AnimeFlix. All rights reserved. This site is for demonstration purposes only.
         </div>
     </footer>
 
     <script>
-        // Anime data (in a real app, this would be fetched from JSON files)
-        const animeData = {
-            popular: [
+        // DOM Elements
+        const popularAnimeGrid = document.getElementById('popular-anime');
+        const allAnimeGrid = document.getElementById('all-anime');
+        const actionAnimeGrid = document.getElementById('action-anime');
+        const sliceOfLifeAnimeGrid = document.getElementById('slice-of-life-anime');
+        const adventureAnimeGrid = document.getElementById('adventure-anime');
+        const sciFiAnimeGrid = document.getElementById('sci-fi-anime');
+        const dramaAnimeGrid = document.getElementById('drama-anime');
+        const comedyAnimeGrid = document.getElementById('comedy-anime');
+        const fantasyAnimeGrid = document.getElementById('fantasy-anime');
+        const searchResultsGrid = document.getElementById('search-results-grid');
+        const searchResultsSection = document.getElementById('search-results');
+        
+        const animeModal = document.getElementById('anime-modal');
+        const closeAnimeModal = document.getElementById('close-anime-modal');
+        const animeDetailContent = document.getElementById('anime-detail-content');
+        
+        const playerModal = document.getElementById('player-modal');
+        const closePlayer = document.getElementById('close-player');
+        const playerIframe = document.getElementById('player-iframe');
+        const loadingAnimation = document.getElementById('loading-animation');
+        const playerTitle = document.getElementById('player-title');
+
+        // Global anime data storage
+        let allAnimeData = {
+            popular: [],
+            all: [],
+            action: [],
+            slice_of_life: [],
+            adventure: [],
+            sci_fi: [],
+            drama: [],
+            comedy: [],
+            fantasy: []
+        };
+
+        // Fetch anime data from JSON files
+        async function fetchAnimeData() {
+            try {
+                // Fetch popular anime
+                const popularResponse = await fetch('popular.json');
+                allAnimeData.popular = await popularResponse.json();
+                
+                // Fetch all anime
+                const allResponse = await fetch('all.json');
+                allAnimeData.all = await allResponse.json();
+                
+                // Fetch action anime
+                const actionResponse = await fetch('action.json');
+                allAnimeData.action = await actionResponse.json();
+                
+                // Fetch slice of life anime
+                const sliceOfLifeResponse = await fetch('slice_of_life.json');
+                allAnimeData.slice_of_life = await sliceOfLifeResponse.json();
+                
+                // Fetch adventure anime
+                const adventureResponse = await fetch('adventure.json');
+                allAnimeData.adventure = await adventureResponse.json();
+                
+                // Fetch sci-fi anime
+                const sciFiResponse = await fetch('sci-fi.json');
+                allAnimeData.sci_fi = await sciFiResponse.json();
+                
+                // Fetch drama anime
+                const dramaResponse = await fetch('drama.json');
+                allAnimeData.drama = await dramaResponse.json();
+                
+                // Fetch comedy anime
+                const comedyResponse = await fetch('comedy.json');
+                allAnimeData.comedy = await comedyResponse.json();
+                
+                // Fetch fantasy anime
+                const fantasyResponse = await fetch('fantasy.json');
+                allAnimeData.fantasy = await fantasyResponse.json();
+                
+                // Render all sections
+                renderAllSections();
+            } catch (error) {
+                console.error('Error fetching anime data:', error);
+                // Fallback to sample data if fetch fails
+                loadSampleData();
+                renderAllSections();
+            }
+        }
+
+        // Sample data for demonstration if JSON files are not available
+        function loadSampleData() {
+            // Popular anime
+            allAnimeData.popular = [
                 {
                     anime_name: "mushishi",
                     metadata: {
@@ -929,201 +1055,20 @@
                         episode: `Episode ${13 - i}`,
                         iframe: `<iframe src="https://databasegdriveplayer.xyz/player.php?type=anime&slug=natsume-yuujinchou&episode=${13 - i}" frameborder="0" width="100%" height="400" allowfullscreen></iframe>`
                     }))
-                },
-                {
-                    anime_name: "attack on titan",
-                    metadata: {
-                        title: "Attack on Titan",
-                        japanese_title: "進撃の巨人",
-                        synopsis: "Centuries ago, mankind was slaughtered to near extinction by monstrous humanoid creatures called Titans, forcing humans to hide in fear behind enormous concentric walls.",
-                        score: 9.1,
-                        episodes: 75,
-                        image: "https://cdn.myanimelist.net/images/anime/10/47347.jpg",
-                        url: "https://myanimelist.net/anime/16498/Shingeki_no_Kyojin"
-                    },
-                    episodes: Array.from({length: 75}, (_, i) => ({
-                        title: "Attack on Titan",
-                        episode: `Episode ${75 - i}`,
-                        iframe: `<iframe src="https://databasegdriveplayer.xyz/player.php?type=anime&slug=attack-on-titan&episode=${75 - i}" frameborder="0" width="100%" height="400" allowfullscreen></iframe>`
-                    }))
-                },
-                {
-                    anime_name: "demon slayer",
-                    metadata: {
-                        title: "Demon Slayer",
-                        japanese_title: "鬼滅の刃",
-                        synopsis: "It is the Taisho Period in Japan. Tanjiro, a kindhearted boy who sells charcoal for a living, finds his family slaughtered by a demon.",
-                        score: 8.7,
-                        episodes: 44,
-                        image: "https://cdn.myanimelist.net/images/anime/1286/99889.jpg",
-                        url: "https://myanimelist.net/anime/38000/Kimetsu_no_Yaiba"
-                    },
-                    episodes: Array.from({length: 44}, (_, i) => ({
-                        title: "Demon Slayer",
-                        episode: `Episode ${44 - i}`,
-                        iframe: `<iframe src="https://databasegdriveplayer.xyz/player.php?type=anime&slug=demon-slayer&episode=${44 - i}" frameborder="0" width="100%" height="400" allowfullscreen></iframe>`
-                    }))
-                },
-                {
-                    anime_name: "jujutsu kaisen",
-                    metadata: {
-                        title: "Jujutsu Kaisen",
-                        japanese_title: "呪術廻戦",
-                        synopsis: "Yuji Itadori is a boy with tremendous physical strength, though he lives a completely ordinary life. One day, to save a friend who has been attacked by Curses, he eats the finger of Ryomen Sukuna, taking the Curse into his own soul.",
-                        score: 8.6,
-                        episodes: 24,
-                        image: "https://cdn.myanimelist.net/images/anime/1171/109222.jpg",
-                        url: "https://myanimelist.net/anime/40748/Jujutsu_Kaisen"
-                    },
-                    episodes: Array.from({length: 24}, (_, i) => ({
-                        title: "Jujutsu Kaisen",
-                        episode: `Episode ${24 - i}`,
-                        iframe: `<iframe src="https://databasegdriveplayer.xyz/player.php?type=anime&slug=jujutsu-kaisen&episode=${24 - i}" frameborder="0" width="100%" height="400" allowfullscreen></iframe>`
-                    }))
                 }
-            ],
-            all: [
-                // Would contain all anime from all categories
-            ],
-            action: [
-                // Action anime data
-                {
-                    anime_name: "one punch man",
-                    metadata: {
-                        title: "One Punch Man",
-                        japanese_title: "ワンパンマン",
-                        synopsis: "The story of Saitama, a hero that does it just for fun & can defeat his opponents with a single punch.",
-                        score: 8.5,
-                        episodes: 24,
-                        image: "https://cdn.myanimelist.net/images/anime/12/76049.jpg",
-                        url: "https://myanimelist.net/anime/30276/One_Punch_Man"
-                    },
-                    episodes: Array.from({length: 24}, (_, i) => ({
-                        title: "One Punch Man",
-                        episode: `Episode ${24 - i}`,
-                        iframe: `<iframe src="https://databasegdriveplayer.xyz/player.php?type=anime&slug=one-punch-man&episode=${24 - i}" frameborder="0" width="100%" height="400" allowfullscreen></iframe>`
-                    }))
-                },
-                {
-                    anime_name: "bleach",
-                    metadata: {
-                        title: "Bleach",
-                        japanese_title: "ブリーチ",
-                        synopsis: "Ichigo Kurosaki is an ordinary high schooler—until his family is attacked by a Hollow, a corrupt spirit that seeks to devour human souls.",
-                        score: 7.9,
-                        episodes: 366,
-                        image: "https://cdn.myanimelist.net/images/anime/3/40451.jpg",
-                        url: "https://myanimelist.net/anime/269/Bleach"
-                    },
-                    episodes: Array.from({length: 366}, (_, i) => ({
-                        title: "Bleach",
-                        episode: `Episode ${366 - i}`,
-                        iframe: `<iframe src="https://databasegdriveplayer.xyz/player.php?type=anime&slug=bleach&episode=${366 - i}" frameborder="0" width="100%" height="400" allowfullscreen></iframe>`
-                    }))
-                }
-            ],
-            slice_of_life: [
-                // Slice of Life anime data
-                {
-                    anime_name: "your lie in april",
-                    metadata: {
-                        title: "Your Lie in April",
-                        japanese_title: "四月は君の嘘",
-                        synopsis: "Piano prodigy Arima Kosei dominated the competition and all child musicians knew his name. But after his mother, who was also his instructor, passed away, he had a mental breakdown while performing at a recital.",
-                        score: 8.7,
-                        episodes: 22,
-                        image: "https://cdn.myanimelist.net/images/anime/3/67177.jpg",
-                        url: "https://myanimelist.net/anime/23273/Shigatsu_wa_Kimi_no_Uso"
-                    },
-                    episodes: Array.from({length: 22}, (_, i) => ({
-                        title: "Your Lie in April",
-                        episode: `Episode ${22 - i}`,
-                        iframe: `<iframe src="https://databasegdriveplayer.xyz/player.php?type=anime&slug=your-lie-in-april&episode=${22 - i}" frameborder="0" width="100%" height="400" allowfullscreen></iframe>`
-                    }))
-                },
-                {
-                    anime_name: "k-on",
-                    metadata: {
-                        title: "K-ON!",
-                        japanese_title: "けいおん！",
-                        synopsis: "Yui Hirasawa, a young, carefree girl entering high school, immediately signs up for the Light Music Club when she sees a poster featuring an adorable girl holding a guitar.",
-                        score: 7.9,
-                        episodes: 39,
-                        image: "https://cdn.myanimelist.net/images/anime/10/76120.jpg",
-                        url: "https://myanimelist.net/anime/5680/K-On"
-                    },
-                    episodes: Array.from({length: 39}, (_, i) => ({
-                        title: "K-ON!",
-                        episode: `Episode ${39 - i}`,
-                        iframe: `<iframe src="https://databasegdriveplayer.xyz/player.php?type=anime&slug=k-on&episode=${39 - i}" frameborder="0" width="100%" height="400" allowfullscreen></iframe>`
-                    }))
-                }
-            ],
-            adventure: [
-                // Adventure anime data
-                {
-                    anime_name: "one piece",
-                    metadata: {
-                        title: "One Piece",
-                        japanese_title: "ワンピース",
-                        synopsis: "Gol D. Roger was known as the \"Pirate King,\" the strongest and most infamous being to have sailed the Grand Line. The capture and execution of Roger by the World Government brought a change throughout the world.",
-                        score: 8.6,
-                        episodes: 1074,
-                        image: "https://cdn.myanimelist.net/images/anime/6/73245.jpg",
-                        url: "https://myanimelist.net/anime/21/One_Piece"
-                    },
-                    episodes: Array.from({length: 1074}, (_, i) => ({
-                        title: "One Piece",
-                        episode: `Episode ${1074 - i}`,
-                        iframe: `<iframe src="https://databasegdriveplayer.xyz/player.php?type=anime&slug=one-piece&episode=${1074 - i}" frameborder="0" width="100%" height="400" allowfullscreen></iframe>`
-                    }))
-                },
-                {
-                    anime_name: "hunter x hunter",
-                    metadata: {
-                        title: "Hunter x Hunter",
-                        japanese_title: "ハンター×ハンター",
-                        synopsis: "Hunters devote themselves to accomplishing hazardous tasks, all from traversing the world's uncharted territories to locating rare items and monsters.",
-                        score: 9.0,
-                        episodes: 148,
-                        image: "https://cdn.myanimelist.net/images/anime/11/33657.jpg",
-                        url: "https://myanimelist.net/anime/11061/Hunter_x_Hunter_2011"
-                    },
-                    episodes: Array.from({length: 148}, (_, i) => ({
-                        title: "Hunter x Hunter",
-                        episode: `Episode ${148 - i}`,
-                        iframe: `<iframe src="https://databasegdriveplayer.xyz/player.php?type=anime&slug=hunter-x-hunter&episode=${148 - i}" frameborder="0" width="100%" height="400" allowfullscreen></iframe>`
-                    }))
-                }
-            ]
-        };
-
-        // Combine all anime for the "All" section
-        animeData.all = [
-            ...animeData.popular,
-            ...animeData.action,
-            ...animeData.slice_of_life,
-            ...animeData.adventure
-        ];
-
-        // DOM Elements
-        const popularAnimeGrid = document.getElementById('popular-anime');
-        const allAnimeGrid = document.getElementById('all-anime');
-        const actionAnimeGrid = document.getElementById('action-anime');
-        const sliceOfLifeAnimeGrid = document.getElementById('slice-of-life-anime');
-        const adventureAnimeGrid = document.getElementById('adventure-anime');
-        const searchResultsGrid = document.getElementById('search-results-grid');
-        const searchResultsSection = document.getElementById('search-results');
-        
-        const animeModal = document.getElementById('anime-modal');
-        const closeAnimeModal = document.getElementById('close-anime-modal');
-        const animeDetailContent = document.getElementById('anime-detail-content');
-        
-        const playerModal = document.getElementById('player-modal');
-        const closePlayer = document.getElementById('close-player');
-        const playerIframe = document.getElementById('player-iframe');
-        const loadingAnimation = document.getElementById('loading-animation');
-        const playerTitle = document.getElementById('player-title');
+            ];
+            
+            // Other categories would have similar data
+            // For demo purposes, we'll duplicate the popular data in other categories
+            allAnimeData.all = [...allAnimeData.popular];
+            allAnimeData.action = [...allAnimeData.popular];
+            allAnimeData.slice_of_life = [...allAnimeData.popular];
+            allAnimeData.adventure = [...allAnimeData.popular];
+            allAnimeData.sci_fi = [...allAnimeData.popular];
+            allAnimeData.drama = [...allAnimeData.popular];
+            allAnimeData.comedy = [...allAnimeData.popular];
+            allAnimeData.fantasy = [...allAnimeData.popular];
+        }
 
         // Render anime cards
         function renderAnimeCard(anime, container) {
@@ -1144,6 +1089,65 @@
             `;
             card.addEventListener('click', () => openAnimeDetail(anime));
             container.appendChild(card);
+        }
+
+        // Render all sections
+        function renderAllSections() {
+            // Clear previous content
+            popularAnimeGrid.innerHTML = '';
+            allAnimeGrid.innerHTML = '';
+            actionAnimeGrid.innerHTML = '';
+            sliceOfLifeAnimeGrid.innerHTML = '';
+            adventureAnimeGrid.innerHTML = '';
+            sciFiAnimeGrid.innerHTML = '';
+            dramaAnimeGrid.innerHTML = '';
+            comedyAnimeGrid.innerHTML = '';
+            fantasyAnimeGrid.innerHTML = '';
+            
+            // Render popular anime
+            allAnimeData.popular.forEach(anime => {
+                renderAnimeCard(anime, popularAnimeGrid);
+            });
+            
+            // Render all anime
+            allAnimeData.all.forEach(anime => {
+                renderAnimeCard(anime, allAnimeGrid);
+            });
+            
+            // Render action anime
+            allAnimeData.action.forEach(anime => {
+                renderAnimeCard(anime, actionAnimeGrid);
+            });
+            
+            // Render slice of life anime
+            allAnimeData.slice_of_life.forEach(anime => {
+                renderAnimeCard(anime, sliceOfLifeAnimeGrid);
+            });
+            
+            // Render adventure anime
+            allAnimeData.adventure.forEach(anime => {
+                renderAnimeCard(anime, adventureAnimeGrid);
+            });
+            
+            // Render sci-fi anime
+            allAnimeData.sci_fi.forEach(anime => {
+                renderAnimeCard(anime, sciFiAnimeGrid);
+            });
+            
+            // Render drama anime
+            allAnimeData.drama.forEach(anime => {
+                renderAnimeCard(anime, dramaAnimeGrid);
+            });
+            
+            // Render comedy anime
+            allAnimeData.comedy.forEach(anime => {
+                renderAnimeCard(anime, comedyAnimeGrid);
+            });
+            
+            // Render fantasy anime
+            allAnimeData.fantasy.forEach(anime => {
+                renderAnimeCard(anime, fantasyAnimeGrid);
+            });
         }
 
         // Open anime detail modal
@@ -1204,68 +1208,26 @@
             playerModal.classList.add('active');
             loadingAnimation.style.display = 'flex';
             playerIframe.style.display = 'none';
+            document.body.style.overflow = 'hidden';
+            
+            // Extract src from iframe HTML string
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(episode.iframe, 'text/html');
+            const iframe = doc.querySelector('iframe');
+            const src = iframe ? iframe.getAttribute('src') : '';
             
             // Simulate loading the iframe after 5 seconds
             setTimeout(() => {
-                playerIframe.srcdoc = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>${anime.metadata.title} - ${episode.episode}</title>
-                        <style>
-                            body {
-                                margin: 0;
-                                padding: 0;
-                                background: black;
-                                display: flex;
-                                justify-content: center;
-                                align-items: center;
-                                height: 100vh;
-                                color: white;
-                                font-family: Arial, sans-serif;
-                            }
-                            .player-container {
-                                width: 100%;
-                                height: 100%;
-                                display: flex;
-                                flex-direction: column;
-                                justify-content: center;
-                                align-items: center;
-                                text-align: center;
-                                padding: 20px;
-                            }
-                            .player-title {
-                                font-size: 24px;
-                                margin-bottom: 20px;
-                                color: #f47521;
-                            }
-                            .player-message {
-                                font-size: 18px;
-                                margin-bottom: 30px;
-                                max-width: 600px;
-                                line-height: 1.6;
-                            }
-                            .player-logo {
-                                font-size: 48px;
-                                color: #f47521;
-                                margin-bottom: 20px;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="player-container">
-                            <div class="player-logo">
-                                <i class="fas fa-play-circle"></i>
-                            </div>
-                            <div class="player-title">${anime.metadata.title} - ${episode.episode}</div>
-                            <div class="player-message">In a real implementation, this would show the actual anime player from the provided iframe source.</div>
-                            <div class="player-message">Currently playing: ${episode.title}</div>
-                        </div>
-                    </body>
-                    </html>
-                `;
-                loadingAnimation.style.display = 'none';
-                playerIframe.style.display = 'block';
+                if (src) {
+                    playerIframe.src = src;
+                    playerIframe.style.display = 'block';
+                    loadingAnimation.style.display = 'none';
+                } else {
+                    // Fallback to showing the iframe HTML directly
+                    playerIframe.srcdoc = episode.iframe;
+                    playerIframe.style.display = 'block';
+                    loadingAnimation.style.display = 'none';
+                }
             }, 5000);
         }
 
@@ -1313,44 +1275,21 @@
                 // Search through all categories
                 let foundResults = false;
                 
-                // Search in popular
-                animeData.popular.forEach(anime => {
-                    if (anime.metadata.title.toLowerCase().includes(query) || 
-                        anime.metadata.japanese_title.toLowerCase().includes(query)) {
-                        renderAnimeCard(anime, searchResultsGrid);
-                        foundResults = true;
-                    }
-                });
+                // Combine all anime from all categories
+                const allAnime = [
+                    ...allAnimeData.popular,
+                    ...allAnimeData.all,
+                    ...allAnimeData.action,
+                    ...allAnimeData.slice_of_life,
+                    ...allAnimeData.adventure,
+                    ...allAnimeData.sci_fi,
+                    ...allAnimeData.drama,
+                    ...allAnimeData.comedy,
+                    ...allAnimeData.fantasy
+                ];
                 
-                // Search in action
-                animeData.action.forEach(anime => {
-                    if (anime.metadata.title.toLowerCase().includes(query) || 
-                        anime.metadata.japanese_title.toLowerCase().includes(query)) {
-                        renderAnimeCard(anime, searchResultsGrid);
-                        foundResults = true;
-                    }
-                });
-                
-                // Search in slice of life
-                animeData.slice_of_life.forEach(anime => {
-                    if (anime.metadata.title.toLowerCase().includes(query) || 
-                        anime.metadata.japanese_title.toLowerCase().includes(query)) {
-                        renderAnimeCard(anime, searchResultsGrid);
-                        foundResults = true;
-                    }
-                });
-                
-                // Search in adventure
-                animeData.adventure.forEach(anime => {
-                    if (anime.metadata.title.toLowerCase().includes(query) || 
-                        anime.metadata.japanese_title.toLowerCase().includes(query)) {
-                        renderAnimeCard(anime, searchResultsGrid);
-                        foundResults = true;
-                    }
-                });
-                
-                // Search in all
-                animeData.all.forEach(anime => {
+                // Filter anime based on search query
+                allAnime.forEach(anime => {
                     if (anime.metadata.title.toLowerCase().includes(query) || 
                         anime.metadata.japanese_title.toLowerCase().includes(query)) {
                         renderAnimeCard(anime, searchResultsGrid);
@@ -1381,36 +1320,8 @@
             if (e.key === 'Enter') searchAnime();
         });
 
-        // Initialize the page with anime data
-        function init() {
-            // Render popular anime
-            animeData.popular.forEach(anime => {
-                renderAnimeCard(anime, popularAnimeGrid);
-            });
-            
-            // Render all anime
-            animeData.all.forEach(anime => {
-                renderAnimeCard(anime, allAnimeGrid);
-            });
-            
-            // Render action anime
-            animeData.action.forEach(anime => {
-                renderAnimeCard(anime, actionAnimeGrid);
-            });
-            
-            // Render slice of life anime
-            animeData.slice_of_life.forEach(anime => {
-                renderAnimeCard(anime, sliceOfLifeAnimeGrid);
-            });
-            
-            // Render adventure anime
-            animeData.adventure.forEach(anime => {
-                renderAnimeCard(anime, adventureAnimeGrid);
-            });
-        }
-
         // Initialize the page
-        init();
+        fetchAnimeData();
     </script>
 </body>
 </html>
