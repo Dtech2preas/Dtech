@@ -171,19 +171,30 @@
       font-size: 18px;
     }
 
-    .view-all {
-      color: var(--cr-orange);
+    /* Updated View All button styles */
+    .view-all-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--cr-white);
       font-weight: 500;
       text-decoration: none;
       font-size: 14px;
       transition: all 0.2s;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 8px;
+      padding: 8px 15px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .view-all:hover {
+    .view-all-btn:hover {
+      background: var(--cr-orange);
       color: white;
+      border-color: var(--cr-orange);
+    }
+
+    .view-all-btn i {
+      font-size: 12px;
     }
 
     /* Horizontal scrolling container */
@@ -582,8 +593,8 @@
         <h2 class="section-title">
           <i class="fas fa-fire section-icon"></i> Popular Now
         </h2>
-        <a href="#" class="view-all" id="view-all-btn">
-          View All <i class="fas fa-chevron-right"></i>
+        <a href="#" class="view-all-btn" id="view-all-btn">
+          <i class="fas fa-list"></i> View All Anime
         </a>
       </div>
       <div class="horizontal-scroll" id="popular">
@@ -891,16 +902,20 @@
       });
     }
 
-    // Search functionality
-    document.getElementById("search").addEventListener("input", e => {
-      const value = e.target.value.toLowerCase().trim();
-      filterAnimeCards(value);
+    // Search functionality - now waits for Enter key
+    document.getElementById("search").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        const value = e.target.value.toLowerCase().trim();
+        filterAnimeCards(value);
+      }
     });
 
-    // Modal search functionality
-    document.getElementById("modal-search").addEventListener("input", e => {
-      const value = e.target.value.toLowerCase().trim();
-      filterModalAnimeCards(value);
+    // Modal search functionality - now waits for Enter key
+    document.getElementById("modal-search").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        const value = e.target.value.toLowerCase().trim();
+        filterModalAnimeCards(value);
+      }
     });
 
     function filterAnimeCards(value) {
