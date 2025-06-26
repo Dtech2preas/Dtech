@@ -2,87 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Anime Details</title>
+  <title>Anime Info</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #111; color: #fff; margin: 0; padding: 20px; }
-    img { max-width: 200px; border-radius: 8px; }
-    #anime-meta { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
-    .episode-btn { background: #333; color: white; padding: 10px; margin: 5px 0; border: none; cursor: pointer; width: 100%; border-radius: 4px; }
-    .episode-btn:hover { background: #444; }
-    #go-back { margin-bottom: 20px; background: red; color: white; padding: 8px 12px; border: none; cursor: pointer; border-radius: 4px; }
-    a.mal-link { color: cyan; font-weight: bold; display: inline-block; margin-top: 10px; }
+    body { background: #111; color: #fff; font-family: Arial; padding: 20px; }
+    img { width: 200px; border-radius: 10px; }
+    .meta { display: flex; gap: 20px; margin-bottom: 20px; }
+    .info { max-width: 600px; }
+    .episodes { display: flex; flex-wrap: wrap; gap: 10px; }
+    .episode-btn { background: #333; color: #fff; padding: 10px; border: none; cursor: pointer; border-radius: 5px; }
+    .episode-btn:hover { background: #555; }
   </style>
 </head>
 <body>
 
-  <button id="go-back" onclick="history.back()">❌ Back</button>
-
-  <div id="anime-meta">
-    <img id="anime-image" src="" alt="Anime Cover" />
-    <div>
-      <h1 id="anime-title"></h1>
-      <h3 id="anime-japanese"></h3>
-      <p id="anime-score"></p>
-      <p id="anime-synopsis"></p>
-      <a id="mal-link" href="" target="_blank" class="mal-link">View on MyAnimeList</a>
-    </div>
-  </div>
-
-  <h2>Episodes</h2>
-  <div id="episode-buttons"></div>
+  <button onclick="history.back()" style="margin-bottom: 20px;">⬅️ Back</button>
+  <div id="content">Loading...</div>
 
   <script>
-    const id = new URLSearchParams(location.search).get("id");
+    const params = new URLSearchParams(window.location.search);
+    const title = decodeURIComponent(params.get("title"));
 
-    const sources = [
-      "popular.json", "action.json", "slice_of_life.json",
-      "adventure.json", "sci-fi.json", "drama.json",
-      "comedy.json", "fantasy.json"
-    ];
+    const jsonFiles = ["popular.json", "action.json", "slice_of_life.json", "sci-fi.json", "drama.json", "comedy.json", "fantasy.json"];
 
-    async function findAnime() {
-      for (const src of sources) {
-        try {
-          const res = await fetch(src);
-          const json = await res.json();
-          const anime = json.find(a => a.anime_name === id);
-          if (anime) return anime;
-        } catch (err) {
-          console.error(`Failed to load ${src}`, err);
+    Promise.all(jsonFiles.map(file => fetch(file).then(r => r.json())))
+      .then(files => {
+        const allAnime = files.flat();
+        const anime = allAnime.find(a => a.anime_name.toLowerCase() === title.toLowerCase());
+
+        if (!anime) {
+          document.getElementById("content").innerHTML = "Anime not found.";
+          return;
         }
-      }
-      return null;
-    }
 
-    findAnime().then(anime => {
-      if (!anime) {
-        document.body.innerHTML = "<h2>Anime not found.</h2>";
-        return;
-      }
+        const { metadata, episodes } = anime;
 
-      document.getElementById("anime-image").src = anime.metadata.image;
-      document.getElementById("anime-title").innerText = anime.metadata.title;
-      document.getElementById("anime-japanese").innerText = anime.metadata.japanese_title;
-      document.getElementById("anime-score").innerText = "⭐ Score: " + anime.metadata.score;
-      document.getElementById("anime-synopsis").innerText = anime.metadata.synopsis;
-      document.getElementById("mal-link").href = anime.metadata.url;
-
-      const buttonsDiv = document.getElementById("episode-buttons");
-
-      anime.episodes.forEach(ep => {
-        const btn = document.createElement("button");
-        btn.className = "episode-btn";
-        btn.innerText = ep.episode;
-
-        btn.onclick = () => {
-          // Encode iframe HTML and redirect to player.html with iframe param
-          const encodedIframe = btoa(encodeURIComponent(ep.iframe));
-          window.location.href = `player.html?iframe=${encodedIframe}`;
-        };
-
-        buttonsDiv.appendChild(btn);
+        document.getElementById("content").innerHTML = `
+          <div class="meta">
+            <img src="${metadata.image}" alt="${metadata.title}">
+            <div class="info">
+              <h2>${metadata.title} (${metadata.japanese_title})</h2>
+              <p><strong>Score:</strong> ${metadata.score}</p>
+              <p>${metadata.synopsis}</p>
+            </div>
+          </div>
+          <h3>Episodes:</h3>
+          <div class="episodes">
+            ${episodes.map(ep => `<button class="episode-btn" onclick="play('${anime.anime_name}', '${ep.episode}')">${ep.episode}</button>`).join("")}
+          </div>
+        `;
       });
-    });
+
+    function play(title, episode) {
+      const encodedTitle = encodeURIComponent(title);
+      const encodedEp = encodeURIComponent(episode);
+      window.location.href = `player.html?title=${encodedTitle}&ep=${encodedEp}`;
+    }
   </script>
 </body>
 </html>
