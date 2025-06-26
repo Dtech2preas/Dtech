@@ -49,9 +49,9 @@
 <script>
   function decodeBase64(str) {
     try {
-      return decodeURIComponent(atob(str).split('').map(c =>
-        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-      ).join(''));
+      // First base64 decode, then URI decode
+      const base64Decoded = atob(str);
+      return decodeURIComponent(base64Decoded);
     } catch {
       return null;
     }
