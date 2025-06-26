@@ -21,7 +21,6 @@
       --cr-medium-gray: #2a2a2a;
       --cr-light-gray: #757575;
       --cr-white: #f5f5f5;
-      --cr-blue: #00aaff;
     }
     
     body {
@@ -478,6 +477,12 @@
     const sections = ["popular", "action", "slice_of_life", "sci-fi", "drama", "comedy", "fantasy"];
     let allAnime = [];
 
+    // Function to extract year from anime title (fallback)
+    function extractYearFromTitle(title) {
+      const yearMatch = title.match(/\((\d{4})\)/);
+      return yearMatch ? yearMatch[1] : null;
+    }
+
     // Function to fetch data for each section
     function loadSectionData(section) {
       return fetch(`${section}.json`)
@@ -512,11 +517,11 @@
         const card = document.createElement("div");
         card.className = "anime-card";
         
-        // Extract metadata with fallbacks
-        const title = anime.metadata?.title || anime.anime_name;
+        // Extract metadata with proper fallbacks
+        const title = anime.metadata?.title || anime.anime_name || "Unknown Title";
         const image = anime.metadata?.image || "https://via.placeholder.com/240x320?text=No+Image";
-        const rating = anime.metadata?.rating || "N/A";
-        const year = anime.metadata?.year || "Unknown";
+        const rating = anime.metadata?.score ? anime.metadata.score.toFixed(1) : "N/A";
+        const year = anime.metadata?.year || extractYearFromTitle(title) || "Unknown";
         
         card.innerHTML = `
           <div class="anime-image-container">
@@ -543,12 +548,12 @@
       });
     }
 
-    // Search functionality
+    // Enhanced search functionality
     document.getElementById("search").addEventListener("input", e => {
       const value = e.target.value.toLowerCase().trim();
       
-      // If search is empty, show all cards
       if (!value) {
+        // Show all cards when search is empty
         document.querySelectorAll(".anime-card").forEach(card => {
           card.style.display = "";
         });
@@ -562,7 +567,7 @@
       
       // Show matching cards
       allAnime.forEach(anime => {
-        const title = anime.metadata?.title || anime.anime_name;
+        const title = anime.metadata?.title || anime.anime_name || "";
         if (title.toLowerCase().includes(value)) {
           const matchingCards = document.querySelectorAll(`.anime-title`);
           matchingCards.forEach(card => {
