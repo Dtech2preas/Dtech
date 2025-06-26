@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Anime Player</title>
+<style>
+  body {
+    background: #111;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    margin: 0; padding: 20px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+  #loading {
+    font-size: 1.5em;
+    margin-top: 30vh;
+    color: yellow;
+  }
+  #video-container {
+    display: none;
+    width: 100%;
+    max-width: 960px;
+    height: 540px;
+  }
+  iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+  #back-btn {
+    margin-bottom: 15px;
+    background: red;
+    border: none;
+    color: white;
+    padding: 10px 16px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+    align-self: flex-start;
+  }
+</style>
+</head>
+<body>
+
+<button id="back-btn" onclick="history.back()">⬅️ Back</button>
+<div id="loading">⏳ Loading video...</div>
+<div id="video-container"></div>
+
+<script>
+  function decodeBase64(str) {
+    try {
+      return decodeURIComponent(atob(str).split('').map(c =>
+        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+      ).join(''));
+    } catch {
+      return null;
+    }
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const encodedIframe = params.get('iframe');
+
+  if (!encodedIframe) {
+    document.getElementById('loading').innerText = '❌ No video source found.';
+  } else {
+    const iframeHTML = decodeBase64(encodedIframe);
+    if (!iframeHTML) {
+      document.getElementById('loading').innerText = '❌ Invalid video source.';
+    } else {
+      setTimeout(() => {
+        document.getElementById('loading').style.display = 'none';
+        const container = document.getElementById('video-container');
+        container.innerHTML = iframeHTML;
+        container.style.display = 'block';
+      }, 5000);
+    }
+  }
+</script>
+
+</body>
+</html>
