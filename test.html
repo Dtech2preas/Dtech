@@ -429,6 +429,42 @@
       color: white;
     }
 
+    /* Pagination controls */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(18, 18, 18, 0.95);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      position: sticky;
+      bottom: 0;
+    }
+
+    .load-more-btn {
+      background: var(--cr-orange);
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .load-more-btn:hover {
+      background: var(--cr-orange-dark);
+    }
+
+    .load-more-btn:disabled {
+      background: var(--cr-medium-gray);
+      color: var(--cr-light-gray);
+      cursor: not-allowed;
+    }
+
     /* Loading indicator */
     .loading {
       display: flex;
@@ -726,14 +762,22 @@
           Loading...
         </div>
       </div>
+
+      <div class="pagination" id="pagination-controls" style="display: none;">
+        <button class="load-more-btn" id="load-more-btn">
+          <i class="fas fa-chevron-down"></i> Load More
+        </button>
+      </div>
     </div>
   </div>
 
   <script>
-    const sections = ["popular", "action", "slice_of_life", "sci-fi", "drama", "comedy", "fantasy", "all"];
+    const sections = ["popular", "action", "slice_of_life", "sci-fi", "drama", "comedy", "fantasy"];
     let allAnime = [];
     let allAnimeLoaded = false;
     let currentGenreFilter = "all";
+    let currentPage = 1;
+    const itemsPerPage = 200;
 
     // Function to fetch data for each section
     function loadSectionData(section) {
@@ -809,9 +853,12 @@
     const closeModal = document.querySelector(".close-modal");
     const allAnimeContainer = document.getElementById("all-anime-container");
     const genreFilter = document.getElementById("genre-filter");
+    const loadMoreBtn = document.getElementById("load-more-btn");
+    const paginationControls = document.getElementById("pagination-controls");
 
     viewAllBtn.addEventListener("click", (e) => {
       e.preventDefault();
+      currentPage = 1; // Reset to first page when opening modal
       renderAllAnimeModal();
       modal.style.display = "block";
       document.body.style.overflow = "hidden";
@@ -829,6 +876,12 @@
       }
     });
 
+    // Load more functionality
+    loadMoreBtn.addEventListener("click", () => {
+      currentPage++;
+      renderAllAnimeModal();
+    });
+
     // Genre filter functionality
     genreFilter.addEventListener("click", (e) => {
       if (e.target.classList.contains("genre-btn")) {
@@ -840,6 +893,7 @@
 
         // Update filter and re-render
         currentGenreFilter = e.target.dataset.genre;
+        currentPage = 1; // Reset to first page when changing genre
         renderAllAnimeModal();
       }
     });
@@ -854,6 +908,7 @@
             Loading...
           </div>
         `;
+        paginationControls.style.display = "none";
         return;
       }
 
@@ -868,10 +923,17 @@
             No anime found
           </div>
         `;
+        paginationControls.style.display = "none";
         return;
       }
 
-      filteredAnime.forEach(anime => {
+      // Calculate pagination
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const paginatedAnime = filteredAnime.slice(0, endIndex);
+
+      // Render the paginated anime
+      paginatedAnime.forEach(anime => {
         const card = document.createElement("div");
         card.className = "anime-card genre";
 
@@ -900,6 +962,14 @@
 
         allAnimeContainer.appendChild(card);
       });
+
+      // Show/hide load more button based on whether there's more to load
+      if (endIndex < filteredAnime.length) {
+        paginationControls.style.display = "flex";
+        loadMoreBtn.disabled = false;
+      } else {
+        paginationControls.style.display = "none";
+      }
     }
 
     // Search functionality - now waits for Enter key
