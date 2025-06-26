@@ -4,11 +4,57 @@
   <meta charset="UTF-8" />
   <title>Video Player</title>
   <style>
-    body { background: #000; color: white; font-family: Arial; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-    #loading { margin-top: 20vh; font-size: 20px; color: yellow; }
-    #video-container { display: none; width: 100%; max-width: 960px; height: 540px; }
-    iframe { width: 100%; height: 100%; border: none; }
-    #back { margin-bottom: 20px; background: red; border: none; padding: 10px 16px; color: white; border-radius: 5px; cursor: pointer; }
+    body {
+      background: #000;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    #back {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: red;
+      border: none;
+      padding: 10px 16px;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #loading {
+      font-size: 20px;
+      color: yellow;
+      text-align: center;
+    }
+
+    #video-container {
+      display: none;
+      width: 100%;
+      max-width: 960px;
+      aspect-ratio: 16/9;
+      margin-top: 20px;
+      animation: fadeIn 1s ease-in-out forwards;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -19,27 +65,50 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const title = decodeURIComponent(params.get("title"));
-    const epNum = decodeURIComponent(params.get("ep"));
+    const title = decodeURIComponent(params.get("title") || "").trim();
+    const epNum = decodeURIComponent(params.get("ep") || "").trim();
 
-    const jsonFiles = ["popular.json", "action.json", "slice_of_life.json", "sci-fi.json", "drama.json", "comedy.json", "fantasy.json"];
+    const videoContainer = document.getElementById("video-container");
+    const loadingMsg = document.getElementById("loading");
 
-    Promise.all(jsonFiles.map(file => fetch(file).then(r => r.json())))
-      .then(files => {
-        const allAnime = files.flat();
-        const anime = allAnime.find(a => a.anime_name.toLowerCase() === title.toLowerCase());
-        if (!anime) return document.getElementById("loading").innerText = "❌ Anime not found.";
+    const jsonFiles = [
+      "popular.json", "action.json", "slice_of_life.json",
+      "sci-fi.json", "drama.json", "comedy.json", "fantasy.json"
+    ];
 
-        const episode = anime.episodes.find(e => e.episode.toLowerCase() === epNum.toLowerCase());
-        if (!episode) return document.getElementById("loading").innerText = "❌ Episode not found.";
+    async function loadAndDisplayVideo() {
+      try {
+        const datasets = await Promise.all(
+          jsonFiles.map(file => fetch(file).then(res => res.json()))
+        );
 
+        const allAnime = datasets.flat();
+        const anime = allAnime.find(a => a.anime_name?.toLowerCase() === title.toLowerCase());
+
+        if (!anime) {
+          loadingMsg.innerText = `❌ Anime "${title}" not found.`;
+          return;
+        }
+
+        const episode = anime.episodes?.find(ep => ep.episode?.toLowerCase() === epNum.toLowerCase());
+        if (!episode) {
+          loadingMsg.innerText = `❌ Episode "${epNum}" not found.`;
+          return;
+        }
+
+        // Display video after slight delay
         setTimeout(() => {
-          document.getElementById("loading").style.display = "none";
-          const player = document.getElementById("video-container");
-          player.innerHTML = episode.iframe;
-          player.style.display = "block";
-        }, 3000);
-      });
+          loadingMsg.style.display = "none";
+          videoContainer.innerHTML = episode.iframe;
+          videoContainer.style.display = "block";
+        }, 1500); // reduced delay for better UX
+      } catch (err) {
+        loadingMsg.innerText = "⚠️ Failed to load video. Please try again later.";
+        console.error("Error loading video:", err);
+      }
+    }
+
+    loadAndDisplayVideo();
   </script>
 </body>
 </html>
