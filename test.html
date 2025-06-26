@@ -2,94 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>AnimeHub - Watch Anime</title>
+  <title>Anime Hub</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #111; color: #fff; margin: 0; padding: 0; }
-    header { background: #222; padding: 10px; text-align: center; }
-    input { width: 90%; padding: 10px; margin: 15px auto; display: block; border-radius: 4px; border: none; }
-    h2 { margin: 20px 10px; }
-    .anime-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; padding: 0 10px; }
-    .anime-card { background: #1c1c1c; border-radius: 8px; overflow: hidden; text-align: center; }
-    .anime-card img { width: 100%; display: block; }
-    .anime-card h3 { font-size: 16px; padding: 5px; }
-    .anime-card p { font-size: 14px; color: #aaa; margin: 0 0 10px; }
+    body { background: #111; color: #fff; font-family: Arial; padding: 20px; }
+    h2 { color: #f90; }
+    .anime-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; }
+    .anime-card { background: #222; padding: 10px; text-align: center; cursor: pointer; border-radius: 8px; }
+    .anime-card img { width: 100%; border-radius: 6px; }
+    .search-bar { margin-bottom: 20px; }
+    input[type="text"] { padding: 10px; width: 100%; font-size: 16px; border-radius: 5px; border: none; }
   </style>
 </head>
 <body>
 
-  <header>
-    <h1>AnimeHub</h1>
-    <input type="text" id="searchBar" placeholder="Search anime... (coming soon)">
-  </header>
+  <h1>🍿 Anime Streaming</h1>
+  <div class="search-bar">
+    <input type="text" id="search" placeholder="🔍 Search anime...">
+  </div>
 
-  <main>
-    <section>
-      <h2>Popular</h2>
-      <div class="anime-grid" id="popular-anime"></div>
-    </section>
-    <section>
-      <h2>Action</h2>
-      <div class="anime-grid" id="action-anime"></div>
-    </section>
-    <section>
-      <h2>Slice of Life</h2>
-      <div class="anime-grid" id="slice-anime"></div>
-    </section>
-    <section>
-      <h2>Adventure</h2>
-      <div class="anime-grid" id="adventure-anime"></div>
-    </section>
-    <section>
-      <h2>Sci-Fi</h2>
-      <div class="anime-grid" id="scifi-anime"></div>
-    </section>
-    <section>
-      <h2>Drama</h2>
-      <div class="anime-grid" id="drama-anime"></div>
-    </section>
-    <section>
-      <h2>Comedy</h2>
-      <div class="anime-grid" id="comedy-anime"></div>
-    </section>
-    <section>
-      <h2>Fantasy</h2>
-      <div class="anime-grid" id="fantasy-anime"></div>
-    </section>
-  </main>
+  <h2>🔥 Popular</h2>
+  <div class="anime-grid" id="popular"></div>
+
+  <h2>🎬 Action</h2>
+  <div class="anime-grid" id="action"></div>
+
+  <h2>🏕 Slice of Life</h2>
+  <div class="anime-grid" id="slice_of_life"></div>
+
+  <h2>🚀 Sci-Fi</h2>
+  <div class="anime-grid" id="sci-fi"></div>
+
+  <h2>🎭 Drama</h2>
+  <div class="anime-grid" id="drama"></div>
+
+  <h2>🤣 Comedy</h2>
+  <div class="anime-grid" id="comedy"></div>
+
+  <h2>🧝‍♂️ Fantasy</h2>
+  <div class="anime-grid" id="fantasy"></div>
 
   <script>
-    const sections = [
-      { id: "popular-anime", file: "popular.json" },
-      { id: "action-anime", file: "action.json" },
-      { id: "slice-anime", file: "slice_of_life.json" },
-      { id: "adventure-anime", file: "adventure.json" },
-      { id: "scifi-anime", file: "sci-fi.json" },
-      { id: "drama-anime", file: "drama.json" },
-      { id: "comedy-anime", file: "comedy.json" },
-      { id: "fantasy-anime", file: "fantasy.json" },
-    ];
+    const sections = ["popular", "action", "slice_of_life", "sci-fi", "drama", "comedy", "fantasy"];
+    let allAnime = [];
 
-    function renderAnimeList(data, containerId) {
-      const container = document.getElementById(containerId);
+    sections.forEach(section => {
+      fetch(`${section}.json`)
+        .then(res => res.json())
+        .then(data => {
+          allAnime = allAnime.concat(data);
+          renderSection(section, data);
+        });
+    });
+
+    function renderSection(id, data) {
+      const container = document.getElementById(id);
       data.forEach(anime => {
         const card = document.createElement("div");
         card.className = "anime-card";
         card.innerHTML = `
-          <a href="anime.html?id=${encodeURIComponent(anime.anime_name)}">
-            <img src="${anime.metadata.image}" alt="${anime.metadata.title}">
-            <h3>${anime.metadata.title}</h3>
-            <p>⭐ ${anime.metadata.score}</p>
-          </a>
+          <img src="${anime.metadata.image}" alt="${anime.metadata.title}">
+          <p>${anime.metadata.title}</p>
         `;
+        card.onclick = () => {
+          const titleParam = encodeURIComponent(anime.anime_name);
+          window.location.href = `anime.html?title=${titleParam}`;
+        };
         container.appendChild(card);
       });
     }
 
-    sections.forEach(({ id, file }) => {
-      fetch(file)
-        .then(res => res.json())
-        .then(data => renderAnimeList(data, id))
-        .catch(err => console.error(`Failed to load ${file}`, err));
+    document.getElementById("search").addEventListener("input", e => {
+      const value = e.target.value.toLowerCase();
+      document.querySelectorAll(".anime-card").forEach(card => {
+        card.style.display = card.textContent.toLowerCase().includes(value) ? "" : "none";
+      });
     });
   </script>
 </body>
