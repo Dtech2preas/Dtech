@@ -344,6 +344,7 @@
       padding: 40px 20px;
       color: var(--cr-orange);
       font-size: 18px;
+      min-width: 100%;
     }
     
     .spinner {
@@ -474,62 +475,32 @@
   </div>
 
   <script>
-    // This data would normally come from your JSON files
-    // For demonstration purposes, I'm including sample data structure
-    // but the actual implementation would fetch from your JSON files
-    
     const sections = ["popular", "action", "slice_of_life", "sci-fi", "drama", "comedy", "fantasy"];
-    
-    // This function simulates loading data from JSON files
+    let allAnime = [];
+
+    // Function to fetch data for each section
     function loadSectionData(section) {
-      return new Promise((resolve) => {
-        // Simulate network delay
-        setTimeout(() => {
-          // Sample data structure
-          let data = [];
-          const titles = [
-            "Attack on Titan: Final Season",
-            "Demon Slayer: Entertainment District Arc",
-            "Jujutsu Kaisen 0",
-            "My Hero Academia Season 6",
-            "One Piece: Wano Country",
-            "Chainsaw Man",
-            "Spy x Family",
-            "Bleach: Thousand-Year Blood War",
-            "Vinland Saga Season 2",
-            "Oshi no Ko"
-          ];
-          
-          for (let i = 0; i < 10; i++) {
-            const rating = (Math.random() * 2 + 8).toFixed(1);
-            const year = 2015 + Math.floor(Math.random() * 9);
-            
-            data.push({
-              anime_name: titles[i % titles.length],
-              metadata: {
-                title: titles[i % titles.length],
-                image: `https://picsum.photos/240/320?random=${section}-${i}`,
-                rating: rating,
-                year: year
-              }
-            });
-          }
-          
-          resolve(data);
-        }, 500);
-      });
+      return fetch(`${section}.json`)
+        .then(res => {
+          if (!res.ok) throw new Error(`Failed to load ${section} data`);
+          return res.json();
+        });
     }
 
     // Render all sections
     sections.forEach(section => {
       loadSectionData(section)
         .then(data => {
+          // Add to allAnime for search functionality
+          allAnime = [...allAnime, ...data];
+          
+          // Render the section
           renderSection(section, data);
         })
         .catch(error => {
           console.error(`Error loading ${section} data:`, error);
           const container = document.getElementById(section);
-          container.innerHTML = `<div class="loading">Error loading data. Please try again later.</div>`;
+          container.innerHTML = `<div class="loading">Error loading ${section} data. Please try again later.</div>`;
         });
     });
 
@@ -540,35 +511,66 @@
       data.forEach(anime => {
         const card = document.createElement("div");
         card.className = "anime-card";
+        
+        // Extract metadata with fallbacks
+        const title = anime.metadata?.title || anime.anime_name;
+        const image = anime.metadata?.image || "https://via.placeholder.com/240x320?text=No+Image";
+        const rating = anime.metadata?.rating || "N/A";
+        const year = anime.metadata?.year || "Unknown";
+        
         card.innerHTML = `
           <div class="anime-image-container">
-            <img src="${anime.metadata.image}" alt="${anime.metadata.title}" class="anime-image">
+            <img src="${image}" alt="${title}" class="anime-image">
             ${id === 'popular' ? '<div class="anime-badge">TRENDING</div>' : ''}
           </div>
           <div class="anime-content">
-            <h3 class="anime-title">${anime.metadata.title}</h3>
+            <h3 class="anime-title">${title}</h3>
             <div class="anime-meta">
               <span class="anime-rating">
-                <i class="fas fa-star"></i> ${anime.metadata.rating}
+                <i class="fas fa-star"></i> ${rating}
               </span>
-              <span>${anime.metadata.year}</span>
+              <span>${year}</span>
             </div>
           </div>
         `;
+        
         card.onclick = () => {
           const titleParam = encodeURIComponent(anime.anime_name);
           window.location.href = `anime.html?title=${titleParam}`;
         };
+        
         container.appendChild(card);
       });
     }
 
     // Search functionality
     document.getElementById("search").addEventListener("input", e => {
-      const value = e.target.value.toLowerCase();
+      const value = e.target.value.toLowerCase().trim();
+      
+      // If search is empty, show all cards
+      if (!value) {
+        document.querySelectorAll(".anime-card").forEach(card => {
+          card.style.display = "";
+        });
+        return;
+      }
+      
+      // Hide all cards initially
       document.querySelectorAll(".anime-card").forEach(card => {
-        const title = card.querySelector('.anime-title').textContent.toLowerCase();
-        card.style.display = title.includes(value) ? "" : "none";
+        card.style.display = "none";
+      });
+      
+      // Show matching cards
+      allAnime.forEach(anime => {
+        const title = anime.metadata?.title || anime.anime_name;
+        if (title.toLowerCase().includes(value)) {
+          const matchingCards = document.querySelectorAll(`.anime-title`);
+          matchingCards.forEach(card => {
+            if (card.textContent.toLowerCase().includes(value)) {
+              card.closest(".anime-card").style.display = "";
+            }
+          });
+        }
       });
     });
   </script>
