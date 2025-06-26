@@ -36,11 +36,19 @@
       text-align: center;
     }
 
+    #rotate-tip {
+      margin-top: 20px;
+      display: none;
+      color: orange;
+      text-align: center;
+      font-size: 16px;
+    }
+
     #video-container {
       display: none;
       width: 100%;
       max-width: 960px;
-      aspect-ratio: 16/9;
+      aspect-ratio: 16 / 9;
       margin-top: 20px;
       animation: fadeIn 1s ease-in-out forwards;
     }
@@ -61,6 +69,7 @@
 
   <button id="back" onclick="history.back()">⬅️ Back</button>
   <div id="loading">⏳ Loading video...</div>
+  <div id="rotate-tip">🔄 For the best experience, please rotate your device to landscape.</div>
   <div id="video-container"></div>
 
   <script>
@@ -70,11 +79,27 @@
 
     const videoContainer = document.getElementById("video-container");
     const loadingMsg = document.getElementById("loading");
+    const rotateTip = document.getElementById("rotate-tip");
 
     const jsonFiles = [
       "popular.json", "action.json", "slice_of_life.json",
       "sci-fi.json", "drama.json", "comedy.json", "fantasy.json"
     ];
+
+    async function requestLandscapeMode() {
+      try {
+        // Request fullscreen
+        await document.documentElement.requestFullscreen();
+
+        // Lock orientation to landscape
+        if (screen.orientation && screen.orientation.lock) {
+          await screen.orientation.lock('landscape');
+        }
+      } catch (err) {
+        console.warn("Orientation lock failed:", err);
+        rotateTip.style.display = "block";
+      }
+    }
 
     async function loadAndDisplayVideo() {
       try {
@@ -96,12 +121,12 @@
           return;
         }
 
-        // Display video after slight delay
         setTimeout(() => {
           loadingMsg.style.display = "none";
           videoContainer.innerHTML = episode.iframe;
           videoContainer.style.display = "block";
-        }, 1500); // reduced delay for better UX
+          requestLandscapeMode(); // attempt to rotate
+        }, 1500);
       } catch (err) {
         loadingMsg.innerText = "⚠️ Failed to load video. Please try again later.";
         console.error("Error loading video:", err);
