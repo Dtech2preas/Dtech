@@ -1,81 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Anime Player</title>
-<style>
-  body {
-    background: #111;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    margin: 0; padding: 20px;
-    display: flex; flex-direction: column; align-items: center;
-  }
-  #loading {
-    font-size: 1.5em;
-    margin-top: 30vh;
-    color: yellow;
-  }
-  #video-container {
-    display: none;
-    width: 100%;
-    max-width: 960px;
-    height: 540px;
-  }
-  iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
-  #back-btn {
-    margin-bottom: 15px;
-    background: red;
-    border: none;
-    color: white;
-    padding: 10px 16px;
-    font-size: 1em;
-    cursor: pointer;
-    border-radius: 5px;
-    align-self: flex-start;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>Video Player</title>
+  <style>
+    body { background: #000; color: white; font-family: Arial; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+    #loading { margin-top: 20vh; font-size: 20px; color: yellow; }
+    #video-container { display: none; width: 100%; max-width: 960px; height: 540px; }
+    iframe { width: 100%; height: 100%; border: none; }
+    #back { margin-bottom: 20px; background: red; border: none; padding: 10px 16px; color: white; border-radius: 5px; cursor: pointer; }
+  </style>
 </head>
 <body>
 
-<button id="back-btn" onclick="history.back()">⬅️ Back</button>
-<div id="loading">⏳ Loading video...</div>
-<div id="video-container"></div>
+  <button id="back" onclick="history.back()">⬅️ Back</button>
+  <div id="loading">⏳ Loading video...</div>
+  <div id="video-container"></div>
 
-<script>
-  function decodeBase64(str) {
-    try {
-      // First base64 decode, then URI decode
-      const base64Decoded = atob(str);
-      return decodeURIComponent(base64Decoded);
-    } catch {
-      return null;
-    }
-  }
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const title = decodeURIComponent(params.get("title"));
+    const epNum = decodeURIComponent(params.get("ep"));
 
-  const params = new URLSearchParams(window.location.search);
-  const encodedIframe = params.get('iframe');
+    const jsonFiles = ["popular.json", "action.json", "slice_of_life.json", "sci-fi.json", "drama.json", "comedy.json", "fantasy.json"];
 
-  if (!encodedIframe) {
-    document.getElementById('loading').innerText = '❌ No video source found.';
-  } else {
-    const iframeHTML = decodeBase64(encodedIframe);
-    if (!iframeHTML) {
-      document.getElementById('loading').innerText = '❌ Invalid video source.';
-    } else {
-      setTimeout(() => {
-        document.getElementById('loading').style.display = 'none';
-        const container = document.getElementById('video-container');
-        container.innerHTML = iframeHTML;
-        container.style.display = 'block';
-      }, 5000);
-    }
-  }
-</script>
+    Promise.all(jsonFiles.map(file => fetch(file).then(r => r.json())))
+      .then(files => {
+        const allAnime = files.flat();
+        const anime = allAnime.find(a => a.anime_name.toLowerCase() === title.toLowerCase());
+        if (!anime) return document.getElementById("loading").innerText = "❌ Anime not found.";
 
+        const episode = anime.episodes.find(e => e.episode.toLowerCase() === epNum.toLowerCase());
+        if (!episode) return document.getElementById("loading").innerText = "❌ Episode not found.";
+
+        setTimeout(() => {
+          document.getElementById("loading").style.display = "none";
+          const player = document.getElementById("video-container");
+          player.innerHTML = episode.iframe;
+          player.style.display = "block";
+        }, 3000);
+      });
+  </script>
 </body>
 </html>
