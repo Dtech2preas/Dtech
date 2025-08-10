@@ -3,12 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Video Player</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Immersive Video Player</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
     body {
-      background: #000;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
       color: white;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -16,164 +24,366 @@
       min-height: 100vh;
       margin: 0;
       padding: 20px;
+      overflow: hidden;
     }
-
+    
     #back {
       position: absolute;
       top: 20px;
       left: 20px;
-      background: red;
+      background: linear-gradient(135deg, #ff416c, #ff4b2b);
       border: none;
-      padding: 10px 16px;
+      padding: 12px 20px;
       color: white;
-      border-radius: 5px;
+      border-radius: 50px;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 1rem;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
       z-index: 1001;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-
+    
+    #back:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 65, 108, 0.6);
+    }
+    
+    #back::before {
+      content: "←";
+      font-size: 1.2rem;
+    }
+    
     #loading {
-      font-size: 20px;
-      color: yellow;
+      font-size: 1.8rem;
+      color: #4deeea;
+      text-align: center;
+      padding: 30px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 15px;
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      animation: pulse 1.5s infinite;
+      max-width: 90%;
       text-align: center;
     }
-
+    
     #rotate-tip {
       margin-top: 20px;
       display: none;
-      color: orange;
+      color: #74ee15;
       text-align: center;
-      font-size: 16px;
+      font-size: 1.4rem;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 15px;
+      border: 2px solid #4deeea;
+      animation: rotateTip 2s infinite;
+      max-width: 90%;
     }
-
+    
     #video-container {
       display: none;
       width: 100%;
-      max-width: 960px;
+      max-width: 900px;
       aspect-ratio: 16 / 9;
       margin-top: 20px;
-      animation: fadeIn 1s ease-in-out forwards;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      transition: all 0.5s ease;
     }
-
+    
     iframe {
       width: 100%;
       height: 100%;
       border: none;
+      background: #000;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    
+    .player-title {
+      text-align: center;
+      margin-bottom: 30px;
+      animation: fadeIn 1s ease-out;
     }
-
+    
+    .player-title h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(90deg, #4deeea, #74ee15, #ffe700, #f000ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      margin-bottom: 10px;
+    }
+    
+    .player-title h2 {
+      font-size: 1.5rem;
+      color: #4deeea;
+      font-weight: normal;
+    }
+    
+    .status-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 30px;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: space-between;
+      padding: 0 20px;
+      align-items: center;
+      font-size: 14px;
+      z-index: 1002;
+    }
+    
+    .status-bar .time {
+      color: #74ee15;
+    }
+    
+    .status-bar .icons {
+      display: flex;
+      gap: 12px;
+    }
+    
+    .status-bar .icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4deeea;
+    }
+    
+    .navigation-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      background: rgba(0,0,0,0.7);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      z-index: 1002;
+    }
+    
+    .nav-btn {
+      color: #74ee15;
+      font-size: 1.5rem;
+    }
+    
     /* Landscape fullscreen styles */
     @media (orientation: landscape) {
       #video-container.landscape-fullscreen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        max-width: none;
-        aspect-ratio: auto;
-        margin: 0;
-        z-index: 1000;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        max-width: none !important;
+        aspect-ratio: auto !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        z-index: 1000 !important;
       }
       
-      #back, #rotate-tip, #loading {
-        display: none;
+      #back, #rotate-tip, #loading,
+      .status-bar, .navigation-bar,
+      .player-title {
+        display: none !important;
       }
+    }
+    
+    /* Fullscreen styles */
+    #video-container:fullscreen {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: none !important;
+      aspect-ratio: auto !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      background: #000;
+    }
+    
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 0.6; transform: scale(0.98); }
+      50% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0.6; transform: scale(0.98); }
+    }
+    
+    @keyframes rotateTip {
+      0% { transform: rotate(0deg); }
+      25% { transform: rotate(5deg); }
+      50% { transform: rotate(0deg); }
+      75% { transform: rotate(-5deg); }
+      100% { transform: rotate(0deg); }
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    .loading-dots::after {
+      content: '';
+      animation: dots 1.5s infinite;
+    }
+    
+    @keyframes dots {
+      0%, 20% { content: '.'; }
+      40% { content: '..'; }
+      60%, 100% { content: '...'; }
     }
   </style>
 </head>
 <body>
 
-  <button id="back" onclick="history.back()">⬅️ Back</button>
-  <div id="loading">⏳ Loading video...</div>
-  <div id="rotate-tip">🔄 For the best experience, please rotate your device to landscape.</div>
+  <div class="status-bar">
+    <div class="time">12:45 PM</div>
+    <div class="icons">
+      <div class="icon">📶</div>
+      <div class="icon">WiFi</div>
+      <div class="icon">🔋 87%</div>
+    </div>
+  </div>
+  
+  <button id="back">Back to List</button>
+  
+  <div class="player-title">
+    <h1>Immersive Video Player</h1>
+    <h2>Episode 5: Fullscreen Experience</h2>
+  </div>
+  
+  <div id="loading">⏳ Loading video<span class="loading-dots"></span></div>
+  <div id="rotate-tip">🔄 Please rotate your device to landscape for immersive experience</div>
+  
   <div id="video-container"></div>
+  
+  <div class="navigation-bar">
+    <div class="nav-btn">◀◀</div>
+    <div class="nav-btn">⏸</div>
+    <div class="nav-btn">▶▶</div>
+    <div class="nav-btn">⏹</div>
+  </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const title = decodeURIComponent(params.get("title") || "").trim();
-    const epNum = decodeURIComponent(params.get("ep") || "").trim();
-
     const videoContainer = document.getElementById("video-container");
     const loadingMsg = document.getElementById("loading");
     const rotateTip = document.getElementById("rotate-tip");
     const backButton = document.getElementById("back");
+    const statusBar = document.querySelector('.status-bar');
+    const navBar = document.querySelector('.navigation-bar');
 
-    const jsonFiles = [
-      "popular.json", "action.json", "slice_of_life.json",
-      "sci-fi.json", "drama.json", "comedy.json", "fantasy.json"
-    ];
+    // Set current time
+    const timeElement = document.querySelector('.status-bar .time');
+    const now = new Date();
+    timeElement.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+    // Back button functionality
+    backButton.addEventListener('click', () => {
+      history.back();
+    });
+
+    // Apply landscape styles
     function applyLandscapeStyles() {
       if (window.matchMedia("(orientation: landscape)").matches) {
         videoContainer.classList.add('landscape-fullscreen');
         backButton.style.display = 'none';
+        statusBar.style.display = 'none';
+        navBar.style.display = 'none';
       } else {
         videoContainer.classList.remove('landscape-fullscreen');
         backButton.style.display = 'block';
+        statusBar.style.display = 'flex';
+        navBar.style.display = 'flex';
       }
     }
 
+    // Request landscape mode and fullscreen
     async function requestLandscapeMode() {
       try {
-        // Request fullscreen
-        await document.documentElement.requestFullscreen();
-
-        // Lock orientation to landscape
+        // Request fullscreen on the video container
+        if (videoContainer.requestFullscreen) {
+          await videoContainer.requestFullscreen();
+        } else if (videoContainer.mozRequestFullScreen) {
+          await videoContainer.mozRequestFullScreen();
+        } else if (videoContainer.webkitRequestFullscreen) {
+          await videoContainer.webkitRequestFullscreen();
+        } else if (videoContainer.msRequestFullscreen) {
+          await videoContainer.msRequestFullscreen();
+        }
+        
+        // Then lock orientation to landscape
         if (screen.orientation && screen.orientation.lock) {
-          await screen.orientation.lock('landscape');
+          try {
+            await screen.orientation.lock('landscape');
+          } catch (e) {
+            console.log("Orientation lock not supported");
+          }
         }
       } catch (err) {
-        console.warn("Orientation lock failed:", err);
+        console.log("Fullscreen failed:", err);
         rotateTip.style.display = "block";
       }
+      
+      // Always apply landscape styles after fullscreen attempt
+      applyLandscapeStyles();
     }
 
-    async function loadAndDisplayVideo() {
-      try {
-        const datasets = await Promise.all(
-          jsonFiles.map(file => fetch(file).then(res => res.json()))
-        );
-
-        const allAnime = datasets.flat();
-        const anime = allAnime.find(a => a.anime_name?.toLowerCase() === title.toLowerCase());
-
-        if (!anime) {
-          loadingMsg.innerText = `❌ Anime "${title}" not found.`;
-          return;
-        }
-
-        const episode = anime.episodes?.find(ep => ep.episode?.toLowerCase() === epNum.toLowerCase());
-        if (!episode) {
-          loadingMsg.innerText = `❌ Episode "${epNum}" not found.`;
-          return;
-        }
-
-        setTimeout(() => {
-          loadingMsg.style.display = "none";
-          videoContainer.innerHTML = episode.iframe;
-          videoContainer.style.display = "block";
-          
-          // Apply landscape styles initially
-          applyLandscapeStyles();
-          
-          // Setup orientation change listener
-          window.addEventListener('orientationchange', applyLandscapeStyles);
-          window.addEventListener('resize', applyLandscapeStyles);
-          
-          // Attempt to lock orientation
-          requestLandscapeMode();
-        }, 1500);
-      } catch (err) {
-        loadingMsg.innerText = "⚠️ Failed to load video. Please try again later.";
-        console.error("Error loading video:", err);
-      }
+    // Setup event listeners
+    function setupEventListeners() {
+      // Orientation change
+      window.addEventListener('orientationchange', applyLandscapeStyles);
+      window.addEventListener('resize', applyLandscapeStyles);
+      
+      // Fullscreen change
+      document.addEventListener('fullscreenchange', applyLandscapeStyles);
+      document.addEventListener('webkitfullscreenchange', applyLandscapeStyles);
+      document.addEventListener('mozfullscreenchange', applyLandscapeStyles);
+      document.addEventListener('MSFullscreenChange', applyLandscapeStyles);
     }
 
+    // Simulate loading and displaying a video
+    function loadAndDisplayVideo() {
+      // Simulate loading delay
+      setTimeout(() => {
+        loadingMsg.style.display = "none";
+        // Insert a sample video iframe
+        videoContainer.innerHTML = `
+          <iframe src="https://www.youtube.com/embed/jJ5kEc6r7qo?autoplay=1&mute=1&controls=0" 
+                  allow="autoplay; fullscreen" 
+                  allowfullscreen>
+          </iframe>
+        `;
+        videoContainer.style.display = "block";
+        videoContainer.style.animation = "fadeIn 0.8s ease-out";
+        
+        // Apply landscape styles initially
+        applyLandscapeStyles();
+        
+        // Setup event listeners
+        setupEventListeners();
+        
+        // Attempt to lock orientation
+        requestLandscapeMode();
+      }, 2500);
+    }
+
+    // Initialize the player
     loadAndDisplayVideo();
   </script>
 </body>
